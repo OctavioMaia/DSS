@@ -8,6 +8,7 @@ package Business;
 /**
  *
  * @author Nuno Oliveira
+ *  @author jms 04_12_2015
  */
 public class Partido {
     
