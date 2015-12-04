@@ -6,6 +6,7 @@
 package Business;
 
 import java.util.Date;
+import java.util.HashSet;
 
 /**
  *
@@ -15,10 +16,12 @@ public class Eleicao {
     
     private Date data;
     private int estado;
+    private HashSet<Integer> votantes;
     
     public Eleicao(Date data, int estado) {
         this.data = data;
         this.estado = estado;
+        this.votantes = new HashSet<Integer>();
     }    
     
     public Date getData() {
@@ -35,10 +38,22 @@ public class Eleicao {
 
     public void setEstado(int estado) {
         this.estado = estado;
-    } 
-    
-    public String toString(){
-    	return "Eleicao na data " + data.toGMTString();
     }
     
+	public HashSet<Integer> getVotantes() {
+		return votantes;
+	}
+
+	public void addVotante(Integer id) {
+		this.votantes.add(id);
+	}
+	
+	public void addVotante(Eleitor e){
+		this.votantes.add(e.getnIdent());
+	}
+  
+    @SuppressWarnings("deprecation")
+	public String toString(){
+    	return "Eleicao na data " + data.toGMTString();
+    }  
 }
