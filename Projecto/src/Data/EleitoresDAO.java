@@ -20,7 +20,7 @@ import java.util.TreeSet;
 
 /**
  *
- * @author joaosilva
+ * @author joaosilva é burro
  */
 public class EleitoresDAO implements Map<Integer, Eleitor> {
 	private Connector c;
