@@ -5,8 +5,8 @@
  */
 package Data;
 
-import Bussines.Circulo;
-import Bussi.Eleitor;
+import Business.Circulo;
+import Business.Eleitor;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -20,8 +20,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
-
-
 
 /**
  *
