@@ -1,8 +1,11 @@
 package Data;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeSet;
 import java.sql.*;
 
 import Business.Circulo;
@@ -89,50 +92,181 @@ public class CirculoDAO implements Map<Integer,Circulo>{
 
 	@Override
 	public Circulo get(Object key) {
-		// TODO Auto-generated method stub
-		return null;
+		Circulo circulo  = null;
+        Connection conn = null;
+        
+        try{
+        	conn=this.c.newConnection();
+        	PreparedStatement ps = conn.prepareStatement("Select * FROM Circulos WHERE Id = ?");
+        	ps.setInt(1, (Integer)key);
+        	ResultSet rs = ps.executeQuery();
+            while(rs.next()){
+               circulo = new Circulo (rs.getInt("idCirculo"),rs.getString("noma"),rs.getInt("totEleitores"));
+            }
+            rs.close();
+            ps.close();
+            conn.commit();
+        }catch(Exception e){
+    		try {
+				conn.rollback();
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+    	}finally{
+    		try {
+				conn.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+    	}
+        return circulo;
 	}
 
 	@Override
 	public Circulo put(Integer key, Circulo value) {
-		// TODO Auto-generated method stub
-		return null;
+		Connection conn=null;
+		Circulo circulo = this.remove(key);
+    	try{
+    		conn = c.newConnection();
+    		PreparedStatement ps = conn.prepareStatement("insert into Circulos " +
+                    "(idCirculo,nome,totEleitores) " +
+                    "value " +
+                    "(?,?,?)");
+    		ps.setString(2, value.getNome());
+            ps.setInt(1, key);
+            ps.setInt(3, value.getTotEleitores());
+            ps.execute();
+            ps.close();
+            conn.commit();
+    	}catch(Exception e){
+    		try {
+				conn.rollback();
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+    	}finally{
+    		try {
+				conn.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+    	}
+    	return circulo;
 	}
 
 	@Override
 	public Circulo remove(Object key) {
-		// TODO Auto-generated method stub
-		return null;
+		Connection conn  = null;
+    	Circulo circulo =null;
+    	try{
+    		conn = this.c.newConnection();
+    	    circulo  = this.get(key); 
+    	    PreparedStatement ps = conn.prepareStatement("DELETE FROM Circulos where idCirculo= ?");
+    	    ps.setInt(1,(Integer)key);
+    	    ps.execute();
+    	    conn.commit();
+    	}catch(Exception e2){
+    		try {
+				conn.rollback();
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+    	}finally{
+    		try {
+				conn.close();
+			} catch (SQLException e2) {
+				// TODO Auto-generated catch block
+				e2.printStackTrace();
+			}
+    	}
+       return circulo;
 	}
 
 	@Override
 	public void putAll(Map<? extends Integer, ? extends Circulo> m) {
-		// TODO Auto-generated method stub
-		
+		throw new RuntimeException("Funcao nao implementada");
 	}
 
 	@Override
 	public void clear() {
-		// TODO Auto-generated method stub
+		Connection conn = null;
+    	try{
+    		conn = c.newConnection();
+    		Statement s = conn.createStatement();
+    		s.executeUpdate("DELETE FROM Circulos");
+    		s.close();
+    		conn.commit();
+    	}catch(Exception e){
+    		try {
+				conn.rollback();
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+    		throw new RuntimeException(e.getMessage());
+    	}
+    	finally {
+    		try {
+				conn.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 		
 	}
 
 	@Override
 	public Set<Integer> keySet() {
-		// TODO Auto-generated method stub
-		return null;
+		Set<Integer> ret = new TreeSet<Integer>();
+        Connection conn = null;
+        try{
+        	conn=this.c.newConnection();
+        	Statement s = conn.createStatement();
+            String querie = " Select idCirculo FROM Circulos";
+            ResultSet rs = s.executeQuery(querie);
+            while(rs.next())
+               ret.add(rs.getInt("idCirculo"));
+            rs.close();
+            s.close();
+            conn.commit();
+        }catch(Exception e){
+    		try {
+				conn.rollback();
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+    	}finally{
+    		try {
+				conn.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+    	}
+        return ret;
 	}
 
 	@Override
 	public Collection<Circulo> values() {
-		// TODO Auto-generated method stub
-		return null;
+		ArrayList <Circulo> ret  = new ArrayList<>();
+        Set<Integer> keys = this.keySet();
+        Iterator<Integer> i  = keys.iterator();
+        while (i.hasNext()){
+            ret.add(this.get((int) i.next()));
+        }
+        return ret;
 	}
 
 	@Override
 	public Set<java.util.Map.Entry<Integer, Circulo>> entrySet() {
-		// TODO Auto-generated method stub
-		return null;
+		throw new RuntimeException("Funcao nao implementada");
 	}
 
 }
