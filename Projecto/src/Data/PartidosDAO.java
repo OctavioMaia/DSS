@@ -7,6 +7,7 @@ package Data;
 
 import Business.Partido;
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -26,7 +27,12 @@ public class PartidosDAO {
     private Connection con;
 
     public PartidosDAO(String url, String nome, String pass) {
-        this.con = Drivermanager.getConnection(url, nome, pass);
+        try {
+			this.con = DriverManager.getConnection(url, nome, pass);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
     }
 
     public List<Partido> getPartidos() {
