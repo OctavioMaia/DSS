@@ -58,4 +58,9 @@ public class Partido {
     public void setSimbolo(String simbolo) {
         this.simbolo = simbolo;
     }    
+    
+    public String toString(){
+    	return "Partido " + nome + ", com a sigla " + sigla + " e com o ID " + id;
+    }
+    
 }

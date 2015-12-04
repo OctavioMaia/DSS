@@ -68,4 +68,8 @@ public class Eleitor {
         return (this.pin.equals(pass));
     }
     
+    public String toString(){
+    	return "Eleitor " + nome + ", com o número de identificacao " + nIdent + " e pertencente ao circulo " + circulo;
+    }
+    
 }

@@ -73,5 +73,9 @@ public class Candidato {
     public void setNaturalidade(String naturalidade) {
         this.naturalidade = naturalidade;
     }
-    
+
+	public String toString() {
+		return "Candidato " + nome + ", com BI nº"+bi + ", nascido a " + dataNasc.toGMTString();
+	}
+     
 }
