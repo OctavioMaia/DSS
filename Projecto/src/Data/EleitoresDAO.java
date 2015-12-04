@@ -6,11 +6,15 @@
 package Data;
 
 import Business.Eleitor;
+<<<<<<< HEAD
+import java.sql.*;
+=======
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+>>>>>>> master
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -20,7 +24,11 @@ import java.util.TreeSet;
 
 /**
  *
+<<<<<<< HEAD
+ * @author jms 04_12_2015
+=======
  * @author joaosilva é burro
+>>>>>>> master
  */
 public class EleitoresDAO implements Map<Integer, Eleitor> {
 	private Connector c;
@@ -52,6 +60,28 @@ public class EleitoresDAO implements Map<Integer, Eleitor> {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+<<<<<<< HEAD
+		} 
+    }
+    
+    @Override
+    public boolean containsKey(Object key){
+        boolean b=false;
+        Connection conn = null;
+        try{
+        	conn = c.newConnection();
+        	PreparedStatement ps = conn.prepareStatement(" Select  EXISTS (SELECT nrID FROM Eleitores " +
+                " WHERE nrID = ?)");
+        	ps.setInt(1,(Integer) key);
+        	ResultSet rs = ps.executeQuery();
+        	while(rs.next())
+        		b = (rs.getInt(1)!=0);
+        	rs.close();
+        	ps.close();
+        	conn.commit();
+        }catch(Exception e){
+        	try {
+=======
 		}
 	}
 
@@ -72,6 +102,7 @@ public class EleitoresDAO implements Map<Integer, Eleitor> {
 			conn.commit();
 		} catch (Exception e) {
 			try {
+>>>>>>> master
 				conn.rollback();
 			} catch (SQLException e1) {
 				// TODO Auto-generated catch block
@@ -85,6 +116,34 @@ public class EleitoresDAO implements Map<Integer, Eleitor> {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+<<<<<<< HEAD
+        }
+        return b;
+    }
+    
+    @Override
+    public boolean containsValue(Object value){
+        return this.containsKey(((Eleitor)value).getnIdent());
+    }
+    
+    public boolean isEmpty(){
+        return this.size()==0;
+    }
+    
+    public int size(){
+    	int ret=0;
+    	Connection conn = null;
+    	try{
+    		conn = this.c.newConnection(); 
+    		PreparedStatement ps = conn.prepareStatement("Select count(*) FROM Eleitores");
+    		ResultSet rs = ps.executeQuery();
+    		if(rs.next()) ret = rs.getInt(1);
+    		rs.close();
+    		ps.close();
+    		conn.commit();
+    	}catch(Exception e){
+    		try {
+=======
 		}
 		return b;
 	}
@@ -112,6 +171,7 @@ public class EleitoresDAO implements Map<Integer, Eleitor> {
 			conn.commit();
 		} catch (Exception e) {
 			try {
+>>>>>>> master
 				conn.rollback();
 			} catch (SQLException e1) {
 				// TODO Auto-generated catch block
@@ -128,6 +188,21 @@ public class EleitoresDAO implements Map<Integer, Eleitor> {
 		return ret;
 	}
 
+<<<<<<< HEAD
+    @Override
+    public Eleitor remove(Object key){
+    	Connection conn  = null;
+    	Eleitor e =null;
+    	try{
+    		conn = this.c.newConnection();
+    	    e  = this.get(key); 
+    	    PreparedStatement ps = conn.prepareStatement("DELETE FROM Eleitores where nrID= ?");
+    	    ps.setInt(1,(Integer)key);
+    	    ps.execute();
+    	    conn.commit();
+    	}catch(Exception e2){
+    		try {
+=======
 	@Override
 	public Eleitor remove(Object bi) {
 		Connection conn = null;
@@ -141,6 +216,7 @@ public class EleitoresDAO implements Map<Integer, Eleitor> {
 			conn.commit();
 		} catch (Exception e2) {
 			try {
+>>>>>>> master
 				conn.rollback();
 			} catch (SQLException e1) {
 				// TODO Auto-generated catch block
@@ -157,6 +233,24 @@ public class EleitoresDAO implements Map<Integer, Eleitor> {
 		return e;
 	}
 
+<<<<<<< HEAD
+    
+    public Set<Integer> keySet(){
+        Set<Integer> ret = new TreeSet<Integer>();
+        Connection conn = null;
+        try{
+        	conn=this.c.newConnection();
+        	Statement s = conn.createStatement();
+            String querie = " Select nrId FROM Eleitores";
+            ResultSet rs = s.executeQuery(querie);
+            while(rs.next())
+               ret.add(rs.getInt("nrID"));
+            rs.close();
+            s.close();
+            conn.commit();
+        }catch(Exception e){
+    		try {
+=======
 	public Set<Integer> keySet() {
 		Set<Integer> ret = new TreeSet<Integer>();
 		Connection conn = null;
@@ -172,6 +266,7 @@ public class EleitoresDAO implements Map<Integer, Eleitor> {
 			conn.commit();
 		} catch (Exception e) {
 			try {
+>>>>>>> master
 				conn.rollback();
 			} catch (SQLException e1) {
 				// TODO Auto-generated catch block
@@ -184,6 +279,30 @@ public class EleitoresDAO implements Map<Integer, Eleitor> {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+<<<<<<< HEAD
+    	}
+        return ret;
+    }
+    
+    @Override
+    public Eleitor get(Object key){
+        Eleitor el  = null;
+        Connection conn = null;
+        
+        try{
+        	conn=this.c.newConnection();
+        	PreparedStatement ps = conn.prepareStatement("Select * FROM Eleitores WHERE nrId = ?");
+        	ps.setInt(1, (Integer)key);
+        	ResultSet rs = ps.executeQuery();
+            while(rs.next()){
+               el = new Eleitor (rs.getString("nome"),rs.getInt("idCirculo"),rs.getInt("nrID"),rs.getString("pin"));
+            }
+            rs.close();
+            ps.close();
+            conn.commit();
+        }catch(Exception e){
+    		try {
+=======
 		}
 		return ret;
 	}
@@ -206,6 +325,7 @@ public class EleitoresDAO implements Map<Integer, Eleitor> {
 			conn.commit();
 		} catch (Exception e) {
 			try {
+>>>>>>> master
 				conn.rollback();
 			} catch (SQLException e1) {
 				// TODO Auto-generated catch block
@@ -218,6 +338,43 @@ public class EleitoresDAO implements Map<Integer, Eleitor> {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+<<<<<<< HEAD
+    	}
+        return el;
+     
+    }
+    
+    
+    public Collection<Eleitor> values(){
+        ArrayList <Eleitor> ret  = new ArrayList<>();
+        Set<Integer> keys = this.keySet();
+        Iterator<Integer> i  = keys.iterator();
+        while (i.hasNext()){
+            ret.add(this.get((int) i.next()));
+        }
+        return ret;
+    }
+  
+    
+    public Eleitor put(Integer key,  Eleitor value){
+    	Connection conn=null;
+    	Eleitor el = this.remove(key);
+    	try{
+    		conn = c.newConnection();
+    		PreparedStatement ps = conn.prepareStatement("insert into Eleitores " +
+                    "(nrId,nome,pin,idCirculo) " +
+                    "value " +
+                    "(?,?,?,?)");
+    		ps.setInt(2, value.getnIdent());
+            ps.setString(1, value.getNome());
+            ps.setString(3, value.getPin());
+            ps.setInt(4, value.getCirculo());
+            ps.execute();
+            ps.close();
+            conn.commit();
+    	}catch(Exception e){
+    		try {
+=======
 		}
 		return el;
 
@@ -253,6 +410,7 @@ public class EleitoresDAO implements Map<Integer, Eleitor> {
 			conn.commit();
 		} catch (Exception e) {
 			try {
+>>>>>>> master
 				conn.rollback();
 			} catch (SQLException e1) {
 				// TODO Auto-generated catch block

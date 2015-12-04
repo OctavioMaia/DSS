@@ -8,15 +8,16 @@ package Business;
 /**
  *
  * @author Nuno Oliveira
+ * @author jms 04_12_2015
  */
 public class Eleitor {
     
     private String nome;
     private int circulo;
     private int nIdent;
-    private int pin;
+    private String pin;
 
-    public Eleitor(String nome, int circulo, int nIdent, int pin) {
+    public Eleitor(String nome, int circulo, int nIdent, String pin) {
         this.nome = nome;
         this.circulo = circulo;
         this.nIdent = nIdent;
@@ -35,7 +36,7 @@ public class Eleitor {
         return nIdent;
     }
 
-    public int getPin() {
+    public String getPin() {
         return pin;
     }
 
@@ -47,7 +48,7 @@ public class Eleitor {
         this.nIdent = nIdent;
     }
 
-    public void setPin(int pin) {
+    public void setPin(String pin) {
         this.pin = pin;
     }
 
@@ -63,8 +64,8 @@ public class Eleitor {
         return (this.nIdent == other.nIdent);
     }
     
-    public boolean verificaPin(int pass) {
-        return (this.pin == pass);
+    public boolean verificaPin(String pass) {
+        return (this.pin.equals(pass));
     }
     
     public String toString(){
