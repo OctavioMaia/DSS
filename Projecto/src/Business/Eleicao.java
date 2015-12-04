@@ -37,4 +37,8 @@ public class Eleicao {
         this.estado = estado;
     } 
     
+    public String toString(){
+    	return "Eleicao na data " + data.toGMTString();
+    }
+    
 }
