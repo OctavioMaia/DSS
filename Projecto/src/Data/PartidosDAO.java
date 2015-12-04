@@ -6,22 +6,19 @@
 package Data;
 
 import Business.Partido;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.TreeSet;
+import java.sql.*;
 
 /**
  *
  * @author ruifreitas
+ * @author jms 04_12_2015
+ * 
  */
 public class PartidosDAO implements Map<Integer,Partido>{
 	private Connector c;
@@ -111,12 +108,11 @@ public class PartidosDAO implements Map<Integer,Partido>{
         
         try{
         	conn=this.c.newConnection();
-        	//Atençao ver aqui a ordem das Colunas na Base de dados
         	PreparedStatement ps = conn.prepareStatement("Select * FROM Partidos WHERE Id = ?");
         	ps.setInt(1, (Integer)key);
         	ResultSet rs = ps.executeQuery();
             while(rs.next()){
-               partido = new Partido (rs.getInt(2),rs.getString(4),rs.getString(1),rs.getString(3));
+               partido = new Partido (rs.getInt("id"),rs.getString("sigla"),rs.getString("nome"),rs.getString("simbolo"));
             }
             rs.close();
             ps.close();
@@ -136,49 +132,154 @@ public class PartidosDAO implements Map<Integer,Partido>{
 				e.printStackTrace();
 			}
     	}
-        return el;
+        return partido;
 	}
 
 	@Override
 	public Partido put(Integer key, Partido value) {
-		// TODO Auto-generated method stub
-		return null;
+		Connection conn=null;
+		Partido partido = this.remove(key);
+    	try{
+    		conn = c.newConnection();
+    		PreparedStatement ps = conn.prepareStatement("insert into Partidos " +
+                    "(id,nome,simbolo,sigla) " +
+                    "value " +
+                    "(?,?,?,?)");
+    		ps.setString(2, value.getNome());
+            ps.setInt(1, key);
+            ps.setString(3, value.getSimbolo());
+            ps.setString(4, value.getSigla());
+            ps.execute();
+            ps.close();
+            conn.commit();
+    	}catch(Exception e){
+    		try {
+				conn.rollback();
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+    	}finally{
+    		try {
+				conn.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+    	}
+    	return partido;
 	}
 
 	@Override
 	public Partido remove(Object key) {
-		// TODO Auto-generated method stub
-		return null;
+		Connection conn  = null;
+    	Partido partido =null;
+    	try{
+    		conn = this.c.newConnection();
+    	    partido  = this.get(key); 
+    	    PreparedStatement ps = conn.prepareStatement("DELETE FROM Partidos where id= ?");
+    	    ps.setInt(1,(Integer)key);
+    	    ps.execute();
+    	    conn.commit();
+    	}catch(Exception e2){
+    		try {
+				conn.rollback();
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+    	}finally{
+    		try {
+				conn.close();
+			} catch (SQLException e2) {
+				// TODO Auto-generated catch block
+				e2.printStackTrace();
+			}
+    	}
+       return partido;  
 	}
 
 	@Override
 	public void putAll(Map<? extends Integer, ? extends Partido> m) {
-		// TODO Auto-generated method stub
+		throw new RuntimeException("Funcao nao implementada");
 		
 	}
 
 	@Override
 	public void clear() {
-		// TODO Auto-generated method stub
+		Connection conn = null;
+    	try{
+    		conn = c.newConnection();
+    		Statement s = conn.createStatement();
+    		s.executeUpdate("DELETE FROM Partidos");
+    		s.close();
+    		conn.commit();
+    	}catch(Exception e){
+    		try {
+				conn.rollback();
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+    		throw new RuntimeException(e.getMessage());
+    	}
+    	finally {
+    		try {
+				conn.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 		
 	}
 
 	@Override
 	public Set<Integer> keySet() {
-		// TODO Auto-generated method stub
-		return null;
+		Set<Integer> ret = new TreeSet<Integer>();
+        Connection conn = null;
+        try{
+        	conn=this.c.newConnection();
+        	Statement s = conn.createStatement();
+            String querie = " Select id FROM Partidos";
+            ResultSet rs = s.executeQuery(querie);
+            while(rs.next())
+               ret.add(rs.getInt("id"));
+            rs.close();
+            s.close();
+            conn.commit();
+        }catch(Exception e){
+    		try {
+				conn.rollback();
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+    	}finally{
+    		try {
+				conn.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+    	}
+        return ret;
 	}
 
 	@Override
 	public Collection<Partido> values() {
-		// TODO Auto-generated method stub
-		return null;
+		ArrayList <Partido> ret  = new ArrayList<>();
+        Set<Integer> keys = this.keySet();
+        Iterator<Integer> i  = keys.iterator();
+        while (i.hasNext()){
+            ret.add(this.get((int) i.next()));
+        }
+        return ret;
 	}
 
 	@Override
 	public Set<java.util.Map.Entry<Integer, Partido>> entrySet() {
-		// TODO Auto-generated method stub
-		return null;
+		throw new RuntimeException("Funcao nao implementada");
 	}
 
     

@@ -6,25 +6,19 @@
 package Data;
 
 import Business.Eleitor;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
-import java.util.TreeMap;
 import java.util.TreeSet;
 
 
 
 /**
  *
- * @author joaosilva
+ * @author jms 04_12_2015
  */
 public class EleitoresDAO implements Map<Integer,Eleitor>{
     private Connector c;
@@ -60,14 +54,14 @@ public class EleitoresDAO implements Map<Integer,Eleitor>{
     }
     
     @Override
-    public boolean containsKey(Object bi){
+    public boolean containsKey(Object key){
         boolean b=false;
         Connection conn = null;
         try{
         	conn = c.newConnection();
-        	PreparedStatement ps = conn.prepareStatement(" Select  EXISTS (SELECT bi FROM Eleitores " +
-                " WHERE bi = ?)");
-        	ps.setInt(1,(Integer) bi);
+        	PreparedStatement ps = conn.prepareStatement(" Select  EXISTS (SELECT nrID FROM Eleitores " +
+                " WHERE nrID = ?)");
+        	ps.setInt(1,(Integer) key);
         	ResultSet rs = ps.executeQuery();
         	while(rs.next())
         		b = (rs.getInt(1)!=0);
@@ -94,8 +88,8 @@ public class EleitoresDAO implements Map<Integer,Eleitor>{
     }
     
     @Override
-    public boolean containsValue(Object e){
-        return this.containsKey(((Eleitor)e).getnIdent());
+    public boolean containsValue(Object value){
+        return this.containsKey(((Eleitor)value).getnIdent());
     }
     
     public boolean isEmpty(){
@@ -107,7 +101,7 @@ public class EleitoresDAO implements Map<Integer,Eleitor>{
     	Connection conn = null;
     	try{
     		conn = this.c.newConnection(); 
-    		PreparedStatement ps = conn.prepareStatement("Select  count(*) FROM Eleitores");
+    		PreparedStatement ps = conn.prepareStatement("Select count(*) FROM Eleitores");
     		ResultSet rs = ps.executeQuery();
     		if(rs.next()) ret = rs.getInt(1);
     		rs.close();
@@ -132,14 +126,14 @@ public class EleitoresDAO implements Map<Integer,Eleitor>{
     }
 
     @Override
-    public Eleitor remove(Object bi){
+    public Eleitor remove(Object key){
     	Connection conn  = null;
     	Eleitor e =null;
     	try{
     		conn = this.c.newConnection();
-    	    e  = this.get(bi); 
-    	    PreparedStatement ps = conn.prepareStatement("DELETE FROM Eleitores where bi= ?");
-    	    ps.setInt(1,(Integer) bi);
+    	    e  = this.get(key); 
+    	    PreparedStatement ps = conn.prepareStatement("DELETE FROM Eleitores where nrID= ?");
+    	    ps.setInt(1,(Integer)key);
     	    ps.execute();
     	    conn.commit();
     	}catch(Exception e2){
@@ -167,10 +161,10 @@ public class EleitoresDAO implements Map<Integer,Eleitor>{
         try{
         	conn=this.c.newConnection();
         	Statement s = conn.createStatement();
-            String querie = " Select Bi FROM Eleitores;";
+            String querie = " Select nrId FROM Eleitores";
             ResultSet rs = s.executeQuery(querie);
             while(rs.next())
-               ret.add(rs.getInt("Bi"));
+               ret.add(rs.getInt("nrID"));
             rs.close();
             s.close();
             conn.commit();
@@ -193,17 +187,17 @@ public class EleitoresDAO implements Map<Integer,Eleitor>{
     }
     
     @Override
-    public Eleitor get(Object bi){
+    public Eleitor get(Object key){
         Eleitor el  = null;
         Connection conn = null;
         
         try{
         	conn=this.c.newConnection();
-        	PreparedStatement ps = conn.prepareStatement("Select * FROM Eleitores WHERE Bi = ?");
-        	ps.setInt(1, (Integer)bi);
+        	PreparedStatement ps = conn.prepareStatement("Select * FROM Eleitores WHERE nrId = ?");
+        	ps.setInt(1, (Integer)key);
         	ResultSet rs = ps.executeQuery();
             while(rs.next()){
-               el = new Eleitor (rs.getString(2),rs.getInt(4),rs.getInt(1),rs.getInt(3));
+               el = new Eleitor (rs.getString("nome"),rs.getInt("idCirculo"),rs.getInt("nrID"),rs.getString("pin"));
             }
             rs.close();
             ps.close();
@@ -227,9 +221,6 @@ public class EleitoresDAO implements Map<Integer,Eleitor>{
      
     }
     
-//    public Collection<Eleitor> values(){
-//        return this.map.values();
-//    }
     
     public Collection<Eleitor> values(){
         ArrayList <Eleitor> ret  = new ArrayList<>();
@@ -242,19 +233,19 @@ public class EleitoresDAO implements Map<Integer,Eleitor>{
     }
   
     
-    public Eleitor put(Integer bi,  Eleitor ep){
+    public Eleitor put(Integer key,  Eleitor value){
     	Connection conn=null;
-    	Eleitor el = this.remove(bi);
+    	Eleitor el = this.remove(key);
     	try{
     		conn = c.newConnection();
     		PreparedStatement ps = conn.prepareStatement("insert into Eleitores " +
-                    "(BI,Nome,PIN,CirculoID) " +
+                    "(nrId,nome,pin,idCirculo) " +
                     "value " +
                     "(?,?,?,?)");
-    		ps.setString(2, ep.getNome());
-            ps.setInt(1, ep.getnIdent());
-            ps.setInt(3, ep.getPin());
-            ps.setInt(4, ep.getCirculo());
+    		ps.setInt(2, value.getnIdent());
+            ps.setString(1, value.getNome());
+            ps.setString(3, value.getPin());
+            ps.setInt(4, value.getCirculo());
             ps.execute();
             ps.close();
             conn.commit();
