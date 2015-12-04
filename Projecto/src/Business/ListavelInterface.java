@@ -9,6 +9,6 @@ package Business;
  *
  * @author Octávio Maia <octaviojmaia at gmail.com>
  */
-public class ListavelInterface {
+public interface ListavelInterface {
     
 }
