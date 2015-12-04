@@ -64,14 +64,14 @@ public class PartidosDAO implements Map<Integer,Partido>{
 	}
 
 	@Override
-	public boolean containsKey(Object id) {
+	public boolean containsKey(Object key) {
 		boolean b=false;
         Connection conn = null;
         try{
         	conn = c.newConnection();
         	PreparedStatement ps = conn.prepareStatement(" Select  EXISTS (SELECT id FROM Partidos " +
                 " WHERE id = ?)");
-        	ps.setInt(1,(Integer) id);
+        	ps.setInt(1,(Integer) key);
         	ResultSet rs = ps.executeQuery();
         	if (rs.next()) b = (rs.getInt(1)!=0);
         	rs.close();
