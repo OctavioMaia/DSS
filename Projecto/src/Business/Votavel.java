@@ -9,6 +9,6 @@ package Business;
  *
  * @author Octávio Maia <octaviojmaia at gmail.com>
  */
-public interface VotavelInterface {
+public interface Votavel {
     
 }
