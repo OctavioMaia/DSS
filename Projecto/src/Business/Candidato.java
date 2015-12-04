@@ -29,6 +29,7 @@ public class Candidato {
         this.naturalidade = naturalidade;
     }
     
+    
     public String getNome() {
         return nome;
     }
