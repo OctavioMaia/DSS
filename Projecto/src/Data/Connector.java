@@ -20,4 +20,6 @@ public class Connector {
         return conn;
 	}
 
+
+	public int teste;
 }
