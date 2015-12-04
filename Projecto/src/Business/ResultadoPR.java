@@ -5,10 +5,24 @@
  */
 package Business;
 
+import Data.ResultadoPRDAO;
+
 /**
  *
  * @author ruifreitas
  */
 public class ResultadoPR {
+    private ResultadoPRDAO resPRDAO;
     
+    public ResultadoPR(ResultadoPRDAO res){
+    	this.setResPRDAO(res);
+    }
+
+	public ResultadoPRDAO getResPRDAO() {
+		return resPRDAO;
+	}
+
+	public void setResPRDAO(ResultadoPRDAO resPRDAO) {
+		this.resPRDAO = resPRDAO;
+	}   
 }
