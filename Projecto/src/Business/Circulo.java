@@ -68,4 +68,8 @@ public class Circulo {
         return (this==(Circulo) obj);
     }
     
+    public String toString(){
+    	return "Circulo " + nome + ",com id " + id + " e " + totEleitores + " eleitores.";
+    }
+    
 }
