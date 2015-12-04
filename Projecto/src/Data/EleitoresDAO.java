@@ -6,7 +6,7 @@
 package Data;
 
 import Bussines.Circulo;
-import Bussines.Eleitor;
+import Bussi.Eleitor;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
