@@ -12,14 +12,13 @@ package Business;
 public class Eleitor {
     
     private String nome;
-    private Circulo circulo;
+    private int circulo;
     private int nIdent;
     private int pin;
 
-    public Eleitor(String nome, Circulo circulo, int nIdent, int pin) {
+    public Eleitor(String nome, int circulo, int nIdent, int pin) {
         this.nome = nome;
         this.circulo = circulo;
-        this.circulo.addEleitor();
         this.nIdent = nIdent;
         this.pin = pin;
     }
@@ -28,7 +27,7 @@ public class Eleitor {
         return nome;
     }
     
-    public Circulo getCirculo () {
+    public int getCirculo () {
         return this.circulo;
     }
 
