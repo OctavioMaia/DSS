@@ -15,21 +15,21 @@ public class SGE {
 	private ColigacaoDAO coligacoes;
 	private EleicaoPRDAO eleicoesPR;
 	private EleicaoARDAO eleicoesAR;
+<<<<<<< HEAD
 	private ResultadoPRDAO resultadosPR;
 	private ResultadoARDAO resultadosAR;
+=======
+>>>>>>> master
 	private int ativa;
 	
 	
 	public SGE(){
-		this.cn = new Connector("jdbc:mysql://localhost/sge","root","12345");
 		try {
 			this.partidos = new PartidosDAO(cn);
 			this.circulos = new CirculoDAO(cn);
-			this.coligacoes = new ColigacaoDAO(cn);
-			this.eleicoesPR = new EleicaoPRDAO(cn);
-			this.eleicoesAR = new EleicaoARDAO(cn);
-			this.resultadosPR = new ResultadoPRDAO(cn);
-			this.resultadosAR = new ResultadoARDAO(cn);
+			this.coligacoes = new ColigacaoDAO();
+			this.eleicoesPR = new EleicaoPRDAO();
+			this.eleicoesAR = new EleicaoARDAO();
 			this.ativa = procuraEleicaoAtiva();
 			
 		} catch (Exception e) {
