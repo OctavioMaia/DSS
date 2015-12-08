@@ -10,7 +10,7 @@ package Business;
  * @author Nuno Oliveira
  *  @author jms 04_12_2015
  */
-public class Partido {
+public class Partido implements Votavel{
     
     private int id;
     private String sigla;

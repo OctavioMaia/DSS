@@ -5,9 +5,13 @@
  */
 package Business;
 
+<<<<<<< HEAD
 import java.util.Map;
 
 import Data.ValidosPRDAO;
+=======
+import java.util.HashMap;
+>>>>>>> master
 
 /**
  *
@@ -16,6 +20,7 @@ import Data.ValidosPRDAO;
 public class ResultadoCirculoPR {
     private int brancos;
     private int nulos;
+<<<<<<< HEAD
     private int totEleitor;
     private Map<Integer,Integer> validos;
 
@@ -23,44 +28,58 @@ public class ResultadoCirculoPR {
         this.brancos = brancos;
         this.nulos = nulos;
         this.totEleitor = totEleitor;
-    }
-
-    public int getBrancos() {
-        return brancos;
-    }
-
-    public int getNulos() {
-        return nulos;
-    }
-
-    public int getTotEleitor() {
-        return totEleitor;
-    }
-
-    public void setBrancos(int brancos) {
-        this.brancos = brancos;
-    }
-
-    public void setNulos(int nulos) {
-        this.nulos = nulos;
-    }
-
-    public void setTotEleitor(int totEleitor) {
-        this.totEleitor = totEleitor;
-    }
-
-    @Override
-    public String toString() {
-        return "ResultadoCirculoPR{" + "brancos=" + brancos + ", nulos=" + nulos + ", totEleitor=" + totEleitor + ", validos=" + validos + '}';
-    }
-
-
+=======
+    private int totEleitores;
+    private HashMap<Integer,Integer> validos;
     
+    public ResultadoCirculoPR(){
+    	this.brancos = 0;
+    	this.nulos = 0;
+    	this.totEleitores = 0;
+    	this.validos =  new HashMap<>();
+>>>>>>> master
+    }
     
-    
-    
-    
-            
-            
-            
+	public ResultadoCirculoPR(int brancos, int nulos, int totEleitores, HashMap<Integer, Integer> validos) {
+		this.brancos = brancos;
+		this.nulos = nulos;
+		this.totEleitores = totEleitores;
+		this.validos = validos;
+	}
+
+	public int getBrancos() {
+		return brancos;
+	}
+
+	public void setBrancos(int brancos) {
+		this.brancos = brancos;
+	}
+
+	public int getNulos() {
+		return nulos;
+	}
+
+	public void setNulos(int nulos) {
+		this.nulos = nulos;
+	}
+
+	public int getTotEleitores() {
+		return totEleitores;
+	}
+
+	public void setTotEleitores(int totEleitores) {
+		this.totEleitores = totEleitores;
+	}
+
+	public HashMap<Integer, Integer> getValidos() {
+		return validos;
+	}
+
+	public void setValidos(HashMap<Integer, Integer> validos) {
+		this.validos = validos;
+	}
+
+	public void addVoto(int idLista){
+		this.validos.put(idLista, this.validos.get(idLista)+1);
+	}     
 }

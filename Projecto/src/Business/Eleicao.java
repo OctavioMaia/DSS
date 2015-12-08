@@ -12,7 +12,7 @@ import java.util.HashSet;
  *
  * @author Octavio
  */
-public class Eleicao {
+public abstract class Eleicao {
     private int idEleicao;
     private Date data;
     private int estado;
@@ -48,14 +48,14 @@ public class Eleicao {
 		return votantes;
 	}
 
-	public void addVotante(Integer id) {
+	public void addVotante(int id) {
 		this.votantes.add(id);
 	}
 	
 	public void addVotante(Eleitor e){
 		this.votantes.add(e.getnIdent());
 	}
-  
+	
     @SuppressWarnings("deprecation")
 	public String toString(){
     	return "Eleicao na data " + data.toGMTString();

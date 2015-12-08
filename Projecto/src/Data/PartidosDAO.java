@@ -22,7 +22,7 @@ import java.sql.*;
  */
 public class PartidosDAO implements Map<Integer,Partido>{
 	
-    public PartidosDAO(Connector c){
+    public PartidosDAO(){
     }
 	
     

@@ -3,6 +3,7 @@ package Business;
 import java.util.Date;
 import java.util.Map;
 import Data.ListaPRDAO;
+import Data.ResultadoCirculoPRDAO;
 public class EleicaoPR extends Eleicao{
 	private int IdEleicao;
 	private boolean volta2;
