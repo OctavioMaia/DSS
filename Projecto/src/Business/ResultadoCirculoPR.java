@@ -5,7 +5,13 @@
  */
 package Business;
 
+<<<<<<< HEAD
+import java.util.Map;
+
+import Data.ValidosPRDAO;
+=======
 import java.util.HashMap;
+>>>>>>> master
 
 /**
  *
@@ -14,6 +20,15 @@ import java.util.HashMap;
 public class ResultadoCirculoPR {
     private int brancos;
     private int nulos;
+<<<<<<< HEAD
+    private int totEleitor;
+    private Map<Integer,Integer> validos;
+
+    public ResultadoCirculoPR(int brancos, int nulos, int totEleitor) {
+        this.brancos = brancos;
+        this.nulos = nulos;
+        this.totEleitor = totEleitor;
+=======
     private int totEleitores;
     private HashMap<Integer,Integer> validos;
     
@@ -22,6 +37,7 @@ public class ResultadoCirculoPR {
     	this.nulos = 0;
     	this.totEleitores = 0;
     	this.validos =  new HashMap<>();
+>>>>>>> master
     }
     
 	public ResultadoCirculoPR(int brancos, int nulos, int totEleitores, HashMap<Integer, Integer> validos) {
