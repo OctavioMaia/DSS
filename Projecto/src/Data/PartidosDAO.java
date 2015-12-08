@@ -21,10 +21,8 @@ import java.sql.*;
  * 
  */
 public class PartidosDAO implements Map<Integer,Partido>{
-	private Connector c;
 	
-    public PartidosDAO(Connector c) throws Exception{
-        this.c =c;
+    public PartidosDAO(Connector c){
     }
 	
     
@@ -33,7 +31,7 @@ public class PartidosDAO implements Map<Integer,Partido>{
 		int ret=0;
     	Connection conn = null;
     	try{
-    		conn = this.c.newConnection(); 
+    		conn = Connector.newConnection(); 
     		PreparedStatement ps = conn.prepareStatement("Select  count(*) FROM Partidos");
     		ResultSet rs = ps.executeQuery();
     		if(rs.next()) ret = rs.getInt(1);
@@ -68,7 +66,7 @@ public class PartidosDAO implements Map<Integer,Partido>{
 		boolean b=false;
         Connection conn = null;
         try{
-        	conn = c.newConnection();
+        	conn = Connector.newConnection();
         	PreparedStatement ps = conn.prepareStatement(" Select  EXISTS (SELECT id FROM Partidos " +
                 " WHERE id = ?)");
         	ps.setInt(1,(Integer) key);
@@ -107,7 +105,7 @@ public class PartidosDAO implements Map<Integer,Partido>{
         Connection conn = null;
         
         try{
-        	conn=this.c.newConnection();
+        	conn=Connector.newConnection();
         	PreparedStatement ps = conn.prepareStatement("Select * FROM Partidos WHERE Id = ?");
         	ps.setInt(1, (Integer)key);
         	ResultSet rs = ps.executeQuery();
@@ -140,7 +138,7 @@ public class PartidosDAO implements Map<Integer,Partido>{
 		Connection conn=null;
 		Partido partido = this.remove(key);
     	try{
-    		conn = c.newConnection();
+    		conn = Connector.newConnection();
     		PreparedStatement ps = conn.prepareStatement("insert into Partidos " +
                     "(id,nome,simbolo,sigla) " +
                     "value " +
@@ -175,7 +173,7 @@ public class PartidosDAO implements Map<Integer,Partido>{
 		Connection conn  = null;
     	Partido partido =null;
     	try{
-    		conn = this.c.newConnection();
+    		conn = Connector.newConnection();
     	    partido  = this.get(key); 
     	    PreparedStatement ps = conn.prepareStatement("DELETE FROM Partidos where id= ?");
     	    ps.setInt(1,(Integer)key);
@@ -209,7 +207,7 @@ public class PartidosDAO implements Map<Integer,Partido>{
 	public void clear() {
 		Connection conn = null;
     	try{
-    		conn = c.newConnection();
+    		conn = Connector.newConnection();
     		Statement s = conn.createStatement();
     		s.executeUpdate("DELETE FROM Partidos");
     		s.close();
@@ -239,7 +237,7 @@ public class PartidosDAO implements Map<Integer,Partido>{
 		Set<Integer> ret = new TreeSet<Integer>();
         Connection conn = null;
         try{
-        	conn=this.c.newConnection();
+        	conn=Connector.newConnection();
         	Statement s = conn.createStatement();
             String querie = " Select id FROM Partidos";
             ResultSet rs = s.executeQuery(querie);

@@ -21,15 +21,13 @@ import java.util.TreeSet;
  * @author jms 04_12_2015
  */
 public class EleitoresDAO implements Map<Integer,Eleitor>{
-    private Connector c;
-    public EleitoresDAO(Connector c) throws Exception{
-        this.c =c;
+    public EleitoresDAO(){
     }
 
     public void clear(){
     	Connection conn = null;
     	try{
-    		conn = c.newConnection();
+    		conn = Connector.newConnection();
     		Statement s = conn.createStatement();
     		s.executeUpdate("DELETE FROM Eleitores");
     		s.close();
@@ -58,7 +56,7 @@ public class EleitoresDAO implements Map<Integer,Eleitor>{
         boolean b=false;
         Connection conn = null;
         try{
-        	conn = c.newConnection();
+        	conn = Connector.newConnection();
         	PreparedStatement ps = conn.prepareStatement(" Select  EXISTS (SELECT nrID FROM Eleitores " +
                 " WHERE nrID = ?)");
         	ps.setInt(1,(Integer) key);
@@ -100,7 +98,7 @@ public class EleitoresDAO implements Map<Integer,Eleitor>{
     	int ret=0;
     	Connection conn = null;
     	try{
-    		conn = this.c.newConnection(); 
+    		conn = Connector.newConnection(); 
     		PreparedStatement ps = conn.prepareStatement("Select count(*) FROM Eleitores");
     		ResultSet rs = ps.executeQuery();
     		if(rs.next()) ret = rs.getInt(1);
@@ -130,7 +128,7 @@ public class EleitoresDAO implements Map<Integer,Eleitor>{
     	Connection conn  = null;
     	Eleitor e =null;
     	try{
-    		conn = this.c.newConnection();
+    		conn = Connector.newConnection();
     	    e  = this.get(key); 
     	    PreparedStatement ps = conn.prepareStatement("DELETE FROM Eleitores where nrID= ?");
     	    ps.setInt(1,(Integer)key);
@@ -159,7 +157,7 @@ public class EleitoresDAO implements Map<Integer,Eleitor>{
         Set<Integer> ret = new TreeSet<Integer>();
         Connection conn = null;
         try{
-        	conn=this.c.newConnection();
+        	conn=Connector.newConnection();
         	Statement s = conn.createStatement();
             String querie = " Select nrId FROM Eleitores";
             ResultSet rs = s.executeQuery(querie);
@@ -192,7 +190,7 @@ public class EleitoresDAO implements Map<Integer,Eleitor>{
         Connection conn = null;
         
         try{
-        	conn=this.c.newConnection();
+        	conn=Connector.newConnection();
         	PreparedStatement ps = conn.prepareStatement("Select * FROM Eleitores WHERE nrId = ?");
         	ps.setInt(1, (Integer)key);
         	ResultSet rs = ps.executeQuery();
@@ -237,7 +235,7 @@ public class EleitoresDAO implements Map<Integer,Eleitor>{
     	Connection conn=null;
     	Eleitor el = this.remove(key);
     	try{
-    		conn = c.newConnection();
+    		conn = Connector.newConnection();
     		PreparedStatement ps = conn.prepareStatement("insert into Eleitores " +
                     "(nrId,nome,pin,idCirculo) " +
                     "value " +

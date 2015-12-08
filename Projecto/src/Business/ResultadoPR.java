@@ -12,10 +12,10 @@ import Data.ResultadoPRDAO;
  * @author ruifreitas
  */
 public class ResultadoPR {
-    private ResultadoPRDAO resultadosC;
+    private ResultadoPRDAO resultadosC ;
     
-    public ResultadoPR(ResultadoPRDAO res){
-    	this.setResPRDAO(res);
+    public ResultadoPR(Resultado){
+    	this.resultadosC = new ResultadoPRDAO(cn);
     }
 
 	public ResultadoPRDAO getResPRDAO() {
