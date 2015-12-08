@@ -136,8 +136,11 @@ public class SGE {
 		}
 	}
 
-	public ResultadoPR verResultadosPR(String id) {
-		return new ResultadoPR(resultadosPR);
+	public Map<Integer,ResultadoCirculoPR> verResultadosPR(String idEleicao) {
+		if(){
+			
+			
+		}
 	}
 
 	public ResultadoAR verREsultadoAR(String id) {
