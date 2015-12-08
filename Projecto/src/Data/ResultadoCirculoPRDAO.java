@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
@@ -165,11 +166,35 @@ public class ResultadoCirculoPRDAO implements Map<Integer,ResultadoCirculoPR>{
 			c=Connector.newConnection();
 			PreparedStatement psRGeral = c.prepareStatement("INSERT INTO Circulo_tem_ResultadoRP"+
                     "(idCirculo,nulos,brancos,totEleitores,idEleicao,volta) " +
-                    "value " +
+                    "values " +
                     "(?,?,?,?,?,?)");
 			psRGeral.setInt(1,(Integer)key);
 			psRGeral.setInt(2,value.getNulos());
 			psRGeral.setInt(3,value.getBrancos());
+			psRGeral.setInt(4,value.getTotEleitores());
+			psRGeral.setInt(5,this.idEleicao);
+			psRGeral.setInt(6,this.volta);
+			psRGeral.executeQuery();
+			PreparedStatement psRLista = c.prepareStatement("INSERT INTO Circulo_tem_listaPR_ResultadoPR"+
+                    "(idCirculo,idlistaPR,NrVotos,idEleicao,volta) " +
+                    "values " +
+                    "(?,?,?,?,?)");
+			psRLista.setInt(1, (Integer)key);
+			psRLista.setInt(4, this.idEleicao);
+			psRLista.setInt(5, this.volta);
+			Map<Integer,Integer> val = value.getValidos();
+			Iterator<Integer> i = val.keySet().iterator();
+			while(i.hasNext()){
+				int lista = i.next();
+				int valid = val.get(lista);
+				psRLista.setInt(2, lista);
+				psRLista.setInt(3, valid);
+				psRLista.executeQuery();
+
+			}
+			psRGeral.close();
+			psRLista.close();
+			c.commit();
 		}catch(Exception e){
 			try {
 				c.rollback();
@@ -225,5 +250,5 @@ public class ResultadoCirculoPRDAO implements Map<Integer,ResultadoCirculoPR>{
 		// TODO Auto-generated method stub
 		return null;
 	}
-
+}
 	
