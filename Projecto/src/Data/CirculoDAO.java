@@ -1,11 +1,5 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package Data;
 
-import Business.Partido;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -14,27 +8,23 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.sql.*;
 
-/**
- *
- * @author ruifreitas
- * @author jms 04_12_2015
- * 
- */
-public class PartidosDAO implements Map<Integer,Partido>{
+import Business.Circulo;
+
+public class CirculoDAO implements Map<Integer,Circulo>{
 	private Connector c;
 	
-    public PartidosDAO(Connector c) throws Exception{
-        this.c =c;
-    }
 	
-    
-    @Override
+	public CirculoDAO(Connector c) {
+		this.c = c;
+	}
+
+	@Override
 	public int size() {
 		int ret=0;
     	Connection conn = null;
     	try{
     		conn = this.c.newConnection(); 
-    		PreparedStatement ps = conn.prepareStatement("Select  count(*) FROM Partidos");
+    		PreparedStatement ps = conn.prepareStatement("Select count(*) FROM Circulos");
     		ResultSet rs = ps.executeQuery();
     		if(rs.next()) ret = rs.getInt(1);
     		rs.close();
@@ -63,14 +53,13 @@ public class PartidosDAO implements Map<Integer,Partido>{
 		return this.size()==0;
 	}
 
-	@Override
 	public boolean containsKey(Object key) {
 		boolean b=false;
         Connection conn = null;
         try{
         	conn = c.newConnection();
-        	PreparedStatement ps = conn.prepareStatement(" Select  EXISTS (SELECT id FROM Partidos " +
-                " WHERE id = ?)");
+        	PreparedStatement ps = conn.prepareStatement(" Select  EXISTS (SELECT idCirculo FROM Circulos " +
+                " WHERE idCirculo = ?)");
         	ps.setInt(1,(Integer) key);
         	ResultSet rs = ps.executeQuery();
         	if (rs.next()) b = (rs.getInt(1)!=0);
@@ -98,21 +87,21 @@ public class PartidosDAO implements Map<Integer,Partido>{
 
 	@Override
 	public boolean containsValue(Object value) {
-		return this.containsKey(((Partido)value).getId());
+		return this.containsKey(((Circulo)value).getId());
 	}
 
 	@Override
-	public Partido get(Object key) {
-		Partido partido  = null;
+	public Circulo get(Object key) {
+		Circulo circulo  = null;
         Connection conn = null;
         
         try{
         	conn=this.c.newConnection();
-        	PreparedStatement ps = conn.prepareStatement("Select * FROM Partidos WHERE Id = ?");
+        	PreparedStatement ps = conn.prepareStatement("Select * FROM Circulos WHERE Id = ?");
         	ps.setInt(1, (Integer)key);
         	ResultSet rs = ps.executeQuery();
             while(rs.next()){
-               partido = new Partido (rs.getInt("id"),rs.getString("sigla"),rs.getString("nome"),rs.getString("simbolo"));
+               circulo = new Circulo (rs.getInt("idCirculo"),rs.getString("noma"),rs.getInt("totEleitores"));
             }
             rs.close();
             ps.close();
@@ -132,23 +121,22 @@ public class PartidosDAO implements Map<Integer,Partido>{
 				e.printStackTrace();
 			}
     	}
-        return partido;
+        return circulo;
 	}
 
 	@Override
-	public Partido put(Integer key, Partido value) {
+	public Circulo put(Integer key, Circulo value) {
 		Connection conn=null;
-		Partido partido = this.remove(key);
+		Circulo circulo = this.remove(key);
     	try{
     		conn = c.newConnection();
-    		PreparedStatement ps = conn.prepareStatement("insert into Partidos " +
-                    "(id,nome,simbolo,sigla) " +
+    		PreparedStatement ps = conn.prepareStatement("insert into Circulos " +
+                    "(idCirculo,nome,totEleitores) " +
                     "value " +
-                    "(?,?,?,?)");
+                    "(?,?,?)");
     		ps.setString(2, value.getNome());
             ps.setInt(1, key);
-            ps.setString(3, value.getSimbolo());
-            ps.setString(4, value.getSigla());
+            ps.setInt(3, value.getTotEleitores());
             ps.execute();
             ps.close();
             conn.commit();
@@ -167,17 +155,17 @@ public class PartidosDAO implements Map<Integer,Partido>{
 				e.printStackTrace();
 			}
     	}
-    	return partido;
+    	return circulo;
 	}
 
 	@Override
-	public Partido remove(Object key) {
+	public Circulo remove(Object key) {
 		Connection conn  = null;
-    	Partido partido =null;
+    	Circulo circulo =null;
     	try{
     		conn = this.c.newConnection();
-    	    partido  = this.get(key); 
-    	    PreparedStatement ps = conn.prepareStatement("DELETE FROM Partidos where id= ?");
+    	    circulo  = this.get(key); 
+    	    PreparedStatement ps = conn.prepareStatement("DELETE FROM Circulos where idCirculo= ?");
     	    ps.setInt(1,(Integer)key);
     	    ps.execute();
     	    conn.commit();
@@ -196,13 +184,12 @@ public class PartidosDAO implements Map<Integer,Partido>{
 				e2.printStackTrace();
 			}
     	}
-       return partido;  
+       return circulo;
 	}
 
 	@Override
-	public void putAll(Map<? extends Integer, ? extends Partido> m) {
+	public void putAll(Map<? extends Integer, ? extends Circulo> m) {
 		throw new RuntimeException("Funcao nao implementada");
-		
 	}
 
 	@Override
@@ -211,7 +198,7 @@ public class PartidosDAO implements Map<Integer,Partido>{
     	try{
     		conn = c.newConnection();
     		Statement s = conn.createStatement();
-    		s.executeUpdate("DELETE FROM Partidos");
+    		s.executeUpdate("DELETE FROM Circulos");
     		s.close();
     		conn.commit();
     	}catch(Exception e){
@@ -241,10 +228,10 @@ public class PartidosDAO implements Map<Integer,Partido>{
         try{
         	conn=this.c.newConnection();
         	Statement s = conn.createStatement();
-            String querie = " Select id FROM Partidos";
+            String querie = " Select idCirculo FROM Circulos";
             ResultSet rs = s.executeQuery(querie);
             while(rs.next())
-               ret.add(rs.getInt("id"));
+               ret.add(rs.getInt("idCirculo"));
             rs.close();
             s.close();
             conn.commit();
@@ -267,8 +254,8 @@ public class PartidosDAO implements Map<Integer,Partido>{
 	}
 
 	@Override
-	public Collection<Partido> values() {
-		ArrayList <Partido> ret  = new ArrayList<>();
+	public Collection<Circulo> values() {
+		ArrayList <Circulo> ret  = new ArrayList<>();
         Set<Integer> keys = this.keySet();
         Iterator<Integer> i  = keys.iterator();
         while (i.hasNext()){
@@ -278,10 +265,8 @@ public class PartidosDAO implements Map<Integer,Partido>{
 	}
 
 	@Override
-	public Set<java.util.Map.Entry<Integer, Partido>> entrySet() {
+	public Set<java.util.Map.Entry<Integer, Circulo>> entrySet() {
 		throw new RuntimeException("Funcao nao implementada");
 	}
 
-    
-    
 }
