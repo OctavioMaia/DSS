@@ -75,7 +75,12 @@ public class ColigacaoDAO implements Map<Integer, Coligacao> {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} finally {
-			cn.close();
+			try {
+				cn.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		
 		return b;
