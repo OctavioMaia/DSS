@@ -39,12 +39,10 @@ public class SGE {
 	public boolean iniciarEleicao(String id){return true;}
 	
 	public ResultadoPR verResultadosPR(String id){return new ResultadoPR(resultadosPR);}
-
+	
 	public ResultadoAR verREsultadoAR(String id){return new ResultaAR(resultadosAR);}
 	
 	public void criarEleicaoAR(){}
-	
-
 	
 	public void addListasPR(){}
 	
