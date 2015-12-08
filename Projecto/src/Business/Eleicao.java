@@ -13,14 +13,25 @@ import java.util.HashSet;
  * @author Octavio
  */
 public abstract class Eleicao {
+	
+	private static final int CRIADA = -1;
+	private static final int ATIVA = 0;
+	private static final int TERMINADA = 1;
+
     private int idEleicao;
     private Date data;
+    private boolean primitirVotar;
     private int estado;
     private HashSet<Integer> votantes;
+    
+    public Eleicao(int idEleicao, Date data){
+    	this.idEleicao = idEleicao;
+    }
     
     public Eleicao(Date data, int estado,int idEleicao) {
     	this.idEleicao=idEleicao;
         this.data = data;
+        this.primitirVotar = false;
         this.estado = estado;
         this.votantes = new HashSet<Integer>();
     }    
