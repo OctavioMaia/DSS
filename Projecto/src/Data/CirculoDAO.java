@@ -11,11 +11,8 @@ import java.sql.*;
 import Business.Circulo;
 
 public class CirculoDAO implements Map<Integer,Circulo>{
-	private Connector c;
 	
-	
-	public CirculoDAO(Connector c) {
-		this.c = c;
+	public CirculoDAO() {
 	}
 
 	@Override
@@ -23,7 +20,7 @@ public class CirculoDAO implements Map<Integer,Circulo>{
 		int ret=0;
     	Connection conn = null;
     	try{
-    		conn = this.c.newConnection(); 
+    		conn = Connector.newConnection();
     		PreparedStatement ps = conn.prepareStatement("Select count(*) FROM Circulos");
     		ResultSet rs = ps.executeQuery();
     		if(rs.next()) ret = rs.getInt(1);
@@ -57,7 +54,7 @@ public class CirculoDAO implements Map<Integer,Circulo>{
 		boolean b=false;
         Connection conn = null;
         try{
-        	conn = c.newConnection();
+        	conn = Connector.newConnection();
         	PreparedStatement ps = conn.prepareStatement(" Select  EXISTS (SELECT idCirculo FROM Circulos " +
                 " WHERE idCirculo = ?)");
         	ps.setInt(1,(Integer) key);
@@ -96,12 +93,12 @@ public class CirculoDAO implements Map<Integer,Circulo>{
         Connection conn = null;
         
         try{
-        	conn=this.c.newConnection();
+        	conn=Connector.newConnection();
         	PreparedStatement ps = conn.prepareStatement("Select * FROM Circulos WHERE Id = ?");
         	ps.setInt(1, (Integer)key);
         	ResultSet rs = ps.executeQuery();
             while(rs.next()){
-               circulo = new Circulo (rs.getInt("idCirculo"),rs.getString("noma"),rs.getInt("totEleitores"));
+               circulo = new Circulo (rs.getInt("idCirculo"),rs.getString("nome"),rs.getInt("totEleitores"));
             }
             rs.close();
             ps.close();
@@ -129,7 +126,7 @@ public class CirculoDAO implements Map<Integer,Circulo>{
 		Connection conn=null;
 		Circulo circulo = this.remove(key);
     	try{
-    		conn = c.newConnection();
+    		conn = Connector.newConnection();
     		PreparedStatement ps = conn.prepareStatement("insert into Circulos " +
                     "(idCirculo,nome,totEleitores) " +
                     "value " +
@@ -163,7 +160,7 @@ public class CirculoDAO implements Map<Integer,Circulo>{
 		Connection conn  = null;
     	Circulo circulo =null;
     	try{
-    		conn = this.c.newConnection();
+    		conn = Connector.newConnection();
     	    circulo  = this.get(key); 
     	    PreparedStatement ps = conn.prepareStatement("DELETE FROM Circulos where idCirculo= ?");
     	    ps.setInt(1,(Integer)key);
@@ -196,7 +193,7 @@ public class CirculoDAO implements Map<Integer,Circulo>{
 	public void clear() {
 		Connection conn = null;
     	try{
-    		conn = c.newConnection();
+    		conn = Connector.newConnection();
     		Statement s = conn.createStatement();
     		s.executeUpdate("DELETE FROM Circulos");
     		s.close();
@@ -226,7 +223,7 @@ public class CirculoDAO implements Map<Integer,Circulo>{
 		Set<Integer> ret = new TreeSet<Integer>();
         Connection conn = null;
         try{
-        	conn=this.c.newConnection();
+        	conn=Connector.newConnection();
         	Statement s = conn.createStatement();
             String querie = " Select idCirculo FROM Circulos";
             ResultSet rs = s.executeQuery(querie);
