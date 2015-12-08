@@ -23,13 +23,12 @@ public class SGE {
 	private EleitoresDAO eleitores;
 	private EleicaoPRDAO eleicoesPR;
 	private EleicaoARDAO eleicoesAR;
-	
-	private 
-	
+
+	private
+
 	private int ativa;
-	
-	
-	public SGE(){
+
+	public SGE() {
 		try {
 			this.partidos = new PartidosDAO();
 			this.circulos = new CirculoDAO();
@@ -38,96 +37,106 @@ public class SGE {
 			this.eleicoesPR = new EleicaoPRDAO();
 			this.eleicoesAR = new EleicaoARDAO();
 			this.ativa = procuraEleicaoAtiva();
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-	
-	private int procuraEleicaoAtiva(){
-		int idEleicaoAtiva=-1;
+
+	private int procuraEleicaoAtiva() {
+		int idEleicaoAtiva = -1;
 		Iterator<EleicaoPR> itPR = this.eleicoesPR.valeus();
-		while(itPR.hasNext() && idEleicaoAtiva==-1){
+		while (itPR.hasNext() && idEleicaoAtiva == -1) {
 			EleicaoPR pr = itPR.next();
-			if(itPR.next().isAtiva()){
+			if (itPR.next().isAtiva()) {
 				idEleicaoAtiva = pr.getIdEleicao();
 			}
 		}
 		Iterator<EleicaoAR> itAR = this.eleicoesAR.valeus();
-		while(itAR.hasNext() && idEleicaoAtiva==-1){
+		while (itAR.hasNext() && idEleicaoAtiva == -1) {
 			EleicaoAR ar = itAR.next();
-			if(itAR.next().isAtiva()){
+			if (itAR.next().isAtiva()) {
 				idEleicaoAtiva = ar.getIdEleicao();
 			}
 		}
 		return idEleicaoAtiva;
 	}
-	
-	public void inserirCadernoRecenciamento(){
-			
-			ArrayList<Eleitor> listaEleitores = new ArrayList<Eleitor>();
-			
-			String ficheiroCSV = "Inserir directoria.csv";
-			String line = "";
-			String cvsSplit = ",";
-			BufferedReader br = null;
-			
-			try{
-				
-				br = new BufferedReader	(new FileReader(ficheiroCSV));
-				while ((line = br.readLine()) != null) {
-					String[] eleitores = line.split(cvsSplit);
-					int a = Integer.parseInt(eleitores[1]);
-					int b = Integer.parseInt(eleitores[0]);
-					Eleitor e = new Eleitor(eleitores[2],a,b,eleitores[3]);
-					listaEleitores.add(e);
-				}
-			} 
-			catch (FileNotFoundException e) {
-				e.printStackTrace();
+
+	public void inserirCadernoRecenciamento() {
+
+		ArrayList<Eleitor> listaEleitores = new ArrayList<Eleitor>();
+
+		String ficheiroCSV = "Inserir directoria.csv";
+		String line = "";
+		String cvsSplit = ",";
+		BufferedReader br = null;
+
+		try {
+
+			br = new BufferedReader(new FileReader(ficheiroCSV));
+			while ((line = br.readLine()) != null) {
+				String[] eleitores = line.split(cvsSplit);
+				int a = Integer.parseInt(eleitores[1]);
+				int b = Integer.parseInt(eleitores[0]);
+				Eleitor e = new Eleitor(eleitores[2], a, b, eleitores[3]);
+				listaEleitores.add(e);
 			}
-			
-			catch (IOException e) {
-				e.printStackTrace();
-			} 
-			finally {
-				if (br != null) {
-					try {
-						br.close();
-					} 
-					catch (IOException e) {
-						e.printStackTrace();
-					}
-				}
-			}
-			
-		for (Eleitor e: listaEleitores) {
-			eleitores.put(e.getnIdent(),e);
-			}
-		
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
 		}
 
-	
-	
-	public boolean iniciarEleicao(String idEleicao){
+		catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			if (br != null) {
+				try {
+					br.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+
+		for (Eleitor e : listaEleitores) {
+			eleitores.put(e.getnIdent(), e);
+		}
+
+	}
+
+	public boolean iniciarEleicao(int idEleicao){
 		boolean ini = false;
 		Eleicao e; 
-		if((e = this.eleicoesPR.get(idEleicao))!=null){
-			
+		if(this.ativa==-1){
+			if((e = this.eleicoesPR.get(idEleicao))!=null){
+				e.iniciar();
+				this.eleicoesPR.put(idEleicao, e);
+			}
+			if( ini==false && (e = this.eleicoesPR.get(idEleicao))!=null){
+				e.iniciar();
+			}
 		}
-		if();
-		return 
+		return ini; 
 	}
 	
-	public ResultadoPR verResultadosPR(String id){return new ResultadoPR(resultadosPR);}
-	
-	public ResultadoAR verREsultadoAR(String id){return new ResultaAR(resultadosAR);}
-	
-	public void criarEleicaoAR(){}
-	
-	public void addListasPR(){}
-	
-	public void addListasAR(){}
-	
-	public void votar(int idEleitor, int idCirculo, int idLista){}
+	public boolean 
+
+	public ResultadoPR verResultadosPR(String id) {
+		return new ResultadoPR(resultadosPR);
+	}
+
+	public ResultadoAR verREsultadoAR(String id) {
+		return new ResultaAR(resultadosAR);
+	}
+
+	public void criarEleicaoAR() {
+	}
+
+	public void addListasPR() {
+	}
+
+	public void addListasAR() {
+	}
+
+	public void votar(int idEleitor, int idCirculo, int idLista) {
+	}
 }
