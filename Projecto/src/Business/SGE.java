@@ -15,11 +15,6 @@ public class SGE {
 	private ColigacaoDAO coligacoes;
 	private EleicaoPRDAO eleicoesPR;
 	private EleicaoARDAO eleicoesAR;
-<<<<<<< HEAD
-	private ResultadoPRDAO resultadosPR;
-	private ResultadoARDAO resultadosAR;
-=======
->>>>>>> master
 	private int ativa;
 	
 	
@@ -48,6 +43,8 @@ public class SGE {
 	public ResultadoAR verREsultadoAR(String id){return new ResultaAR(resultadosAR);}
 	
 	public void criarEleicaoAR(){}
+	
+
 	
 	public void addListasPR(){}
 	
