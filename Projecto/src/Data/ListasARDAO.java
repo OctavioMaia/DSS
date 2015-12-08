@@ -1,6 +1,7 @@
 package Data;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -13,7 +14,6 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import Business.Candidato;
-import Business.Circulo;
 import Business.Lista;
 import Business.Votavel;
 
@@ -29,7 +29,7 @@ public class ListasARDAO implements Map<Integer,Lista>{
 		int ret=0;
     	Connection conn = null;
     	try{
-    		conn = this.c.newConnection(); 
+    		conn = Connector.newConnection(); 
     		PreparedStatement ps = conn.prepareStatement("Select count(*) FROM ListasAR");
     		ResultSet rs = ps.executeQuery();
     		if(rs.next()) ret = rs.getInt(1);
@@ -135,7 +135,7 @@ public class ListasARDAO implements Map<Integer,Lista>{
         Connection conn = null;
         ArrayList<Candidato> r = new ArrayList<>();
         try{
-        	conn=this.c.newConnection();
+        	conn=Connector.newConnection();
         	PreparedStatement ps = conn.prepareStatement("Select * FROM CandidatosAR WHERE bi IN (SELECT CandidatoAR_bi FROM CandidatoAR_has_ListasAR) WHERE ListasAR_id IN (Select id FROM ListaAR WHERE id = ? ) ");
         	ps.setInt(1, (Integer)key);
         	ResultSet rs = ps.executeQuery();
@@ -200,8 +200,9 @@ public class ListasARDAO implements Map<Integer,Lista>{
 	public Lista put(Integer key, Lista value) {
 		Connection conn=null;
 		Lista l = this.remove(key);
+		ArrayList<Candidato> r=null;
     	try{
-    		conn = c.newConnection();
+    		conn = Connector.newConnection();
     		PreparedStatement ps1 = conn.prepareStatement("INSERT INTO ListasAR (id,ordem,sigla,nome,simbolo) value (?,?,?,?,?)");
             ps1.setInt(1, key);
             ps1.setInt(2, value.getOrdem());
@@ -211,9 +212,26 @@ public class ListasARDAO implements Map<Integer,Lista>{
             ps1.execute();
             ps1.close();
             
-            PreparedStatement ps2 = conn.prepareStatement("");
+            r = value.getCandidatos();
+            Iterator<Candidato> i  = r.iterator();
+            PreparedStatement ps2 = conn.prepareStatement("INSERT INTO CandidatoAR_has_ListasAR (CandidatoAR_bi,ListasAR_id) value (?,?)");
+            ps2.setInt(2, key);
+            PreparedStatement ps3 = conn.prepareStatement("INSERT INTO CandidatosAR (bi,dataNasc,naturalidade,residencia,prof) value (?,?,?,?,?)");
             
+            while(i.hasNext()){
+            	Candidato c = i.next();
+	            ps3.setInt(1, c.getBi());
+	            ps3.setDate(2, (Date) c.getDataNasc());
+	            ps3.setString(3, c.getNaturalidade());
+	            ps3.setString(4, c.getResidencia());
+	            ps3.setString(5, c.getProf());
+	            ps3.execute();
+	            ps2.setInt(1, c.getBi());
+	            ps2.execute();
+            }
             
+            ps2.close();
+            ps3.close();
             conn.commit();
     	}catch(Exception e){
     		try {
@@ -241,14 +259,17 @@ public class ListasARDAO implements Map<Integer,Lista>{
 
 	@Override
 	public Lista remove(Object key) {
-		Connection conn  = null;
-    	Lista l =null;
+		Connection conn = null;
+    	Lista l = null;
     	try{
-    		conn = this.c.newConnection();
+    		conn = Connector.newConnection();
     	    l  = this.get(key); 
-    	    PreparedStatement ps = conn.prepareStatement("DELETE FROM ListasAR where id= ?");
-    	    ps.setInt(1,(Integer)key);
-    	    ps.execute();
+    	    PreparedStatement ps1 = conn.prepareStatement("DELETE FROM CandidatoAR_has_ListasAR WHERE ListasAR_id = ?");
+    	    PreparedStatement ps2 = conn.prepareStatement("DELETE FROM ListasAR WHERE id = ?");
+    	    ps1.setInt(1,(Integer)key);
+    	    ps1.execute();
+    	    ps2.setInt(1,(Integer)key);
+    	    ps2.execute();
     	    conn.commit();
     	}catch(Exception e2){
     		try {
