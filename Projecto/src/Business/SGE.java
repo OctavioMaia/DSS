@@ -7,6 +7,11 @@ import Data.Connector;
 import Data.EleicaoARDAO;
 import Data.EleicaoPRDAO;
 import Data.EleitoresDAO;
+import java.util.ArrayList;
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 
 public class SGE {
 	private Connector cn;
@@ -40,7 +45,50 @@ public class SGE {
 		
 	}
 	
-	public boolean inserirCadernoRecenciamento(){return true;}
+	public void inserirCadernoRecenciamento(){
+			
+			ArrayList<Eleitor> listaEleitores = new ArrayList<Eleitor>();
+			
+			String ficheiroCSV = "Inserir directoria.csv";
+			String line = "";
+			String cvsSplit = ",";
+			BufferedReader br = null;
+			
+			try{
+				
+				br = new BufferedReader	(new FileReader(ficheiroCSV));
+				while ((line = br.readLine()) != null) {
+					String[] eleitores = line.split(cvsSplit);
+					int a = Integer.parseInt(eleitores[1]);
+					int b = Integer.parseInt(eleitores[0]);
+					Eleitor e = new Eleitor(eleitores[2],a,b,eleitores[3]);
+					listaEleitores.add(e);
+				}
+			} 
+			catch (FileNotFoundException e) {
+				e.printStackTrace();
+			}
+			
+			catch (IOException e) {
+				e.printStackTrace();
+			} 
+			finally {
+				if (br != null) {
+					try {
+						br.close();
+					} 
+					catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
+			}
+			
+		for (Eleitor e: listaEleitores) {
+			eleitores.put(e.getnIdent(),e);
+			}
+		
+		}
+	
 	
 	public boolean iniciarEleicao(String id){return true;}
 	
