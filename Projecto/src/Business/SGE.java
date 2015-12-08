@@ -106,6 +106,8 @@ public class SGE {
 			}
 		
 		}
+
+	
 	
 	public boolean iniciarEleicao(String idEleicao){
 		boolean ini = false;
