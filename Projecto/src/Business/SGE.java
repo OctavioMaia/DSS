@@ -24,6 +24,7 @@ public class SGE {
 	private EleitoresDAO eleitores;
 	private EleicaoPRDAO eleicoesPR;
 	private EleicaoARDAO eleicoesAR;
+
 	private int ativa;
 
 	public SGE() {
