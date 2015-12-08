@@ -13,17 +13,21 @@ import java.util.HashSet;
  * @author Octavio
  */
 public class Eleicao {
-    
+    private int idEleicao;
     private Date data;
     private int estado;
     private HashSet<Integer> votantes;
     
-    public Eleicao(Date data, int estado) {
+    public Eleicao(Date data, int estado,int idEleicao) {
+    	this.idEleicao=idEleicao;
         this.data = data;
         this.estado = estado;
         this.votantes = new HashSet<Integer>();
     }    
     
+    public int getIdEleicao(){
+    	return this.idEleicao;
+    }
     public Date getData() {
         return data;
     }
