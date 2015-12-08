@@ -12,7 +12,6 @@ import java.util.HashMap;
  * @author ruifreitas
  */
 public class ResultadoCirculoPR {
-	private int idCirculo;
     private int brancos;
     private int nulos;
     private int totEleitores;
