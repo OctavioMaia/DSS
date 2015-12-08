@@ -5,7 +5,6 @@ import java.util.Map;
 import Data.ListaPRDAO;
 import Data.ResultadoCirculoPRDAO;
 public class EleicaoPR extends Eleicao{
-	private int IdEleicao;
 	private boolean volta2;
 	private Date data2;
 	private ResultadoCirculoPRDAO voltaR1;
@@ -14,10 +13,19 @@ public class EleicaoPR extends Eleicao{
 	private Boletim boletim2;
 	private ListaPRDAO listas;
 	
+	public EleicaoPR(int idEleicao, Date data) {
+		super(idEleicao, data);
+		this.volta2 = false;
+		this.data2 = null;
+		this.voltaR1 = new ResultadoCirculoPRDAO(idEleicao,1);
+		this.voltaR2 = new ResultadoCirculoPRDAO(idEleicao,2);
+		this.boletim1 = null;
+		this.boletim2 = null;
+		this.listas= new ListaPRDAO();
+	}
 	
 	public EleicaoPR(Date data, int estado, int idEleicao, boolean volta2, Date data2, Boletim boletim1, Boletim boletim2) {
 		super(data, estado, idEleicao);
-		this.IdEleicao = idEleicao;
 		this.volta2 = volta2;
 		this.data2 = data2;
 		this.voltaR1 = new ResultadoCirculoPRDAO(idEleicao,1);
@@ -27,12 +35,6 @@ public class EleicaoPR extends Eleicao{
 		this.listas= new ListaPRDAO();
 	}
 
-	public int getIdEleicao() {
-		return IdEleicao;
-	}
-	public void setIdEleicao(int idEleicao) {
-		IdEleicao = idEleicao;
-	}
 	public boolean isVolta2() {
 		return volta2;
 	}
