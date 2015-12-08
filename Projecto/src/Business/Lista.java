@@ -7,6 +7,7 @@ import java.util.ArrayList;
  */
 public class Lista implements Listavel{
 	private int id;
+	private int ordem;
 	private String sigla;
 	private String nome;
 	private String simbolo;
@@ -15,6 +16,7 @@ public class Lista implements Listavel{
 	
 	public Lista(int id, String sigla, String nome, String simbolo, Votavel mandante) {
 		this.id=id;
+		this.ordem=-1;
 		this.sigla = sigla;
 		this.nome = nome;
 		this.simbolo = simbolo;
@@ -24,6 +26,7 @@ public class Lista implements Listavel{
 
 	public Lista(int id,String sigla, String nome, String simbolo, Votavel mandante, ArrayList<Candidato> candidatos) {
 		this.id=id;
+		this.ordem=-1;
 		this.sigla = sigla;
 		this.nome = nome;
 		this.simbolo = simbolo;
@@ -39,6 +42,14 @@ public class Lista implements Listavel{
 		this.id=id;
 	}
 
+	public int getOrdem(){
+		return ordem;
+	}
+	
+	public void setOrdem(int ordem){
+		this.ordem=ordem;
+	}
+	
 	public String getSigla() {
 		return sigla;
 	}

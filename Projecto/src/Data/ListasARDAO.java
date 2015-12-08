@@ -12,6 +12,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
+import Business.Candidato;
 import Business.Circulo;
 import Business.Lista;
 import Business.Votavel;
@@ -63,7 +64,7 @@ public class ListasARDAO implements Map<Integer,Lista>{
         Connection conn = null;
         try{
         	conn = c.newConnection();
-        	PreparedStatement ps = conn.prepareStatement("Select  EXISTS (SELECT id FROM ListasAR WHERE id = ?)");
+        	PreparedStatement ps = conn.prepareStatement("Select EXISTS (SELECT id FROM ListasAR WHERE id = ?)");
         	ps.setInt(1,(Integer) key);
         	ResultSet rs = ps.executeQuery();
         	if (rs.next()) b = (rs.getInt(1)!=0);
@@ -132,15 +133,16 @@ public class ListasARDAO implements Map<Integer,Lista>{
 	public Lista get(Object key) {
 		Lista l  = null;
         Connection conn = null;
-        
+        ArrayList<Candidato> r = new ArrayList<>();
         try{
         	conn=this.c.newConnection();
-        	PreparedStatement ps = conn.prepareStatement("Select * FROM ListaAR WHERE id = ?");
+        	PreparedStatement ps = conn.prepareStatement("Select * FROM CandidatosAR WHERE bi IN (SELECT CandidatoAR_bi FROM CandidatoAR_has_ListasAR) WHERE ListasAR_id IN (Select id FROM ListaAR WHERE id = ? ) ");
         	ps.setInt(1, (Integer)key);
         	ResultSet rs = ps.executeQuery();
             while(rs.next()){
-               l = new Lista(rs.getInt("id"),rs.getString("sigla"),rs.getString("nome"),rs.getString("simbolo"),(Votavel) rs.getObject("mandante"));
+            	r.add(new Candidato(rs.getString("nome"), rs.getInt("bi"), rs.getString("prof"), rs.getDate("dataNasc"), rs.getString("residencia"), rs.getString("naturalidade")));
             }
+            l = new Lista(rs.getInt("id"),rs.getString("sigla"),rs.getString("nome"),rs.getString("simbolo"),(Votavel) rs.getObject("mandante"), r);
             rs.close();
             ps.close();
             conn.commit();
@@ -200,17 +202,18 @@ public class ListasARDAO implements Map<Integer,Lista>{
 		Lista l = this.remove(key);
     	try{
     		conn = c.newConnection();
-    		PreparedStatement ps = conn.prepareStatement("insert into ListasAR " +
-                    "(id,sigla,nome,simbolo,mandante) " +
-                    "value " +
-                    "(?,?,?,?,?)");
-            ps.setInt(1, key);
-            ps.setString(2, value.getSigla());
-            ps.setString(3, value.getNome());
-            ps.setString(4, value.getSimbolo());
-            ps.setObject(4, (Votavel) value.getMandante());
-            ps.execute();
-            ps.close();
+    		PreparedStatement ps1 = conn.prepareStatement("INSERT INTO ListasAR (id,ordem,sigla,nome,simbolo) value (?,?,?,?,?)");
+            ps1.setInt(1, key);
+            ps1.setInt(2, value.getOrdem());
+            ps1.setString(3, value.getSigla());
+            ps1.setString(4, value.getNome());
+            ps1.setString(5, value.getSimbolo());
+            ps1.execute();
+            ps1.close();
+            
+            PreparedStatement ps2 = conn.prepareStatement("");
+            
+            
             conn.commit();
     	}catch(Exception e){
     		try {
