@@ -5,11 +5,15 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
+import java.util.Date;
 import java.util.Map;
 import java.util.Set;
 
+import Business.Boletim;
 import Business.Circulo;
 import Business.EleicaoPR;
+import Business.ResultadoPR;
+import Business.ListaPR;
 
 public class EleicaoPRDAO implements Map<Integer,EleicaoPR>{
 
@@ -93,15 +97,36 @@ public class EleicaoPRDAO implements Map<Integer,EleicaoPR>{
 	public EleicaoPR get(Object key) {
 		EleicaoPR eleic = null;
 		Connection conn = null;
+		Date data = null;
+		Date data2 = null;
+		ResultadoPR voltaR1=null;
+		ResultadoPR voltaR2=null;
+		Boletim boletim1=null;
+		Boletim boletim2=null;
+		int estado =0;
+		int idEleicao =0;
+		boolean volta2 = false;
+		if(!this.containsKey(key)) return eleic;
         
         try{
         	conn=Connector.newConnection();
+        	PreparedStatement psListas = conn.prepareStatement("SELECT * FROM listasPR WHERE idEleicao = ?");
+        	PreparedStatement psCandidato = conn.prepareStatement("SELECT * FROM Candidatos WHERE bi = ?");
+        	psListas.setInt(1,(Integer)key);
+        	ResultSet rsListas = psListas.executeQuery();
+        	while(rsListas.next()){
+        		int candit = rsListas.getInt("Candidato_bi");
+        		psCandidato.setInt(1, candit);
+        		
+        	}
         	PreparedStatement ps = conn.prepareStatement("Select * FROM Circulos WHERE Id = ?");
         	ps.setInt(1, (Integer)key);
         	ResultSet rs = ps.executeQuery();
             while(rs.next()){
                circulo = new Circulo (rs.getInt("idCirculo"),rs.getString("nome"),rs.getInt("totEleitores"));
             }
+            
+            eleic= new EleicaoPR(data, estado, idEleicao, volta2, data2, voltaR1, voltaR2, boletim1, boletim2, listas);
             rs.close();
             ps.close();
             conn.commit();
