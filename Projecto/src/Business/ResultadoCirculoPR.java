@@ -17,22 +17,32 @@ public class ResultadoCirculoPR {
     private int nulos;
     private int totEleitores;
     private HashMap<Integer,Integer> validos;
-
-    public ResultadoCirculoPR(int idCirculo) {
-        this.idCirculo = idCirculo;
+    private int idcirculo;
+    
+    public ResultadoCirculoPR(){
     	this.brancos = 0;
-        this.nulos = 0;
-        this.totEleitores = 0;
-	    this.validos = new HashMap<>();
+    	this.nulos = 0;
+    	this.totEleitores = 0;
+    	this.validos =  new HashMap<>();
+    	this.idcirculo=0;
     }
     
-	public ResultadoCirculoPR(int brancos, int nulos, int totEleitores, HashMap<Integer, Integer> validos) {
+	public ResultadoCirculoPR(int brancos, int nulos, int totEleitores, HashMap<Integer, Integer> validos, int idcirculo) {
 		this.brancos = brancos;
 		this.nulos = nulos;
 		this.totEleitores = totEleitores;
 		this.validos = validos;
+		this.idcirculo=idcirculo;
 	}
 
+	public int getIdcirculo(){
+		return this.idcirculo;
+	}
+	
+	public void setIdcirculo(int idcirculo){
+		this.idcirculo=idcirculo;
+	}
+	
 	public int getBrancos() {
 		return brancos;
 	}
