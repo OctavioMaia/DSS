@@ -5,6 +5,8 @@
  */
 package Business;
 
+import java.util.HashMap;
+
 import Data.ResultadoPRDAO;
 
 /**
@@ -14,15 +16,14 @@ import Data.ResultadoPRDAO;
 public class ResultadoPR {
     private ResultadoPRDAO resultadosC ;
     
-    public ResultadoPR(Resultado){
-    	this.resultadosC = new ResultadoPRDAO(cn);
+    public ResultadoPR(){
+    	this.resultadosC = new ResultadoPRDAO();
     }
 
-	public ResultadoPRDAO getResPRDAO() {
-		return resultadosC;
+	public void addVoto(int idCirculo, int idLista){
+		ResultadoCirculoPR res = resultadosC.get(idCirculo);
+		res.addVoto(idLista);
+		resultadosC.put(idCirculo,res);
 	}
 
-	public void setResPRDAO(ResultadoPRDAO resPRDAO) {
-		this.resultadosC = resPRDAO;
-	}   
 }

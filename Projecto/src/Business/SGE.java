@@ -5,14 +5,15 @@ import Data.PartidosDAO;
 import Data.ColigacaoDAO;
 import Data.Connector;
 import Data.EleicaoARDAO;
-import Data.EleicaoDAO;
 import Data.EleicaoPRDAO;
+import Data.EleitoresDAO;
 
 public class SGE {
 	private Connector cn;
 	private PartidosDAO partidos;
 	private CirculoDAO circulos;
 	private ColigacaoDAO coligacoes;
+	private EleitoresDAO eleitores;
 	private EleicaoPRDAO eleicoesPR;
 	private EleicaoARDAO eleicoesAR;
 	private int ativa;
@@ -20,9 +21,10 @@ public class SGE {
 	
 	public SGE(){
 		try {
-			this.partidos = new PartidosDAO(cn);
-			this.circulos = new CirculoDAO(cn);
+			this.partidos = new PartidosDAO();
+			this.circulos = new CirculoDAO();
 			this.coligacoes = new ColigacaoDAO();
+			this.eleitores = new EleitoresDAO();
 			this.eleicoesPR = new EleicaoPRDAO();
 			this.eleicoesAR = new EleicaoARDAO();
 			this.ativa = procuraEleicaoAtiva();
@@ -32,7 +34,11 @@ public class SGE {
 		}
 	}
 	
-	private int procuraEleicaoAtiva(){return -1;}
+	private int procuraEleicaoAtiva(){
+		
+		return -1;
+		
+	}
 	
 	public boolean inserirCadernoRecenciamento(){return true;}
 	
@@ -48,4 +54,5 @@ public class SGE {
 	
 	public void addListasAR(){}
 	
+	public void votar(int idEleitor, int idCirculo, int idLista){}
 }
