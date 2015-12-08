@@ -1,5 +1,7 @@
 package Business;
 
+import java.util.Iterator;
+
 import Data.CirculoDAO;
 import Data.PartidosDAO;
 import Data.ColigacaoDAO;
@@ -16,6 +18,9 @@ public class SGE {
 	private EleitoresDAO eleitores;
 	private EleicaoPRDAO eleicoesPR;
 	private EleicaoARDAO eleicoesAR;
+	
+	private 
+	
 	private int ativa;
 	
 	
@@ -35,14 +40,35 @@ public class SGE {
 	}
 	
 	private int procuraEleicaoAtiva(){
-		
-		return -1;
-		
+		int idEleicaoAtiva=-1;
+		Iterator<EleicaoPR> itPR = this.eleicoesPR.valeus();
+		while(itPR.hasNext() && idEleicaoAtiva==-1){
+			EleicaoPR pr = itPR.next();
+			if(itPR.next().isAtiva()){
+				idEleicaoAtiva = pr.getIdEleicao();
+			}
+		}
+		Iterator<EleicaoAR> itAR = this.eleicoesAR.valeus();
+		while(itAR.hasNext() && idEleicaoAtiva==-1){
+			EleicaoAR ar = itAR.next();
+			if(itAR.next().isAtiva()){
+				idEleicaoAtiva = ar.getIdEleicao();
+			}
+		}
+		return idEleicaoAtiva;
 	}
-	
+
 	public boolean inserirCadernoRecenciamento(){return true;}
 	
-	public boolean iniciarEleicao(String id){return true;}
+	public boolean iniciarEleicao(String idEleicao){
+		boolean ini = false;
+		Eleicao e; 
+		if((e = this.eleicoesPR.get(idEleicao))!=null){
+			
+		}
+		if();
+		return 
+	}
 	
 	public ResultadoPR verResultadosPR(String id){return new ResultadoPR(resultadosPR);}
 	
