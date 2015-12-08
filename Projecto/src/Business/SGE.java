@@ -1,6 +1,7 @@
 package Business;
 
 import java.util.Iterator;
+import java.util.Map;
 
 import Data.CirculoDAO;
 import Data.PartidosDAO;
@@ -23,8 +24,6 @@ public class SGE {
 	private EleitoresDAO eleitores;
 	private EleicaoPRDAO eleicoesPR;
 	private EleicaoARDAO eleicoesAR;
-
-	private
 
 	private int ativa;
 
@@ -103,25 +102,46 @@ public class SGE {
 
 	}
 
-	public boolean iniciarEleicao(int idEleicao){
-		boolean ini = false;
+	public void iniciarEleicao(int idEleicao){
 		Eleicao e; 
 		if(this.ativa==-1){
 			if((e = this.eleicoesPR.get(idEleicao))!=null){
 				e.iniciar();
-				this.eleicoesPR.put(idEleicao, e);
+				this.eleicoesPR.put(idEleicao, (EleicaoPR) e);  
 			}
-			if( ini==false && (e = this.eleicoesPR.get(idEleicao))!=null){
+			else {
+				this.eleicoesAR.get(idEleicao);
 				e.iniciar();
+				this.eleicoesAR.put(idEleicao, (EleicaoAR) e);
 			}
+		}else{
+			throw new ExceptionEleicaoAtiva("Já existe uma eleição ativa");
 		}
-		return ini; 
 	}
 	
-	public boolean 
+	public void terminarEleicao(){
+		Eleicao e; 
+		if(this.ativa!=-1){
+			if((e = this.eleicoesPR.get(this.ativa))!=null){
+				e.terminar();
+				this.eleicoesPR.put(this.ativa, (EleicaoPR) e);  
+			}
+			else {
+				this.eleicoesAR.get(this.ativa);
+				e.terminar();
+				this.eleicoesAR.put(this.ativa, (EleicaoAR) e);
+			}
+			this.ativa=-1;
+		}else{
+			throw new ExceptionEleicaoAtiva("Não existe eleição ativa");
+		}
+	}
 
-	public ResultadoPR verResultadosPR(String id) {
-		return new ResultadoPR(resultadosPR);
+	public Map<Integer,ResultadoCirculoPR> verResultadosPR(String idEleicao) {
+		if(){
+			
+			
+		}
 	}
 
 	public ResultadoAR verREsultadoAR(String id) {
