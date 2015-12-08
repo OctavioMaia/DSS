@@ -48,7 +48,7 @@ public abstract class Eleicao {
 		return votantes;
 	}
 
-	public void addVotante(Integer id) {
+	public void addVotante(int id) {
 		this.votantes.add(id);
 	}
 	
