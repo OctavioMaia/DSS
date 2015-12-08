@@ -12,7 +12,7 @@ public class Lista implements Listavel{
 	private String nome;
 	private String simbolo;
 	private Votavel mandante;
-	private ArrayList<Candidato> candidatos;
+	private ArrayList<CandidatoAR> candidatos;
 	
 	public Lista(int id, String sigla, String nome, String simbolo, Votavel mandante) {
 		this.id=id;
@@ -24,7 +24,7 @@ public class Lista implements Listavel{
 		this.candidatos = new ArrayList<>();
 	}
 
-	public Lista(int id,String sigla, String nome, String simbolo, Votavel mandante, ArrayList<Candidato> candidatos) {
+	public Lista(int id,String sigla, String nome, String simbolo, Votavel mandante, ArrayList<CandidatoAR> candidatos) {
 		this.id=id;
 		this.ordem=-1;
 		this.sigla = sigla;
@@ -82,11 +82,11 @@ public class Lista implements Listavel{
 		this.mandante = mandante;
 	}
 
-	public ArrayList<Candidato> getCandidatos(){
+	public ArrayList<CandidatoAR> getCandidatos(){
 		return this.candidatos;
 	}
 	
-	public void addCandidato(Candidato candidato){
+	public void addCandidato(CandidatoAR candidato){
 		if(candidato != null) this.candidatos.add(candidato);
 	}
 
