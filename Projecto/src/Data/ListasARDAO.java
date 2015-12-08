@@ -61,6 +61,7 @@ public class ListasARDAO implements Map<Integer,Lista>{
 		boolean b=false;
         Connection conn = null;
         try{
+        	
         	conn = Connector.newConnection();
         	PreparedStatement ps = conn.prepareStatement("Select EXISTS (SELECT id FROM ListasAR WHERE id = ?)");
         	ps.setInt(1,(Integer) key);
@@ -138,6 +139,8 @@ public class ListasARDAO implements Map<Integer,Lista>{
         	ps.setInt(1, (Integer)key);
         	ResultSet rs = ps.executeQuery();
             while(rs.next()){
+            	/*Está mal esta merda*/
+            	
             	r.add(new Candidato(rs.getString("nome"), rs.getInt("bi"), rs.getString("prof"), rs.getDate("dataNasc"), rs.getString("residencia"), rs.getString("naturalidade")));
             }
             l = new Lista(rs.getInt("id"),rs.getString("sigla"),rs.getString("nome"),rs.getString("simbolo"),(Votavel) rs.getObject("mandante"), r);
