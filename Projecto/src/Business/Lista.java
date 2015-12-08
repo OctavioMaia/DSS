@@ -5,7 +5,7 @@ import java.util.ArrayList;
 /*
  * Lista da Assembleia da República
  */
-public class Lista {
+public class Lista implements Listavel{
 	private int id;
 	private String sigla;
 	private String nome;
