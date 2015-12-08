@@ -12,11 +12,7 @@ import Business.Coligacao;
 
 public class ColigacaoDAO implements Map<Integer, Coligacao> {
 
-	private Connector con;
-
-	public ColigacaoDAO(Connector c) {
-		this.con = c;
-	}
+	public ColigacaoDAO() {}
 
 	@Override
 	public int size() {
