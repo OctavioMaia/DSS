@@ -5,6 +5,8 @@
  */
 package Business;
 
+import java.util.Map;
+
 import Data.ValidosPRDAO;
 
 /**
@@ -15,7 +17,7 @@ public class ResultadoCirculoPR {
     private int brancos;
     private int nulos;
     private int totEleitor;
-    private ValidosPRDAO validos;
+    private Map<Integer,Integer> validos;
 
     public ResultadoCirculoPR(int brancos, int nulos, int totEleitor) {
         this.brancos = brancos;
