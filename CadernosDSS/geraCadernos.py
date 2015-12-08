@@ -1,4 +1,5 @@
 import random
+from unicodedata import normalize
 rapaz = []
 rapariga = []
 aplidos = []
@@ -15,6 +16,8 @@ for line in mo:
 for line in ap:
 	aplidos.append(line.strip())
 
+def remover_acentos(txt, codif='utf-8'):
+    return normalize('NFKD', txt.decode(codif)).encode('ASCII','ignore')
 
 def geraBi():
 	bi=""
@@ -67,7 +70,7 @@ def geraNomes(arr,cir,bis,n):
 				bi=geraBi()
 			bism.append(bi)
 			#print bi+" , "+ + " , "++" , "+str(cir)
-			ret.append(bi+","+ str(cir)+ ","+tolname+","+ geraPin()+"")
+			ret.append(bi+","+ str(cir)+ ","+remover_acentos(tolname)+","+ geraPin()+"")
 	return {"nomes": ret, "bis": bism}
 
 ca = open("nomes.csv",'w')
