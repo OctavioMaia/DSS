@@ -5,19 +5,14 @@
  */
 package Business;
 
-<<<<<<< HEAD
-import java.util.Map;
-
-import Data.ValidosPRDAO;
-=======
 import java.util.HashMap;
->>>>>>> master
 
 /**
  *
  * @author ruifreitas
  */
 public class ResultadoCirculoPR {
+	private int idCirculo;
     private int brancos;
     private int nulos;
     private int totEleitores;
