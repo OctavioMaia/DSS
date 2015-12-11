@@ -1,14 +1,14 @@
 package Business;
 
-import Data.ListasARDAO;
+import Data.ListaARDAO;
 
 public class CirculoInfo {
 	private Boletim boletim;
-	private ListasARDAO listasDAO;
+	private ListaARDAO listasDAO;
 	
 	public CirculoInfo(){
 		this.boletim = new Boletim();
-		this.listasDAO = new ListasARDAO();
+		this.listasDAO = new ListaARDAO();
 	}
 	
 	public void addLista(Lista lista){
