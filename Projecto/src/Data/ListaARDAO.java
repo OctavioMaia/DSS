@@ -17,9 +17,9 @@ import Business.Candidato;
 import Business.Lista;
 import Business.Votavel;
 
-public class ListasARDAO implements Map<Integer,Lista>{
+public class ListaARDAO implements Map<Integer,Lista>{
 
-	public ListasARDAO(){
+	public ListaARDAO(){
 	}
 
 	@Override
@@ -139,7 +139,7 @@ public class ListasARDAO implements Map<Integer,Lista>{
         	ps.setInt(1, (Integer)key);
         	ResultSet rs = ps.executeQuery();
             while(rs.next()){
-            	/*Está mal esta merda*/
+            	/*Estï¿½ mal esta merda*/
             	
             	r.add(new Candidato(rs.getString("nome"), rs.getInt("bi"), rs.getString("prof"), rs.getDate("dataNasc"), rs.getString("residencia"), rs.getString("naturalidade")));
             }
