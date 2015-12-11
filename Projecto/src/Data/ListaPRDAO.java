@@ -18,9 +18,9 @@ import Business.Lista;
 import Business.Votavel;
 import java.sql.SQLException;
 
-public class ListasPRDAO implements Map<Integer,Lista> {
+public class ListaPRDAO implements Map<Integer,Lista> {
 	
-	public ListasPRDAO (){
+	public ListaPRDAO (){
 		}
 	
 	public int size() {
