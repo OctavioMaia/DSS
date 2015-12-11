@@ -2,6 +2,8 @@ package Business;
 
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 
 import Data.CirculoDAO;
 import Data.PartidosDAO;
@@ -18,6 +20,11 @@ import java.io.FileReader;
 import java.io.IOException;
 
 public class SGE {
+
+	private static final int CRIADA = -1;
+	private static final int ATIVA = 0;
+	private static final int TERMINADA = 1;
+
 	private Connector cn;
 	private PartidosDAO partidos;
 	private CirculoDAO circulos;
@@ -25,7 +32,6 @@ public class SGE {
 	private EleitoresDAO eleitores;
 	private EleicaoPRDAO eleicoesPR;
 	private EleicaoARDAO eleicoesAR;
-
 	private int ativa;
 
 	public SGE() {
@@ -103,69 +109,122 @@ public class SGE {
 
 	}
 
-	public void iniciarEleicao(int idEleicao) {
-		Eleicao e;
+	public void iniciarEleicao(Eleicao e) {
 		if (this.ativa == -1) {
-			if ((e = this.eleicoesPR.get(idEleicao)) != null) {
-				e.iniciar();
-				this.eleicoesPR.put(idEleicao, (EleicaoPR) e);
-			} else {
-				this.eleicoesAR.get(idEleicao);
-				e.iniciar();
-				this.eleicoesAR.put(idEleicao, (EleicaoAR) e);
-			}
-		} else {
 			throw new ExceptionEleicaoAtiva("Já existe uma eleição ativa");
-		}
-	}
-
-	public void terminarEleicao() {
-		Eleicao e;
-		if (this.ativa != -1) {
-			if ((e = this.eleicoesPR.get(this.ativa)) != null) {
-				e.terminar();
-				this.eleicoesPR.put(this.ativa, (EleicaoPR) e);
-			} else {
-				this.eleicoesAR.get(this.ativa);
-				e.terminar();
-				this.eleicoesAR.put(this.ativa, (EleicaoAR) e);
-			}
-			this.ativa = -1;
 		} else {
+			e.iniciar();
+			if (getClass().getName() == "EleicaoPR") {
+				this.eleicoesPR.put(e.getIdEleicao(), (EleicaoPR) e);
+			} else {
+				this.eleicoesAR.put(e.getIdEleicao(), (EleicaoAR) e);
+			}
+		}
+
+	}
+
+	public void terminarEleicao(Eleicao e) {
+		if (this.ativa == -1) {
 			throw new ExceptionEleicaoAtiva("Não existe eleição ativa");
+		} else {
+			e.iniciar();
+			if (getClass().getName() == "EleicaoPR") {
+				this.eleicoesPR.put(e.getIdEleicao(), (EleicaoPR) e);
+			} else {
+				this.eleicoesAR.put(e.getIdEleicao(), (EleicaoAR) e);
+			}
 		}
 	}
 
-	public Map<Integer, ResultadoCirculoPR> verResultadosPR(int idEleicao) {
-		if (this.ativa == idEleicao) {
+	public Map<Integer, ResultadoCirculoPR> verResultadosPR(EleicaoPR e) {
+		if (this.ativa == e.getIdEleicao()) {
 			throw new ExceptionEleicaoAtiva("Eleição está ativa");
-		return this.eleicoesPR.get(idEleicao).verResultados();
+		}
+		return e.verResultados();
 	}
 
-	public Map<Integer, ResultadoCirculoAR> verREsultadoAR(int idEleicao) {
-		if (this.ativa == idEleicao) {
+	public Map<Integer, ResultadoCirculoAR> verResultadoAR(EleicaoPR e) {
+		if (this.ativa == e.getIdEleicao()) {
 			throw new ExceptionEleicaoAtiva("Eleição está ativa");
-		return this.eleicoesAR.get(idEleicao).verResultados();
+		}
+		return e.verResultados();
 	}
 
-	public void criarEleicaoPR(Date data) {
-		EleicaoPR epr = new EleicaoPR(this.eleicoesPR.size()+1,data);
-		this.eleicoesPR.put(epr.getIdEleicao(),epr);
+	public EleicaoPR criarEleicaoPR(Date data) {
+		EleicaoPR epr = new EleicaoPR(this.eleicoesPR.size() + 1, data);
+		this.eleicoesPR.put(epr.getIdEleicao(), epr);
+		return epr;
 	}
 
-	public void criarEleicaoAR(){
-		
-	}
-	
-	public void addListasPR() {
-	
+	public EleicaoAR criarEleicaoAR(Date data) {
+		EleicaoAR ear = new EleicaoAR(this.eleicoesAR.size() + 1, data);
+		this.eleicoesAR.put(ear.getEleicaoAR(), ear);
+		return ear;
 	}
 
-	public void addListasAR() {
-	
+	public void addListaPR(EleicaoPR e) {
+		e.addLista();
+		this.eleicoesPR.put(e.getIdEleicao(), e);
 	}
 
-	public void votar(int idEleitor, int idCirculo, int idLista) {
-	
+	public void addListaAR(EleicaoAR e) {
+		e.addLista();
+		this.eleicoesAR.put(e.getIdEleicao(), e);
+	}
+
+	public Eleicao eleicaoAtiva() {
+		Eleicao ativa;
+		if ((ativa = this.eleicoesAR.get(this.ativa)) == null) {
+			ativa = this.eleicoesPR.get(this.ativa);
+		}
+		return ativa;
+	}
+
+	@SuppressWarnings("unchecked")
+	public Set<Eleicao> getEleicoesCriadas() {
+		Set<Eleicao> eCriadas = new TreeSet<>(new ComparatorEleicaoData());
+		Iterator<Eleicao> it = (Iterator<Eleicao>) this.eleicoesPR.values();
+		while (it.hasNext()) {
+			Eleicao e = it.next();
+			if (e.estado(CRIADA)) {
+				eCriadas.add(e);
+			}
+		}
+		it = (Iterator<Eleicao>) this.eleicoesAR.values();
+		while (it.hasNext()) {
+			Eleicao e = it.next();
+			if (e.estado(CRIADA)) {
+				eCriadas.add(e);
+			}
+		}
+		return eCriadas;
+	}
+
+	public Set<Eleicao> getEleicoesTerminadas() {
+		Set<Eleicao> eCriadas = new TreeSet<>(new ComparatorEleicaoData());
+		Iterator<Eleicao> it = (Iterator<Eleicao>) this.eleicoesPR.values();
+		while (it.hasNext()) {
+			Eleicao e = it.next();
+			if (e.estado(TERMINADA)) {
+				eCriadas.add(e);
+			}
+		}
+		it = (Iterator<Eleicao>) this.eleicoesAR.values();
+		while (it.hasNext()) {
+			Eleicao e = it.next();
+			if (e.estado(TERMINADA)) {
+				eCriadas.add(e);
+			}
+		}
+		return eCriadas;
+	}
+
+	public void votar(Eleicao e, int idCirculo, Listavel lista) {
+		e.votar();
+		if (e.getClass().getName() == "EleicaoPR") {
+			this.eleicoesPR.put(e.getIdEleicao(), e);
+		} else {
+			this.eleicoesAR.put(e.getIdEleicao(), e);
+		}
 	}
 }
