@@ -13,6 +13,16 @@ public class EleicaoPR extends Eleicao{
 	private Boletim boletim2;
 	private ListaPRDAO listas;
 	
+	public EleicaoPR(int idEleicao, Date data) {
+		super(idEleicao, data);
+		this.volta2 = false;
+		this.data2 = null;
+		this.voltaR1 = new ResultadoCirculoPRDAO(idEleicao,1);
+		this.voltaR2 = new ResultadoCirculoPRDAO(idEleicao,2);
+		this.boletim1 = null;
+		this.boletim2 = null;
+		this.listas= new ListaPRDAO();
+	}
 	
 	public EleicaoPR(Date data, int estado, int idEleicao, boolean volta2, Date data2, Boletim boletim1, Boletim boletim2) {
 		super(data, estado, idEleicao);

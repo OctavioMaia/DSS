@@ -11,6 +11,7 @@ import Data.EleicaoARDAO;
 import Data.EleicaoPRDAO;
 import Data.EleitoresDAO;
 import java.util.ArrayList;
+import java.util.Date;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -102,61 +103,69 @@ public class SGE {
 
 	}
 
-	public void iniciarEleicao(int idEleicao){
-		Eleicao e; 
-		if(this.ativa==-1){
-			if((e = this.eleicoesPR.get(idEleicao))!=null){
+	public void iniciarEleicao(int idEleicao) {
+		Eleicao e;
+		if (this.ativa == -1) {
+			if ((e = this.eleicoesPR.get(idEleicao)) != null) {
 				e.iniciar();
-				this.eleicoesPR.put(idEleicao, (EleicaoPR) e);  
-			}
-			else {
+				this.eleicoesPR.put(idEleicao, (EleicaoPR) e);
+			} else {
 				this.eleicoesAR.get(idEleicao);
 				e.iniciar();
 				this.eleicoesAR.put(idEleicao, (EleicaoAR) e);
 			}
-		}else{
+		} else {
 			throw new ExceptionEleicaoAtiva("Já existe uma eleição ativa");
 		}
 	}
-	
-	public void terminarEleicao(){
-		Eleicao e; 
-		if(this.ativa!=-1){
-			if((e = this.eleicoesPR.get(this.ativa))!=null){
+
+	public void terminarEleicao() {
+		Eleicao e;
+		if (this.ativa != -1) {
+			if ((e = this.eleicoesPR.get(this.ativa)) != null) {
 				e.terminar();
-				this.eleicoesPR.put(this.ativa, (EleicaoPR) e);  
-			}
-			else {
+				this.eleicoesPR.put(this.ativa, (EleicaoPR) e);
+			} else {
 				this.eleicoesAR.get(this.ativa);
 				e.terminar();
 				this.eleicoesAR.put(this.ativa, (EleicaoAR) e);
 			}
-			this.ativa=-1;
-		}else{
+			this.ativa = -1;
+		} else {
 			throw new ExceptionEleicaoAtiva("Não existe eleição ativa");
 		}
 	}
 
-	public Map<Integer,ResultadoCirculoPR> verResultadosPR(String idEleicao) {
-		if(){
-			
-			
-		}
+	public Map<Integer, ResultadoCirculoPR> verResultadosPR(int idEleicao) {
+		if (this.ativa == idEleicao) {
+			throw new ExceptionEleicaoAtiva("Eleição está ativa");
+		return this.eleicoesPR.get(idEleicao).verResultados();
 	}
 
-	public ResultadoAR verREsultadoAR(String id) {
-		return new ResultaAR(resultadosAR);
+	public Map<Integer, ResultadoCirculoAR> verREsultadoAR(int idEleicao) {
+		if (this.ativa == idEleicao) {
+			throw new ExceptionEleicaoAtiva("Eleição está ativa");
+		return this.eleicoesAR.get(idEleicao).verResultados();
 	}
 
-	public void criarEleicaoAR() {
+	public void criarEleicaoPR(Date data) {
+		EleicaoPR epr = new EleicaoPR(this.eleicoesPR.size()+1,data);
+		this.eleicoesPR.put(epr.getIdEleicao(),epr);
 	}
 
+	public void criarEleicaoAR(){
+		
+	}
+	
 	public void addListasPR() {
+	
 	}
 
 	public void addListasAR() {
+	
 	}
 
 	public void votar(int idEleitor, int idCirculo, int idLista) {
+	
 	}
 }
