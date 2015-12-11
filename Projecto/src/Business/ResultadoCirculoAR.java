@@ -9,6 +9,22 @@ public class ResultadoCirculoAR {
     private HashMap<Integer,Integer> votos;
     private HashMap<Integer,Integer> mandatos;
 
+    public ResultadoCirculoAR(){
+    	this.brancos = 0;
+    	this.nulos = 0;
+    	this.totEleitor = 0;
+    	this.votos = new HashMap<>();
+    	this.mandatos = new HashMap<>();
+    }
+    
+    public ResultadoCirculoAR(int totEleitor){
+    	this.brancos = 0;
+    	this.nulos = 0;
+    	this.totEleitor = totEleitor;
+    	this.votos = new HashMap<>();
+    	this.mandatos = new HashMap<>();
+    }
+    
     public ResultadoCirculoAR(int brancos, int nulos, int totEleitor) {
         this.brancos = brancos;
         this.nulos = nulos;
