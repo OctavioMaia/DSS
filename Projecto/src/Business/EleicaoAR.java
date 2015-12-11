@@ -21,11 +21,13 @@ public class EleicaoAR extends Eleicao{
 		super(idEleicao, data);
 		this.circulos = new CirculoInfoDAO(idEleicao);
 		for(int i = 1; i<=22; i++){
+			if(!this.circulos.containsKey(i))
 			this.circulos.put(i,new CirculoInfo());
 		}
 		this.concorrentes = new HashSet<>();
 		this.resultado = new ResultadoCirculoARDAO(idEleicao);
 		for(int i = 1; i<=22; i++){
+			if(!this.resultado.containsKey(i))
 			this.resultado.put(i,new ResultadoCirculoAR());
 		}
 	}
@@ -34,14 +36,25 @@ public class EleicaoAR extends Eleicao{
 		super(idEleicao, data);
 		this.circulos = new CirculoInfoDAO(idEleicao);
 		for(int i = 1; i<=22; i++){
+			if(!this.circulos.containsKey(i))
 			this.circulos.put(i,new CirculoInfo());
 		}
 		this.concorrentes = new HashSet<>();
 		this.resultado = new ResultadoCirculoARDAO(idEleicao);
 		for(int i = 1; i<=22; i++){
+			if(!this.resultado.containsKey(i))
 			this.resultado.put(i,new ResultadoCirculoAR(totEleitores.get(i)));
 		}
 	}
 	
+	public void setTotEleitores(Map<Integer,Integer> totEleitores){
+		for(int i: totEleitores.keySet()){
+			if(i>= 1 && i <= 22){
+				ResultadoCirculoAR rc = this.resultado.get(i);
+				rc.setTotEleitor(totEleitores.get(i));
+				this.resultado.put(i,rc);
+			}
+		}
+	}
 	
 }
