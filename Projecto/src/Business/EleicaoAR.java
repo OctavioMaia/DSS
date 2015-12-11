@@ -3,6 +3,7 @@ package Business;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import Data.CirculoInfoDAO;
 import Data.ResultadoCirculoARDAO;
@@ -27,8 +28,9 @@ public class EleicaoAR extends Eleicao {
 		}
 	}
 
-	public EleicaoAR(int idEleicao, Date data, Map<Integer, Integer> totEleitores, HashSet<Votavel> concorrentes) {
-		super(idEleicao, data);
+	public EleicaoAR(int idEleicao, Date data, int estado, boolean permitirVotar, Set<Integer> vot,
+			Map<Integer, Integer> totEleitores, HashSet<Votavel> concorrentes) {
+		super(idEleicao, data,estado,permitirVotar,vot);
 		this.circulos = new CirculoInfoDAO(idEleicao);
 		for (int i = 1; i <= 22; i++) {
 			if (!this.circulos.containsKey(i))
