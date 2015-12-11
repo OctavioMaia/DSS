@@ -4,11 +4,13 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeSet;
 
 import Business.ResultadoCirculoPR;
 
@@ -217,38 +219,140 @@ public class ResultadoCirculoPRDAO implements Map<Integer,ResultadoCirculoPR>{
 
 	@Override
 	public ResultadoCirculoPR remove(Object key) {
-		// TODO Auto-generated method stub
-		return null;
+		ResultadoCirculoPR ret = this.get(key);
+		Connection c = null;
+		try{
+			c=Connector.newConnection();
+			PreparedStatement psRGeral = c.prepareStatement("DELETE FROM Circulo_tem_ResultadoRP"+
+                    "WHERE idCirculo = ? AND volta = ? AND idEleicao = ? ");
+			psRGeral.setInt(1,(Integer)key);
+			psRGeral.setInt(2,this.volta);
+			psRGeral.setInt(3,this.idEleicao);
+			psRGeral.executeQuery();
+			
+			PreparedStatement psRLista = c.prepareStatement("DELETE FROM Circulo_tem_listaPR_ResultadoRP"+
+                    "WHERE idCirculo = ? AND volta = ? AND idEleicao = ? ");
+			psRLista.setInt(1,(Integer)key);
+			psRLista.setInt(2,this.volta);
+			psRLista.setInt(3,this.idEleicao);
+			
+			psRLista.executeQuery();
+			
+			psRGeral.close();
+			psRLista.close();
+			c.commit();
+		}catch(Exception e){
+			try {
+				c.rollback();
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			throw new RuntimeException(e.getMessage());
+		}finally{
+			try {
+			c.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		return ret;
 	}
 
 	@Override
 	public void putAll(Map<? extends Integer, ? extends ResultadoCirculoPR> m) {
-		// TODO Auto-generated method stub
+		throw new RuntimeException("Nao implementado");
 		
 	}
 
 	@Override
 	public void clear() {
-		// TODO Auto-generated method stub
+		Connection conn = null;
+    	try{
+    		conn = Connector.newConnection();
+    		PreparedStatement ps = conn.prepareStatement("DELETE FROM Circulo_tem_ResultadoPR WHERE idEleicao = ? AND volta = ?");
+    		ps.setInt(1, this.idEleicao);
+    		ps.setInt(2, this.volta);
+    		ps.executeQuery();
+    		PreparedStatement ps2 = conn.prepareStatement("DELETE FROM Circulo_tem_listaPR_ResultadoPR WHERE idEleicao = ? AND volta = ?");
+    		ps2.setInt(1, this.idEleicao);
+    		ps2.setInt(2, this.volta);
+    		ps2.executeQuery();
+    		ps.close();
+    		ps2.close();
+    		conn.commit();
+    	}catch(Exception e){
+    		try {
+				conn.rollback();
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+    		throw new RuntimeException(e.getMessage());
+    	}
+    	finally {
+    		try {
+				conn.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		} 
 		
 	}
 
 	@Override
 	public Set<Integer> keySet() {
-		// TODO Auto-generated method stub
-		return null;
+		Set<Integer> ret = new TreeSet<Integer>();
+        Connection conn = null;
+        try {
+			conn = Connector.newConnection();
+			PreparedStatement ps = conn.prepareStatement("Select idCirculo FROM Circulo_tem_ResultadoPR WHERE idEleicao = ? AND volta = ?");
+			ps.setInt(1, this.idEleicao);
+			ps.setInt(2, this.volta);
+			ResultSet rs = ps.executeQuery();
+			while(rs.next()){
+				ret.add(rs.getInt("idlistaPR"));
+			}
+			rs.close();
+			ps.close();
+			conn.commit();
+		}catch(Exception e){
+			try {
+				conn.rollback();
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			throw new RuntimeException(e.getMessage());
+		}finally{
+			try {
+				conn.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		return ret;
 	}
 
 	@Override
 	public Collection<ResultadoCirculoPR> values() {
-		// TODO Auto-generated method stub
-		return null;
+		ArrayList<ResultadoCirculoPR> ret = new ArrayList<>();
+		Iterator<Integer> i = this.keySet().iterator();
+		while(i.hasNext()){
+			int id = i.next();
+			ret.add(this.get(id));
+		}
+		return ret;
 	}
 
 	@Override
 	public Set<java.util.Map.Entry<Integer, ResultadoCirculoPR>> entrySet() {
-		// TODO Auto-generated method stub
-		return null;
+		throw new RuntimeException("Nao implementado");
 	}
 }
 	
