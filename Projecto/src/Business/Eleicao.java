@@ -7,6 +7,7 @@ package Business;
 
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Set;
 
 /**
  *
@@ -22,22 +23,22 @@ public abstract class Eleicao {
 	private Date data;
 	private boolean permitirVotar;
 	private int estado;
-	private HashSet<Integer> votantes;
+	private Set<Integer> votantes;
 
 	public Eleicao(int idEleicao, Date data) {
 		this.idEleicao = idEleicao;
 		this.data = data;
 		this.permitirVotar = false;
 		this.estado = CRIADA;
-		this.votantes = new HashSet<Integer>();
+		this.votantes = new HashSet<>();
 	}
 
-	public Eleicao(Date data, int estado, int idEleicao) {
+	public Eleicao(int idEleicao, Date data, int estado, boolean permitirVotar, Set<Integer> vot) {
 		this.idEleicao = idEleicao;
 		this.data = data;
-		this.permitirVotar = false;
+		this.permitirVotar = permitirVotar;
 		this.estado = estado;
-		this.votantes = new HashSet<Integer>();
+		this.votantes = vot;
 	}
 
 	public int getIdEleicao() {
@@ -60,7 +61,7 @@ public abstract class Eleicao {
 		this.estado = estado;
 	}
 
-	public HashSet<Integer> getVotantes() {
+	public Set<Integer> getVotantes() {
 		return votantes;
 	}
 
