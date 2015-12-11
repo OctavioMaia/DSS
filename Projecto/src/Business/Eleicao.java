@@ -13,14 +13,26 @@ import java.util.HashSet;
  * @author Octavio
  */
 public abstract class Eleicao {
+	
+	private static final int CRIADA = -1;
+	private static final int ATIVA = 0;
+	private static final int TERMINADA = 1;
+
     private int idEleicao;
     private Date data;
+    private boolean permitirVotar;
     private int estado;
     private HashSet<Integer> votantes;
+    
+    public Eleicao(int idEleicao, Date data){
+    	this.idEleicao = idEleicao;
+    	this.data = data;
+    }
     
     public Eleicao(Date data, int estado,int idEleicao) {
     	this.idEleicao=idEleicao;
         this.data = data;
+        this.permitirVotar = false;
         this.estado = estado;
         this.votantes = new HashSet<Integer>();
     }    
@@ -48,6 +60,22 @@ public abstract class Eleicao {
 		return votantes;
 	}
 
+	public boolean isPermitirVotar() {
+		return permitirVotar;
+	}
+
+	public void setPermitirVotar(boolean permitirVotar) {
+		this.permitirVotar = permitirVotar;
+	}
+
+	public void setIdEleicao(int idEleicao) {
+		this.idEleicao = idEleicao;
+	}
+
+	public void setVotantes(HashSet<Integer> votantes) {
+		this.votantes = votantes;
+	}
+
 	public void addVotante(int id) {
 		this.votantes.add(id);
 	}
@@ -56,8 +84,13 @@ public abstract class Eleicao {
 		this.votantes.add(e.getnIdent());
 	}
 	
-    @SuppressWarnings("deprecation")
-	public String toString(){
-    	return "Eleicao na data " + data.toGMTString();
-    }  
+	public void terminar(){
+		this.estado = TERMINADA;
+		this.permitirVotar = false;
+	}
+	
+	public void iniciar(){
+		this.estado = ATIVA;
+		this.permitirVotar = true;
+	}
 }

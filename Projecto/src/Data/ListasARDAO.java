@@ -18,10 +18,8 @@ import Business.Lista;
 import Business.Votavel;
 
 public class ListasARDAO implements Map<Integer,Lista>{
-	private Connector c;
 
-	public ListasARDAO(Connector c){
-		this.c = c;
+	public ListasARDAO(){
 	}
 
 	@Override
@@ -63,7 +61,8 @@ public class ListasARDAO implements Map<Integer,Lista>{
 		boolean b=false;
         Connection conn = null;
         try{
-        	conn = c.newConnection();
+        	
+        	conn = Connector.newConnection();
         	PreparedStatement ps = conn.prepareStatement("Select EXISTS (SELECT id FROM ListasAR WHERE id = ?)");
         	ps.setInt(1,(Integer) key);
         	ResultSet rs = ps.executeQuery();
@@ -94,7 +93,7 @@ public class ListasARDAO implements Map<Integer,Lista>{
 	public void clear() {
 		Connection conn = null;
     	try{
-    		conn = c.newConnection();
+    		conn = Connector.newConnection();
     		Statement s = conn.createStatement();
     		s.executeUpdate("DELETE FROM ListasAR");
     		s.close();
@@ -140,6 +139,8 @@ public class ListasARDAO implements Map<Integer,Lista>{
         	ps.setInt(1, (Integer)key);
         	ResultSet rs = ps.executeQuery();
             while(rs.next()){
+            	/*Está mal esta merda*/
+            	
             	r.add(new Candidato(rs.getString("nome"), rs.getInt("bi"), rs.getString("prof"), rs.getDate("dataNasc"), rs.getString("residencia"), rs.getString("naturalidade")));
             }
             l = new Lista(rs.getInt("id"),rs.getString("sigla"),rs.getString("nome"),rs.getString("simbolo"),(Votavel) rs.getObject("mandante"), r);
@@ -169,7 +170,7 @@ public class ListasARDAO implements Map<Integer,Lista>{
 		Set<Integer> ret = new TreeSet<Integer>();
         Connection conn = null;
         try{
-        	conn=this.c.newConnection();
+        	conn=Connector.newConnection();
         	Statement s = conn.createStatement();
             String querie = "Select id FROM ListasAR";
             ResultSet rs = s.executeQuery(querie);
