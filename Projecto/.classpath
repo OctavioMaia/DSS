@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="src" path="img"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="lib/jgoodies-forms.jar" sourcepath="lib/jgoodies-forms-sources.jar">
 		<attributes>
@@ -10,6 +11,11 @@
 	<classpathentry kind="lib" path="lib/jgoodies-common.jar" sourcepath="lib/jgoodies-common-sources.jar">
 		<attributes>
 			<attribute name="javadoc_location" value="jar:platform:/resource/SGE/lib/jgoodies-common-javadoc.jar!/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="lib/jgoodies-uif-lite.jar" sourcepath="lib/jgoodies-uif-lite-src.zip">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:platform:/resource/SGE/lib/jgoodies-uif-lite-javadoc.zip!/"/>
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="output" path="bin"/>
