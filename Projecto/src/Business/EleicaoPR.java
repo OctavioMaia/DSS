@@ -1,10 +1,14 @@
 package Business;
 
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
+
 import Data.ListaPRDAO;
 import Data.ResultadoCirculoPRDAO;
-public class EleicaoPR extends Eleicao{
+
+public class EleicaoPR extends Eleicao {
 	private boolean volta2;
 	private Date data2;
 	private ResultadoCirculoPRDAO voltaR1;
@@ -12,41 +16,44 @@ public class EleicaoPR extends Eleicao{
 	private Boletim boletim1;
 	private Boletim boletim2;
 	private ListaPRDAO listas;
-	
+
 	public EleicaoPR(int idEleicao, Date data) {
 		super(idEleicao, data);
 		this.volta2 = false;
 		this.data2 = null;
-		this.voltaR1 = new ResultadoCirculoPRDAO(idEleicao,1);
-		this.voltaR2 = new ResultadoCirculoPRDAO(idEleicao,2);
+		this.voltaR1 = new ResultadoCirculoPRDAO(idEleicao, 1);
+		this.voltaR2 = new ResultadoCirculoPRDAO(idEleicao, 2);
 		this.boletim1 = null;
 		this.boletim2 = null;
-		this.listas= new ListaPRDAO();
+		this.listas = new ListaPRDAO();
 	}
-	
-	public EleicaoPR(Date data, int estado, int idEleicao, boolean volta2, Date data2, Boletim boletim1, Boletim boletim2) {
-		super(data, estado, idEleicao);
+
+	public EleicaoPR(int idEleicao, Date data, int estado, boolean permitirVotar, Set<Integer> vot, boolean volta2, Date data2,
+			Boletim boletim1, Boletim boletim2) {
+		super(idEleicao, data, estado, permitirVotar, vot);
 		this.volta2 = volta2;
 		this.data2 = data2;
-		this.voltaR1 = new ResultadoCirculoPRDAO(idEleicao,1);
-		this.voltaR2 = new ResultadoCirculoPRDAO(idEleicao,2);
+		this.voltaR1 = new ResultadoCirculoPRDAO(idEleicao, 1);
+		this.voltaR2 = new ResultadoCirculoPRDAO(idEleicao, 2);
 		this.boletim1 = boletim1;
 		this.boletim2 = boletim2;
-		this.listas= new ListaPRDAO();
+		this.listas = new ListaPRDAO();
 	}
 
 	public boolean isVolta2() {
 		return volta2;
 	}
+
 	public void setVolta2(boolean volta2) {
 		this.volta2 = volta2;
 	}
+
 	public Date getData2() {
 		return data2;
 	}
+
 	public void setData2(Date data2) {
 		this.data2 = data2;
 	}
-	
-	
+
 }

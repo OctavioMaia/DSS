@@ -7,56 +7,61 @@ package Business;
 
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Set;
 
 /**
  *
  * @author Octavio
  */
 public abstract class Eleicao {
-	
+
 	private static final int CRIADA = -1;
 	private static final int ATIVA = 0;
 	private static final int TERMINADA = 1;
 
-    private int idEleicao;
-    private Date data;
-    private boolean permitirVotar;
-    private int estado;
-    private HashSet<Integer> votantes;
-    
-    public Eleicao(int idEleicao, Date data){
-    	this.idEleicao = idEleicao;
-    	this.data = data;
-    }
-    
-    public Eleicao(Date data, int estado,int idEleicao) {
-    	this.idEleicao=idEleicao;
-        this.data = data;
-        this.permitirVotar = false;
-        this.estado = estado;
-        this.votantes = new HashSet<Integer>();
-    }    
-    
-    public int getIdEleicao(){
-    	return this.idEleicao;
-    }
-    public Date getData() {
-        return data;
-    }
+	private int idEleicao;
+	private Date data;
+	private boolean permitirVotar;
+	private int estado;
+	private Set<Integer> votantes;
 
-    public int getEstado() {
-        return estado;
-    }
+	public Eleicao(int idEleicao, Date data) {
+		this.idEleicao = idEleicao;
+		this.data = data;
+		this.permitirVotar = false;
+		this.estado = CRIADA;
+		this.votantes = new HashSet<>();
+	}
 
-    public void setData(Date data) {
-        this.data = data;
-    }
+	public Eleicao(int idEleicao, Date data, int estado, boolean permitirVotar, Set<Integer> vot) {
+		this.idEleicao = idEleicao;
+		this.data = data;
+		this.permitirVotar = permitirVotar;
+		this.estado = estado;
+		this.votantes = vot;
+	}
 
-    public void setEstado(int estado) {
-        this.estado = estado;
-    }
-    
-	public HashSet<Integer> getVotantes() {
+	public int getIdEleicao() {
+		return this.idEleicao;
+	}
+
+	public Date getData() {
+		return data;
+	}
+
+	public int getEstado() {
+		return estado;
+	}
+
+	public void setData(Date data) {
+		this.data = data;
+	}
+
+	public void setEstado(int estado) {
+		this.estado = estado;
+	}
+
+	public Set<Integer> getVotantes() {
 		return votantes;
 	}
 
@@ -79,18 +84,25 @@ public abstract class Eleicao {
 	public void addVotante(int id) {
 		this.votantes.add(id);
 	}
-	
-	public void addVotante(Eleitor e){
+
+	public void addVotante(Eleitor e) {
 		this.votantes.add(e.getnIdent());
 	}
-	
-	public void terminar(){
+
+	public void terminar() {
 		this.estado = TERMINADA;
 		this.permitirVotar = false;
 	}
-	
-	public void iniciar(){
-		this.estado = ATIVA;
-		this.permitirVotar = true;
+
+	public boolean estado(int est) {
+		if (this.estado == est)
+			return true;
+		return false;
+	}
+
+	public void iniciar() {
+	}
+
+	public void votar(int idCirculo, Listavel lista) {
 	}
 }
