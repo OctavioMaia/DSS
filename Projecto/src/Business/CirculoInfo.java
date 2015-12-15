@@ -13,11 +13,9 @@ public class CirculoInfo {
 	
 	public void addLista(Lista lista){
 		this.listasDAO.put(lista.getID(),lista);
-		//this.boletim.addLista(lista);
 	}
 	
-	public void removeLista(int lista){
-		this.listasDAO.remove(lista);
-		//this.boletim.removeLista(lista);
+	public void removeLista(Lista lista){
+		this.listasDAO.remove(lista.getID());
 	}
 }

@@ -89,4 +89,12 @@ public class ResultadoCirculoAR {
 	public void addVoto(Lista lista){
     	this.validos.put(lista, this.validos.get(lista)+1);
     }
+	
+	public void addVotoBranco(){
+		this.brancos++;
+	}
+	
+	public void addVotoNulo(){
+		this.nulos++;
+	}
 }

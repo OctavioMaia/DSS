@@ -100,4 +100,25 @@ public class EleicaoAR extends Eleicao {
 	public ResultadoCirculoAR getResultadoCirculo(int idCirculo){
 		return this.resultado.get(idCirculo);
 	}
+	
+	public void addLista(Lista lista){
+		this.circulos.get(lista.getCirculo()).addLista(lista);
+	}
+	
+	public void removeLista(Lista lista){
+		this.circulos.get(lista.getCirculo()).removeLista(lista);
+	}
+	
+	public void addVoto(Lista lista){
+    	this.resultado.get(lista.getCirculo()).addVoto(lista);
+    }
+	
+	public void addVotoBranco(int idCirculo){
+		this.resultado.get(idCirculo).addVotoBranco();
+	}
+	
+	public void addVotoNulo(int idCirculo){
+		this.resultado.get(idCirculo).addVotoNulo();
+	}
+	
 }
