@@ -1,18 +1,20 @@
 package Business;
 
 /*
- * Lista da Presidência da República
+ * Lista da Presidï¿½ncia da Repï¿½blica
  */
 
 public class ListaPR implements Listavel {
 	
+	private int idEleicao;
 	private int idListaPR;
 	private boolean volta2;
 	private int ordem1;
 	private int ordem2;
 	private Candidato candidato;
 	
-	public ListaPR (int idListaPR, boolean volta2, int ordem1, int ordem2, Candidato candidato){
+	public ListaPR (int idEleicao,int idListaPR, boolean volta2, int ordem1, int ordem2, Candidato candidato){
+		this.idEleicao =idEleicao;
 		this.idListaPR = idListaPR;
 		this.volta2 = volta2;
 		this.ordem1 = ordem1;
