@@ -1,6 +1,8 @@
 package Data;
 
-import Business.ResultadoAR;
+import java.util.Map;
+
+import Business.ResultadoCirculoAR;
 
 public class ResultadoCirculoARDAO implements Map<Integer,ResultadoCirculoAR>{
 	private int idEleicao;
