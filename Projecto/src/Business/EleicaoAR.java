@@ -44,7 +44,7 @@ public class EleicaoAR extends Eleicao {
 				this.resultado.put(i, new ResultadoCirculoAR(totEleitores.get(i)));
 		}
 	}
-
+	
 	public CirculoInfoDAO getCirculoInfo() {
 		return circulos;
 	}
@@ -101,22 +101,36 @@ public class EleicaoAR extends Eleicao {
 		return this.resultado.get(idCirculo);
 	}
 	
-	public void addLista(Lista lista){
-		this.circulos.get(lista.getCirculo()).addLista(lista);
+	@Override
+	public void iniciar(){
+		super.setEstado(0);
+		super.setPermitirVotar(true);
 	}
 	
-	public void removeLista(Lista lista){
-		this.circulos.get(lista.getCirculo()).removeLista(lista);
+	@Override
+	public void addLista(Listavel lista){
+		Lista l = (Lista)lista;
+		this.circulos.get(l.getCirculo()).addLista(l);
 	}
 	
-	public void addVoto(Lista lista){
-    	this.resultado.get(lista.getCirculo()).addVoto(lista);
+	@Override
+	public void removeLista(Listavel lista){
+		Lista l = (Lista)lista;
+		this.circulos.get(l.getCirculo()).removeLista(l);
+	}
+	
+	@Override
+	public void addVoto(Listavel lista){
+		Lista l = (Lista)lista;
+    	this.resultado.get(l.getCirculo()).addVoto(l);
     }
 	
+	@Override
 	public void addVotoBranco(int idCirculo){
 		this.resultado.get(idCirculo).addVotoBranco();
 	}
 	
+	@Override
 	public void addVotoNulo(int idCirculo){
 		this.resultado.get(idCirculo).addVotoNulo();
 	}
