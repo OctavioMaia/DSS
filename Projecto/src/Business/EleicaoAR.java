@@ -1,6 +1,7 @@
 package Business;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -44,6 +45,18 @@ public class EleicaoAR extends Eleicao {
 		}
 	}
 
+	public CirculoInfoDAO getCirculoInfo() {
+		return circulos;
+	}
+
+	public HashSet<Votavel> getConcorrentes() {
+		return concorrentes;
+	}
+
+	public ResultadoCirculoARDAO getResultado() {
+		return resultado;
+	}
+
 	public void setTotEleitores(Map<Integer, Integer> totEleitores) {
 		for (int i : totEleitores.keySet()) {
 			if (i >= 1 && i <= 22) {
@@ -53,5 +66,38 @@ public class EleicaoAR extends Eleicao {
 			}
 		}
 	}
-
+	
+	public ResultadoGlobalAR getResultadoGlobal(){
+		int nulos = 0;
+		int brancos = 0;
+		int totEleitores = 0;
+		HashMap<Votavel,Integer> validos = new HashMap<>();
+		HashMap<Votavel,Integer> mandatos = new HashMap<>();
+		for(int circulo: this.circulos.keySet()){
+			nulos += this.resultado.get(circulo).getNulos();
+			brancos += this.resultado.get(circulo).getBrancos();
+			totEleitores += this.resultado.get(circulo).getTotEleitor();
+			HashMap<Lista,Integer> validosCirculo = this.resultado.get(circulo).getValidos();
+			for(Lista lista: validosCirculo.keySet()){
+				Votavel mandante = lista.getMandante();
+				if(!validos.containsKey(mandante))
+					validos.put(mandante, validosCirculo.get(lista));
+				else
+					validos.put(mandante, validos.get(mandante) + validosCirculo.get(mandante));
+			}
+			HashMap<Lista,Integer> mandatosCirculo = this.resultado.get(circulo).getMandatos();
+			for(Lista lista: mandatosCirculo.keySet()){
+				Votavel mandante = lista.getMandante();
+				if(!mandatos.containsKey(mandante))
+					mandatos.put(mandante, mandatosCirculo.get(lista));
+				else
+					mandatos.put(mandante, mandatos.get(mandante) + mandatosCirculo.get(mandante));
+			}
+		}
+		return new ResultadoGlobalAR(nulos,brancos,totEleitores,validos,mandatos); 
+	}
+	
+	public ResultadoCirculoAR getResultadoCirculo(int idCirculo){
+		return this.resultado.get(idCirculo);
+	}
 }
