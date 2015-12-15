@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
@@ -117,11 +118,9 @@ public class EleicaoPRDAO implements Map<Integer,EleicaoPR>{
         		vota.add(rsEleiteleic.getInt("nrIdEleitor"));
         	}
         	if(rsEleicao.next() && rsEleicaoPR.next()){
-        		//eleic = new EleicaoPR(rsEleicao.getDate("data"),rsEleicao.getInt("estado"), rsEleicao.getInt("idEleiao"), rsEleicaoPR.getBoolean("volta2"),
-        		//		rsEleicaoPR.getDate("data2"), null, null);
-        	}
-        	
-        	
+        		eleic = new EleicaoPR(rsEleicao.getInt("idEleicao"), rsEleicao.getDate("data"), rsEleicao.getInt("estado"), rsEleicao.getBoolean("permitidoVotar"), vota, rsEleicaoPR.getBoolean("volta2"), 
+        				rsEleicaoPR.getDate("data2"), null, null);
+        	}	
         }catch(Exception e){
     		try {
 				conn.rollback();
@@ -143,8 +142,30 @@ public class EleicaoPRDAO implements Map<Integer,EleicaoPR>{
 
 	@Override
 	public EleicaoPR put(Integer key, EleicaoPR value) {
-		// TODO Auto-generated method stub
-		return null;
+		EleicaoPR ret =null;
+		ret = this.get(key);
+		Connection conn =null;
+		try{
+			conn = Connector.newConnection();
+			//inserir Eleicao
+			if(ret==null){//nao existe na BD
+				
+			}else{//existe na BD Update
+				
+			}
+			//inserir votantes
+			Iterator<Integer> votantes = value.getVotantes().iterator();
+			PreparedStatement psvota = conn.prepareStatement("INSERT INTRO Eleitor_vota_Eleicao"
+					+ "VALUES"
+					+ "(nrIdEleitor,idEleicao)");
+			while(votantes.hasNext()){
+				int eleit = votantes.next();
+			}
+			
+			
+		}
+		
+		return ret;
 	}
 
 	@Override
