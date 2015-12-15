@@ -1,6 +1,7 @@
 package Business;
 
 import java.util.HashSet;
+import java.util.Set;
 
 public class Coligacao implements Votavel{
 	
@@ -10,7 +11,7 @@ public class Coligacao implements Votavel{
 	private String simbolo;
 	private HashSet<Integer> partidos;
 	
-	public Coligacao(int id, String sigla, String nome, String simbolo, HashSet<Integer> partidos) {
+	public Coligacao(int id, String sigla, String nome, String simbolo, Set<Integer> partidos) {
 		this.id = id;
 		this.sigla = sigla;
 		this.nome = nome;
@@ -56,6 +57,12 @@ public class Coligacao implements Votavel{
 
 	public void setPartidos(HashSet<Integer> partidos) {
 		this.partidos = partidos;
+	}
+	
+	public boolean equals(Object obj) {
+		if(this.getClass() != obj.getClass()) return false; 
+		Coligacao col = (Coligacao) obj;
+		return this.nome==col.getNome() && this.sigla==col.getSigla() && this.simbolo==col.getSimbolo();
 	}
 
 }
