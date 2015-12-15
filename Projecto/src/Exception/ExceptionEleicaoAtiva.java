@@ -1,4 +1,4 @@
-package Business;
+package Exception;
 
 public class ExceptionEleicaoAtiva extends Exception{
 	public ExceptionEleicaoAtiva(){super();}

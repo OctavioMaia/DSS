@@ -5,8 +5,15 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
+import com.sun.org.apache.bcel.internal.generic.NEW;
+
 import Data.CirculoDAO;
 import Data.PartidosDAO;
+import Exception.ExceptionColigacaoExiste;
+import Exception.ExceptionColigacaoNaoExiste;
+import Exception.ExceptionEleicaoAtiva;
+import Exception.ExceptionPartidoExiste;
+import Exception.ExceptionPartidoNaoExiste;
 import Data.ColigacaoDAO;
 import Data.Connector;
 import Data.EleicaoARDAO;
@@ -106,7 +113,6 @@ public class SGE {
 		for (Eleitor e : listaEleitores) {
 			eleitores.put(e.getnIdent(), e);
 		}
-
 	}
 
 	public void iniciarEleicao(Eleicao e) {
@@ -160,16 +166,6 @@ public class SGE {
 		EleicaoAR ear = new EleicaoAR(this.eleicoesAR.size() + 1, data);
 		this.eleicoesAR.put(ear.getEleicaoAR(), ear);
 		return ear;
-	}
-
-	public void addListaPR(EleicaoPR e) {
-		e.addLista();
-		this.eleicoesPR.put(e.getIdEleicao(), e);
-	}
-
-	public void addListaAR(EleicaoAR e) {
-		e.addLista();
-		this.eleicoesAR.put(e.getIdEleicao(), e);
 	}
 
 	public Eleicao eleicaoAtiva() {
@@ -227,9 +223,56 @@ public class SGE {
 			this.eleicoesAR.put(e.getIdEleicao(), e);
 		}
 	}
-	
-	public boolean login(int id, String pin){
-		return this.eleitores.get(id).autenticar(id,pin);
+
+	public boolean login(int id, String pin) {
+		return this.eleitores.get(id).autenticar(id, pin);
+	}
+
+	public void addPartido(String sigla, String nome, String simbolo) throws ExceptionPartidoExiste {
+		Partido part = new Partido(this.partidos.size() + 1, sigla, nome, simbolo);
+		boolean naoExiste = true;
+		Iterator<Partido> itPart = this.partidos.values().iterator();
+		while (itPart.hasNext() && naoExiste) {
+			if (!itPart.next().equals(part)) {
+				naoExiste = false;
+				throw new ExceptionPartidoExiste("O partido já se encontram registado");
+			}
+		}
+		this.partidos.put(part.getId(), part);
+	}
+
+	public void eliminarPartido(Partido p) throws ExceptionPartidoNaoExiste {
+		if (this.partidos.remove(p.getId()) == null)
+			throw new ExceptionPartidoNaoExiste("O partido nao se encontra registado");
+	}
+
+	public Coligacao addColigacao(String sigla, String nome, String simbolo, Set<Integer> listaPart)
+			throws ExceptionColigacaoExiste {
+		Coligacao col = new Coligacao(this.coligacoes.size() + 1, sigla, nome, simbolo, listaPart);
+		boolean naoExiste = true;
+		Iterator<Coligacao> itCol = this.coligacoes.values().iterator();
+		while (itCol.hasNext() && naoExiste) {
+			if (!itCol.next().equals(col)) {
+				naoExiste = false;
+				throw new ExceptionColigacaoExiste("O partido já se encontram registado");
+			}
+		}
+		this.coligacoes.put(col.getId(), col);
+		return col;
+	}
+
+	public void eliminarColigacao(Coligacao col) throws ExceptionColigacaoNaoExiste {
+		if (this.remove(col.getId()) == null)
+			throw new ExceptionColigacaoNaoExiste("A coligação não se encontra registada");
+	}
+
+	public void addListaPR(EleicaoPR e, ListaPR l) {
+		e.addLista();
+	}
+
+	public void addListaAR(EleicaoAR e, listaAR l) {
+		e.addLista();
 	}
 	
+	public 
 }
