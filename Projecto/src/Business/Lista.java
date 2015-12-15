@@ -3,10 +3,11 @@ package Business;
 import java.util.ArrayList;
 
 /*
- * Lista da Assembleia da República
+ * Lista da Assembleia da Republica
  */
 public class Lista implements Listavel{
 	private int id;
+	private int circulo;
 	private int ordem;
 	private String sigla;
 	private String nome;
@@ -14,8 +15,9 @@ public class Lista implements Listavel{
 	private Votavel mandante;
 	private ArrayList<CandidatoAR> candidatos;
 	
-	public Lista(int id, String sigla, String nome, String simbolo, Votavel mandante) {
+	public Lista(int id, int circulo, String sigla, String nome, String simbolo, Votavel mandante) {
 		this.id=id;
+		this.circulo = circulo;
 		this.ordem=-1;
 		this.sigla = sigla;
 		this.nome = nome;
@@ -24,8 +26,9 @@ public class Lista implements Listavel{
 		this.candidatos = new ArrayList<>();
 	}
 
-	public Lista(int id,String sigla, String nome, String simbolo, Votavel mandante, ArrayList<CandidatoAR> candidatos) {
+	public Lista(int id, int circulo, String sigla, String nome, String simbolo, Votavel mandante, ArrayList<CandidatoAR> candidatos) {
 		this.id=id;
+		this.circulo = circulo;
 		this.ordem=-1;
 		this.sigla = sigla;
 		this.nome = nome;
@@ -40,6 +43,14 @@ public class Lista implements Listavel{
 	
 	public void setID(int id){
 		this.id=id;
+	}
+
+	public int getCirculo() {
+		return circulo;
+	}
+
+	public void setCirculo(int circulo) {
+		this.circulo = circulo;
 	}
 
 	public int getOrdem(){
