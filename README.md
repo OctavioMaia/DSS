@@ -3,3 +3,4 @@
 Coisas a considerar:
 - Possibilidade de "esconder" partidos e coligações.
 - Será o Nuno homossexual?
+-Acho que ListaPR e CandidatoPR podem juntar, discutir isso
