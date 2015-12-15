@@ -1,0 +1,336 @@
+JFDML JFormDesigner: "5.2.2.2.228" Java: "1.8.0_65" encoding: "UTF-8"
+
+new FormModel {
+	contentType: "form/swing"
+	root: new FormRoot {
+		add( new FormWindow( "javax.swing.JFrame", new FormLayoutManager( class com.jformdesigner.runtime.NullLayout ) ) {
+			name: "ResultadosAR"
+			"$locationPolicy": 1
+			"$sizePolicy": 1
+			"resizable": false
+			"title": "Resultados Presidente da República"
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label1"
+				"text": "Resultados globais"
+				"font": &Font0 new java.awt.Font( "Arial", 1, 14 )
+			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
+				"x": 20
+				"y": 35
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label2"
+				"text": "Votos brancos:"
+				"font": &Font1 new java.awt.Font( "Arial", 0, 14 )
+			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
+				"width": 100
+				"height": 17
+				"x": 265
+				"y": 10
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label3"
+				"text": "Votos nulos:"
+				"font": #Font1
+			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
+				"width": 90
+				"height": 17
+				"x": 265
+				"y": 35
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label4"
+				"text": "Abstenção:"
+				"font": #Font1
+			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
+				"width": 85
+				"height": 17
+				"x": 265
+				"y": 60
+			} )
+			add( new FormComponent( "javax.swing.JSeparator" ) {
+				name: "separator1"
+			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
+				"x": 15
+				"y": 300
+				"width": 560
+				"height": 2
+			} )
+			add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
+				name: "scrollGlobais"
+				"font": &Font2 new java.awt.Font( "Arial", 0, 12 )
+				add( new FormComponent( "javax.swing.JTable" ) {
+					name: "tableResultadosGlobais"
+					"model": new com.jformdesigner.model.SwingTableModel( new java.util.Vector, new java.util.Vector {
+						add( "Percentagem" )
+						add( "Lista" )
+					}, new java.util.Vector {
+						add( class java.lang.String )
+						add( null )
+					}, new java.util.Vector {
+						add( false )
+						add( false )
+					}, new java.util.Vector {
+						add( &SwingTableColumn0 new com.jformdesigner.model.SwingTableColumn( null, 0, 0, 0, false ) )
+						add( null )
+					} )
+					"font": &Font3 new java.awt.Font( "Arial", 0, 12 )
+				} )
+			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
+				"width": 235
+				"height": 195
+				"x": 15
+				"y": 90
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label5"
+				"text": "Resultados círculo"
+				"font": #Font0
+			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
+				"width": 134
+				"height": 17
+				"x": 15
+				"y": 310
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "globaisBrancosN"
+				"text": "N"
+				"font": #Font1
+			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
+				"width": 40
+				"height": 17
+				"x": 405
+				"y": 10
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "globaisNulosN"
+				"text": "N"
+				"font": #Font1
+			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
+				"width": 40
+				"height": 17
+				"x": 405
+				"y": 35
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "globaisAbstencaoN"
+				"text": "N"
+				"font": #Font1
+			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
+				"width": 40
+				"height": 17
+				"x": 405
+				"y": 60
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "globaisAbstencaoP"
+				"text": "%"
+				"font": #Font1
+			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
+				"width": 40
+				"height": 17
+				"x": 470
+				"y": 60
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "globaisNulosP"
+				"text": "%"
+				"font": #Font1
+			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
+				"width": 40
+				"height": 17
+				"x": 470
+				"y": 35
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "globaisBrancosP"
+				"text": "%"
+				"font": #Font1
+			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
+				"width": 40
+				"height": 17
+				"x": 470
+				"y": 10
+			} )
+			add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
+				name: "scrollCirculo"
+				"font": new java.awt.Font( "Arial", 0, 12 )
+				add( new FormComponent( "javax.swing.JTable" ) {
+					name: "tableCirculo"
+					"font": new java.awt.Font( "Arial", 0, 12 )
+					"model": new com.jformdesigner.model.SwingTableModel( new java.util.Vector, new java.util.Vector {
+						add( "Círculo" )
+					}, new java.util.Vector {
+						add( null )
+					}, new java.util.Vector {
+						add( false )
+					}, new java.util.Vector {
+						add( new com.jformdesigner.model.SwingTableColumn( null, 0, 0, 0, false ) )
+					} )
+				} )
+			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
+				"x": 15
+				"y": 335
+				"width": 130
+				"height": 190
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label12"
+				"text": "Votos brancos:"
+				"font": #Font1
+			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
+				"width": 100
+				"height": 17
+				"x": 265
+				"y": 310
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "circuloBrancosN"
+				"text": "N"
+				"font": #Font1
+			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
+				"width": 40
+				"height": 17
+				"x": 415
+				"y": 310
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "circuloBrancosP"
+				"text": "%"
+				"font": #Font1
+			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
+				"width": 40
+				"height": 17
+				"x": 480
+				"y": 310
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "circuloNulosP"
+				"text": "%"
+				"font": #Font1
+			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
+				"width": 40
+				"height": 17
+				"x": 480
+				"y": 335
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "circuloAbstencaoP"
+				"text": "%"
+				"font": #Font1
+			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
+				"width": 40
+				"height": 17
+				"x": 480
+				"y": 360
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "circuloAbstencaoN"
+				"text": "N"
+				"font": #Font1
+			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
+				"width": 40
+				"height": 17
+				"x": 415
+				"y": 360
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "circuloNulosN"
+				"text": "N"
+				"font": #Font1
+			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
+				"width": 40
+				"height": 17
+				"x": 415
+				"y": 335
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label19"
+				"text": "Votos nulos:"
+				"font": #Font1
+			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
+				"width": 90
+				"height": 17
+				"x": 265
+				"y": 335
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label20"
+				"text": "Abstenção:"
+				"font": #Font1
+			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
+				"width": 85
+				"height": 17
+				"x": 265
+				"y": 360
+			} )
+			add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
+				name: "scrollCirculoExpanded"
+				"font": #Font2
+				add( new FormComponent( "javax.swing.JTable" ) {
+					name: "tableResultadosCirculo"
+					"model": new com.jformdesigner.model.SwingTableModel( new java.util.Vector, new java.util.Vector {
+						add( "Percentagem" )
+						add( "Lista" )
+						add( "Número de Votos" )
+					}, new java.util.Vector {
+						add( class java.lang.String )
+						add( null )
+						add( null )
+					}, new java.util.Vector {
+						add( false )
+						add( false )
+						add( null )
+					}, new java.util.Vector {
+						add( #SwingTableColumn0 )
+						add( null )
+						add( null )
+					} )
+					"font": #Font3
+				} )
+			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
+				"width": 420
+				"height": 135
+				"x": 155
+				"y": 390
+			} )
+			add( new FormComponent( "javax.swing.JToolBar$Separator" ) {
+				name: "separator2"
+			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
+				"x": 195
+				"y": 40
+			} )
+			add( new FormContainer( "javax.swing.JDesktopPane", new FormLayoutManager( class javax.swing.JDesktopPane ) ) {
+				name: "desktopPane1"
+				"background": &SwingColor0 new com.jformdesigner.model.SwingColor( "Button.background" )
+				"border": &EtchedBorder0 new javax.swing.border.EtchedBorder( 1, null, null )
+			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
+				"x": 255
+				"y": 5
+				"height": 80
+				"width": 320
+			} )
+			add( new FormContainer( "javax.swing.JDesktopPane", new FormLayoutManager( class javax.swing.JDesktopPane ) ) {
+				name: "desktopPane2"
+				"background": #SwingColor0
+				"border": #EtchedBorder0
+			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
+				"width": 320
+				"height": 80
+				"x": 255
+				"y": 305
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "imagem"
+				"icon": new com.jformdesigner.model.SwingIcon( 0, "/img/PS.png" )
+			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
+				"x": 335
+				"y": 110
+				"width": 165
+				"height": 170
+			} )
+		}, new FormLayoutConstraints( null ) {
+			"size": new java.awt.Dimension( 605, 580 )
+			"location": new java.awt.Point( 0, 0 )
+		} )
+	}
+}
