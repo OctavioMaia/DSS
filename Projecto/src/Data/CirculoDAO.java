@@ -55,7 +55,7 @@ public class CirculoDAO implements Map<Integer,Circulo>{
         Connection conn = null;
         try{
         	conn = Connector.newConnection();
-        	PreparedStatement ps = conn.prepareStatement(" Select  EXISTS (SELECT idCirculo FROM Circulos " +
+        	PreparedStatement ps = conn.prepareStatement("Select  EXISTS (SELECT idCirculo FROM Circulos " +
                 " WHERE idCirculo = ?)");
         	ps.setInt(1,(Integer) key);
         	ResultSet rs = ps.executeQuery();
@@ -124,18 +124,34 @@ public class CirculoDAO implements Map<Integer,Circulo>{
 	@Override
 	public Circulo put(Integer key, Circulo value) {
 		Connection conn=null;
-		Circulo circulo = this.remove(key);
+		Circulo circulo = this.get(key);
     	try{
     		conn = Connector.newConnection();
-    		PreparedStatement ps = conn.prepareStatement("insert into Circulos " +
+    		if(circulo==null){
+    			PreparedStatement ps = conn.prepareStatement("insert into Circulos " +
                     "(idCirculo,nome,totEleitores) " +
                     "value " +
                     "(?,?,?)");
-    		ps.setString(2, value.getNome());
-            ps.setInt(1, key);
-            ps.setInt(3, value.getTotEleitores());
-            ps.execute();
-            ps.close();
+    			ps.setString(2, value.getNome());
+    			ps.setInt(1, key);
+    			ps.setInt(3, value.getTotEleitores());
+    			ps.execute();
+    			ps.close();
+    		}else{
+    			//UPDATE table_name
+    			//SET column1=value1,column2=value2,...
+    			//		WHERE some_column=some_value;
+    			PreparedStatement ps = conn.prepareStatement("UPDATE Circulos " +
+                        "SET nome = ?,totEleitores = ? " +
+                        "WHERE idCirculo = ? "); 
+                    //    "(?,?,?)");
+        		ps.setString(1, value.getNome());
+        		ps.setInt(3, key);
+        		ps.setInt(2, value.getTotEleitores());
+        		ps.execute();
+        		ps.close();
+    			
+    		}
             conn.commit();
     	}catch(Exception e){
     		try {
