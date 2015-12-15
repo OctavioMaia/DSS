@@ -113,15 +113,14 @@ public class SGE {
 		return listaEleitores;
 	}
 
-	public void confirmarCadernoRecenciamento(List<Eleitor> listaEleitores){
+	public void confirmarCadernoRecenciamento(List<Eleitor> listaEleitores) {
 		for (Eleitor e : listaEleitores) {
 			eleitores.put(e.getnIdent(), e);
 		}
 	}
-	
-	
+
 	public void iniciarEleicao(Eleicao e) {
-		if (this.ativa == -1) {
+		if (this.ativa != -1) {
 			throw new ExceptionEleicaoAtiva("Já existe uma eleição ativa");
 		} else {
 			e.iniciar();
@@ -266,16 +265,29 @@ public class SGE {
 		if (this.remove(col.getId()) == null)
 			throw new ExceptionColigacaoNaoExiste("A coligação não se encontra registada");
 	}
-	
+
 	public void addLista(Eleicao el, Listavel lista, ){
 		el.addLista(lista);
 	}
-	public void removeLista(Eleicao e, Listavel lista){
+
+	public void removeLista(Eleicao e, Listavel lista) {
 		e.removeLista(lista);
 	}
-	public Boletim getBoletim(Eleicao e, Eleitor eleitor){
-		return e.getBoletim(eleitor);
+
+	public Boletim getBoletim(Eleicao e, Eleitor eleitor) {
+		return e.getBoletim(eleitor.getCirculo());
+	}
+
+	public void addVoto(Eleicao e, Listavel lista) {
+		e.addVoto(lista);
+	}
+
+	public void addVotoNulo(Eleicao e, int idCirculo) {
+		e.addVotoNulo(idCirculo);
+	}
+
+	public void addVotoBranco(Eleicao e, int idCirculo){
+		e.addVotoBranco(idCirculo);
 	}
 	
-	public 
 }
