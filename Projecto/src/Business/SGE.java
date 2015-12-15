@@ -227,4 +227,9 @@ public class SGE {
 			this.eleicoesAR.put(e.getIdEleicao(), e);
 		}
 	}
+	
+	public boolean login(int id, String pin){
+		return this.eleitores.get(id).autenticar(id,pin);
+	}
+	
 }
