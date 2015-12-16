@@ -12,9 +12,14 @@ import Data.ListaPRDAO;
 import Data.ResultadoCirculoPRDAO;
 import Exception.ExceptionListaExiste;
 
+
+/**
+ * Passar circulos tambem nos construtores
+ */
+
 public class EleicaoPR extends Eleicao {
 	private boolean volta2;
-	private Date data2;
+	private Calendar data2;
 	private ResultadoCirculoPRDAO voltaR1;
 	private ResultadoCirculoPRDAO voltaR2;
 	private Boletim boletim1;
@@ -22,7 +27,7 @@ public class EleicaoPR extends Eleicao {
 	private ListaPRDAO listas;
 	private Set<Integer> votantes2;
 
-	public EleicaoPR(int idEleicao, Date data) {
+	public EleicaoPR(int idEleicao, Calendar data) {
 		super(idEleicao, data);
 		this.volta2 = false;
 		this.data2 = null;
@@ -34,8 +39,8 @@ public class EleicaoPR extends Eleicao {
 		this.votantes2 = new HashSet<>();
 	}
 
-	public EleicaoPR(int idEleicao, Date data, int estado, boolean permitirVotar, Set<Integer> vot, Set<Integer> vot2,
-			boolean volta2, Date data2, Boletim boletim1, Boletim boletim2) {
+	public EleicaoPR(int idEleicao, Calendar data, int estado, boolean permitirVotar, Set<Integer> vot, Set<Integer> vot2,
+			boolean volta2, Calendar data2, Boletim boletim1, Boletim boletim2) {
 		super(idEleicao, data, estado, permitirVotar, vot);
 		this.volta2 = volta2;
 		this.data2 = data2;
@@ -71,11 +76,11 @@ public class EleicaoPR extends Eleicao {
 		this.volta2 = volta2;
 	}
 
-	public Date getData2() {
+	public Calendar getData2() {
 		return data2;
 	}
 
-	public void setData2(Date data2) {
+	public void setData2(Calendar data2) {
 		this.data2 = data2;
 	}
 

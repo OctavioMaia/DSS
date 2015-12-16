@@ -7,16 +7,21 @@ package Business;
 
 import java.util.HashMap;
 
+
+/**
+ * Falta colocar no construtor os circulos
+ */
+
 /**
  *
  * @author ruifreitas
  */
 public class ResultadoCirculoPR {
+	private Circulo circulo;
 	private int brancos;
 	private int nulos;
-	private int totEleitores;
-	private HashMap<Integer, Integer> validos;
-	private int idcirculo;
+	private HashMap<ListaPR, Integer> validos;
+	
 
 	public ResultadoCirculoPR() {
 		this.brancos = 0;
@@ -26,7 +31,7 @@ public class ResultadoCirculoPR {
 		this.idcirculo = 0;
 	}
 
-	public ResultadoCirculoPR(int brancos, int nulos, int totEleitores, HashMap<Integer, Integer> validos,
+	public ResultadoCirculoPR(int brancos, int nulos, int totEleitores, HashMap<ListaPR, Integer> validos,
 			int idcirculo) {
 		this.brancos = brancos;
 		this.nulos = nulos;

@@ -11,11 +11,14 @@ import java.io.File;
 import javax.swing.*;
 import javax.swing.table.*;
 
+import Business.EleicaoPR;
+
 /**
  * @author Octavio Maia
  */
 public class GerirPR {
-	public GerirPR() {
+	
+	public GerirPR(EleicaoPR eleicao) {
 		initComponents();
 		GerirPR.setVisible(true);
 	}
@@ -34,18 +37,27 @@ public class GerirPR {
 
 	private void buttonSairActionPerformed(ActionEvent e) {
 		GerirPR.dispose();
+		//voltar atras?
 	}
 
 	private void buttonAdicionarFotoActionPerformed(ActionEvent e) {
-		//stuff
+		// TODO parse data inicio eleicao
+		
+		Date data = new Date();
+		
+		// TODO parse foto + filepath / nome candidato
+		// TODO apos parse adicionar a tabela
+	}
+
+	private void buttonConfirmarActionPerformed(ActionEvent e) {
+		
 	}
 	
 	private void initComponents() {
 		// JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
-		// Generated using JFormDesigner Evaluation license - Rui Freitas
+		// Generated using JFormDesigner Evaluation license - Octavio Maia
 		GerirPR = new JFrame();
 		label1 = new JLabel();
-		label2 = new JLabel();
 		tableCandidatos = new JScrollPane();
 		tableCandidatos2 = new JTable();
 		imagem = new JLabel();
@@ -59,9 +71,8 @@ public class GerirPR {
 		buttonConfirmar = new JButton();
 		buttonSair = new JButton();
 		diasInicio = new JComboBox<>();
-		diasFim = new JComboBox<>();
 		mesInicio = new JComboBox<>();
-		mesFim = new JComboBox<>();
+		anoInicio = new JComboBox<>();
 		dialog1 = new JDialog();
 		fileChooser1 = new JFileChooser();
 
@@ -77,12 +88,6 @@ public class GerirPR {
 			label1.setFont(new Font("Arial", Font.PLAIN, 14));
 			GerirPRContentPane.add(label1);
 			label1.setBounds(new Rectangle(new Point(25, 25), label1.getPreferredSize()));
-
-			//---- label2 ----
-			label2.setText("Data fim da elei\u00e7\u00e3o:");
-			label2.setFont(new Font("Arial", Font.PLAIN, 14));
-			GerirPRContentPane.add(label2);
-			label2.setBounds(25, 55, 139, 17);
 
 			//======== tableCandidatos ========
 			{
@@ -112,48 +117,48 @@ public class GerirPR {
 				tableCandidatos.setViewportView(tableCandidatos2);
 			}
 			GerirPRContentPane.add(tableCandidatos);
-			tableCandidatos.setBounds(25, 95, 265, 215);
+			tableCandidatos.setBounds(25, 60, 265, 215);
 
 			//---- imagem ----
 			imagem.setIcon(new ImageIcon(getClass().getResource("/img/PS.png")));
 			GerirPRContentPane.add(imagem);
-			imagem.setBounds(360, 95, 165, 170);
+			imagem.setBounds(360, 60, 165, 170);
 
 			//---- eliminar ----
 			eliminar.setText("Eliminar");
 			eliminar.setFont(new Font("Arial", Font.PLAIN, 14));
 			eliminar.setEnabled(false);
 			GerirPRContentPane.add(eliminar);
-			eliminar.setBounds(360, 285, 165, eliminar.getPreferredSize().height);
+			eliminar.setBounds(360, 250, 165, eliminar.getPreferredSize().height);
 
 			//---- label3 ----
 			label3.setText("Nome do candidato:");
 			label3.setFont(new Font("Arial", Font.PLAIN, 14));
 			GerirPRContentPane.add(label3);
-			label3.setBounds(25, 330, 139, 17);
+			label3.setBounds(25, 290, 139, 22);
 
 			//---- label4 ----
 			label4.setText("Foto");
 			label4.setFont(new Font("Arial", Font.PLAIN, 14));
 			GerirPRContentPane.add(label4);
-			label4.setBounds(25, 360, 35, 17);
+			label4.setBounds(25, 320, 35, 22);
 
 			//---- nomeCandidato ----
 			nomeCandidato.setFont(new Font("Arial", Font.PLAIN, 14));
 			GerirPRContentPane.add(nomeCandidato);
-			nomeCandidato.setBounds(165, 325, 375, nomeCandidato.getPreferredSize().height);
+			nomeCandidato.setBounds(165, 290, 375, nomeCandidato.getPreferredSize().height);
 
 			//---- buttonProcurar ----
 			buttonProcurar.setText("Procurar");
 			buttonProcurar.setFont(new Font("Arial", Font.PLAIN, 14));
 			buttonProcurar.addActionListener(e -> buttonProcurarActionPerformed(e));
 			GerirPRContentPane.add(buttonProcurar);
-			buttonProcurar.setBounds(65, 355, 95, buttonProcurar.getPreferredSize().height);
+			buttonProcurar.setBounds(65, 320, 95, buttonProcurar.getPreferredSize().height);
 
 			//---- pathImagem ----
 			pathImagem.setEditable(false);
 			GerirPRContentPane.add(pathImagem);
-			pathImagem.setBounds(165, 355, 375, 25);
+			pathImagem.setBounds(165, 320, 375, 25);
 
 			//---- buttonAdicionarFoto ----
 			buttonAdicionarFoto.setText("Adicionar");
@@ -161,20 +166,20 @@ public class GerirPR {
 			buttonAdicionarFoto.setEnabled(false);
 			buttonAdicionarFoto.addActionListener(e -> buttonAdicionarFotoActionPerformed(e));
 			GerirPRContentPane.add(buttonAdicionarFoto);
-			buttonAdicionarFoto.setBounds(65, 385, 95, 25);
+			buttonAdicionarFoto.setBounds(65, 350, 95, 25);
 
 			//---- buttonConfirmar ----
 			buttonConfirmar.setText("Confirmar");
 			buttonConfirmar.setFont(new Font("Arial", Font.PLAIN, 14));
 			GerirPRContentPane.add(buttonConfirmar);
-			buttonConfirmar.setBounds(305, 415, 105, 25);
+			buttonConfirmar.setBounds(305, 380, 105, 25);
 
 			//---- buttonSair ----
 			buttonSair.setText("Sair");
 			buttonSair.setFont(new Font("Arial", Font.PLAIN, 14));
 			buttonSair.addActionListener(e -> buttonSairActionPerformed(e));
 			GerirPRContentPane.add(buttonSair);
-			buttonSair.setBounds(435, 415, 95, 25);
+			buttonSair.setBounds(435, 380, 95, 25);
 
 			//---- diasInicio ----
 			diasInicio.setFont(new Font("Arial", Font.PLAIN, 12));
@@ -214,44 +219,6 @@ public class GerirPR {
 			GerirPRContentPane.add(diasInicio);
 			diasInicio.setBounds(170, 20, 40, 25);
 
-			//---- diasFim ----
-			diasFim.setFont(new Font("Arial", Font.PLAIN, 12));
-			diasFim.setModel(new DefaultComboBoxModel<>(new String[] {
-				"1",
-				"2",
-				"3",
-				"4",
-				"5",
-				"6",
-				"7",
-				"8",
-				"9",
-				"10",
-				"11",
-				"12",
-				"13",
-				"14",
-				"15",
-				"16",
-				"17",
-				"18",
-				"19",
-				"20",
-				"21",
-				"22",
-				"23",
-				"24",
-				"25",
-				"26",
-				"27",
-				"28",
-				"29",
-				"30",
-				"31"
-			}));
-			GerirPRContentPane.add(diasFim);
-			diasFim.setBounds(170, 50, 40, 25);
-
 			//---- mesInicio ----
 			mesInicio.setFont(new Font("Arial", Font.PLAIN, 12));
 			mesInicio.setModel(new DefaultComboBoxModel<>(new String[] {
@@ -271,24 +238,53 @@ public class GerirPR {
 			GerirPRContentPane.add(mesInicio);
 			mesInicio.setBounds(215, 20, 120, 25);
 
-			//---- mesFim ----
-			mesFim.setFont(new Font("Arial", Font.PLAIN, 12));
-			mesFim.setModel(new DefaultComboBoxModel<>(new String[] {
-				"Janeiro",
-				"Fevereiro",
-				"Mar\u00e7o",
-				"Abril",
-				"Maio",
-				"Junho",
-				"Julho",
-				"Agosto",
-				"Setembro",
-				"Outubro",
-				"Novembro",
-				"Dezembro"
+			//---- anoInicio ----
+			anoInicio.setFont(new Font("Tahoma", Font.PLAIN, 12));
+			anoInicio.setModel(new DefaultComboBoxModel<>(new String[] {
+				"1990",
+				"1991",
+				"1992",
+				"1993",
+				"1994",
+				"1995",
+				"1996",
+				"1997",
+				"1998",
+				"1999",
+				"2000",
+				"2001",
+				"2002",
+				"2003",
+				"2004",
+				"2005",
+				"2006",
+				"2007",
+				"2008",
+				"2009",
+				"2010",
+				"2011",
+				"2012",
+				"2013",
+				"2014",
+				"2015",
+				"2016",
+				"2017",
+				"2018",
+				"2019",
+				"2020",
+				"2021",
+				"2022",
+				"2023",
+				"2024",
+				"2025",
+				"2026",
+				"2027",
+				"2028",
+				"2029",
+				"2030"
 			}));
-			GerirPRContentPane.add(mesFim);
-			mesFim.setBounds(215, 50, 120, 25);
+			GerirPRContentPane.add(anoInicio);
+			anoInicio.setBounds(340, 20, 75, 25);
 
 			{ // compute preferred size
 				Dimension preferredSize = new Dimension();
@@ -303,7 +299,7 @@ public class GerirPR {
 				GerirPRContentPane.setMinimumSize(preferredSize);
 				GerirPRContentPane.setPreferredSize(preferredSize);
 			}
-			GerirPR.setSize(570, 485);
+			GerirPR.setSize(570, 450);
 			GerirPR.setLocationRelativeTo(null);
 		}
 
@@ -341,10 +337,9 @@ public class GerirPR {
 
 	
 	// JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables
-	// Generated using JFormDesigner Evaluation license - Rui Freitas
+	// Generated using JFormDesigner Evaluation license - Octavio Maia
 	private JFrame GerirPR;
 	private JLabel label1;
-	private JLabel label2;
 	private JScrollPane tableCandidatos;
 	private JTable tableCandidatos2;
 	private JLabel imagem;
@@ -358,9 +353,8 @@ public class GerirPR {
 	private JButton buttonConfirmar;
 	private JButton buttonSair;
 	private JComboBox<String> diasInicio;
-	private JComboBox<String> diasFim;
 	private JComboBox<String> mesInicio;
-	private JComboBox<String> mesFim;
+	private JComboBox<String> anoInicio;
 	private JDialog dialog1;
 	private JFileChooser fileChooser1;
 	// JFormDesigner - End of variables declaration  //GEN-END:variables
