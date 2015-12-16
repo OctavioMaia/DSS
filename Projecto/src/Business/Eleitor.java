@@ -69,7 +69,15 @@ public class Eleitor {
     }
     
     public String toString(){
-    	return "Eleitor " + nome + ", com o número de identificacao " + nIdent + " e pertencente ao circulo " + circulo;
+    	return "Eleitor " + nome + ", com o nÃºmero de identificacao " + nIdent + " e pertencente ao circulo " + circulo;
     }
+    
+    public boolean autenticar(int id, String pin){
+    	if(this.nIdent == id && this.pin == pin){
+    		return true;
+    	}
+    	return false;
+    }
+    
     
 }

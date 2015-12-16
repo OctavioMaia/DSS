@@ -1,12 +1,20 @@
 package Business;
 
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
+import com.sun.org.apache.bcel.internal.generic.NEW;
+
 import Data.CirculoDAO;
 import Data.PartidosDAO;
+import Exception.ExceptionColigacaoExiste;
+import Exception.ExceptionColigacaoNaoExiste;
+import Exception.ExceptionEleicaoAtiva;
+import Exception.ExceptionPartidoExiste;
+import Exception.ExceptionPartidoNaoExiste;
 import Data.ColigacaoDAO;
 import Data.Connector;
 import Data.EleicaoARDAO;
@@ -68,7 +76,7 @@ public class SGE {
 		return idEleicaoAtiva;
 	}
 
-	public void inserirCadernoRecenciamento() {
+	public List<Eleitor> lerCadernoRecenciamento() {
 
 		ArrayList<Eleitor> listaEleitores = new ArrayList<Eleitor>();
 
@@ -102,15 +110,17 @@ public class SGE {
 				}
 			}
 		}
+		return listaEleitores;
+	}
 
+	public void confirmarCadernoRecenciamento(List<Eleitor> listaEleitores) {
 		for (Eleitor e : listaEleitores) {
 			eleitores.put(e.getnIdent(), e);
 		}
-
 	}
 
 	public void iniciarEleicao(Eleicao e) {
-		if (this.ativa == -1) {
+		if (this.ativa != -1) {
 			throw new ExceptionEleicaoAtiva("Já existe uma eleição ativa");
 		} else {
 			e.iniciar();
@@ -162,16 +172,6 @@ public class SGE {
 		return ear;
 	}
 
-	public void addListaPR(EleicaoPR e) {
-		e.addLista();
-		this.eleicoesPR.put(e.getIdEleicao(), e);
-	}
-
-	public void addListaAR(EleicaoAR e) {
-		e.addLista();
-		this.eleicoesAR.put(e.getIdEleicao(), e);
-	}
-
 	public Eleicao eleicaoAtiva() {
 		Eleicao ativa;
 		if ((ativa = this.eleicoesAR.get(this.ativa)) == null) {
@@ -219,12 +219,75 @@ public class SGE {
 		return eCriadas;
 	}
 
-	public void votar(Eleicao e, int idCirculo, Listavel lista) {
-		e.votar();
-		if (e.getClass().getName() == "EleicaoPR") {
-			this.eleicoesPR.put(e.getIdEleicao(), e);
-		} else {
-			this.eleicoesAR.put(e.getIdEleicao(), e);
-		}
+	public void addVoto(Eleicao e, Listavel lista, Eleitor eleitor) {
+		e.addVoto(lista);
+		e.addVotante(eleitor);
 	}
+
+	public boolean login(int id, String pin) {
+		return this.eleitores.get(id).autenticar(id, pin);
+	}
+
+	public void addPartido(String sigla, String nome, String simbolo) throws ExceptionPartidoExiste {
+		Partido part = new Partido(this.partidos.size() + 1, sigla, nome, simbolo);
+		boolean naoExiste = true;
+		Iterator<Partido> itPart = this.partidos.values().iterator();
+		while (itPart.hasNext() && naoExiste) {
+			if (!itPart.next().equals(part)) {
+				naoExiste = false;
+				throw new ExceptionPartidoExiste("O partido já se encontram registado");
+			}
+		}
+		this.partidos.put(part.getId(), part);
+	}
+
+	public void eliminarPartido(Partido p) throws ExceptionPartidoNaoExiste {
+		if (this.partidos.remove(p.getId()) == null)
+			throw new ExceptionPartidoNaoExiste("O partido nao se encontra registado");
+	}
+
+	public Coligacao addColigacao(String sigla, String nome, String simbolo, Set<Integer> listaPart)
+			throws ExceptionColigacaoExiste {
+		Coligacao col = new Coligacao(this.coligacoes.size() + 1, sigla, nome, simbolo, listaPart);
+		boolean naoExiste = true;
+		Iterator<Coligacao> itCol = this.coligacoes.values().iterator();
+		while (itCol.hasNext() && naoExiste) {
+			if (!itCol.next().equals(col)) {
+				naoExiste = false;
+				throw new ExceptionColigacaoExiste("O partido já se encontram registado");
+			}
+		}
+		this.coligacoes.put(col.getId(), col);
+		return col;
+	}
+
+	public void eliminarColigacao(Coligacao col) throws ExceptionColigacaoNaoExiste {
+		if (this.remove(col.getId()) == null)
+			throw new ExceptionColigacaoNaoExiste("A coligação não se encontra registada");
+	}
+
+	public void addLista(Eleicao el, Listavel lista, ){
+		el.addLista(lista);
+	}
+
+	public void removeLista(Eleicao e, Listavel lista) {
+		e.removeLista(lista);
+	}
+
+	public Boletim getBoletim(Eleicao e, Eleitor eleitor) {
+		return e.getBoletim(eleitor.getCirculo());
+	}
+
+	public void addVoto(Eleicao e, Listavel lista) {
+		e.addVoto(lista);
+	}
+
+	public void addVotoNulo(Eleicao e, int idCirculo) {
+		e.addVotoNulo(idCirculo);
+	}
+
+	public void addVotoBranco(Eleicao e, int idCirculo){
+		e.addVotoBranco(idCirculo);
+	}
+	
 }

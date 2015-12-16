@@ -8,59 +8,66 @@ package Business;
 /**
  *
  * @author Nuno Oliveira
- *  @author jms 04_12_2015
+ * @author jms 04_12_2015
  */
-public class Partido implements Votavel{
-    
-    private int id;
-    private String sigla;
-    private String nome;
-    private String simbolo;
+public class Partido implements Votavel {
 
-    public Partido() {
-    }
-    
-    public Partido(int id, String sigla, String nome, String simbolo) {
-        this.id = id;
-        this.sigla = sigla;
-        this.nome = nome;
-        this.simbolo = simbolo;
-    }
-    
-    public int getId() {
-        return id;
-    }
+	private int id;
+	private String sigla;
+	private String nome;
+	private String simbolo;
 
-    public String getSigla() {
-        return sigla;
-    }
+	public Partido() {
+	}
 
-    public String getNome() {
-        return nome;
-    }
+	public Partido(int id, String sigla, String nome, String simbolo) {
+		this.id = id;
+		this.sigla = sigla;
+		this.nome = nome;
+		this.simbolo = simbolo;
+	}
 
-    public String getSimbolo() {
-        return simbolo;
-    }
+	public int getId() {
+		return id;
+	}
 
-    public void setId(int id) {
-        this.id = id;
-    }
+	public String getSigla() {
+		return sigla;
+	}
 
-    public void setSigla(String sigla) {
-        this.sigla = sigla;
-    }
+	public String getNome() {
+		return nome;
+	}
 
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
+	public String getSimbolo() {
+		return simbolo;
+	}
 
-    public void setSimbolo(String simbolo) {
-        this.simbolo = simbolo;
-    }    
-    
-    public String toString(){
-    	return "Partido " + nome + ", com a sigla " + sigla + " e com o ID " + id;
-    }
-    
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public void setSigla(String sigla) {
+		this.sigla = sigla;
+	}
+
+	public void setNome(String nome) {
+		this.nome = nome;
+	}
+
+	public void setSimbolo(String simbolo) {
+		this.simbolo = simbolo;
+	}
+
+	public String toString() {
+		return "Partido " + nome + ", com a sigla " + sigla + " e com o ID " + id;
+	}
+
+	@Override
+    public boolean equals(Object obj) {
+		if(this.getClass() == obj.getClass()) return false; 
+		Partido part = (Partido) obj;
+		return this.nome==part.getNome() && this.sigla==part.getSigla() && this.simbolo==part.getSimbolo();
+	}
+
 }
