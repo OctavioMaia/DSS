@@ -9,7 +9,7 @@ Coisas a considerar:
 Cenas do Octávio:
 
 - [ ] Interfaces
-  - [x ] Login
+  - [x] Login
     - [x] Butão confirmar
     - [x] Butão sair
     - [x] Parse numero identificacao
