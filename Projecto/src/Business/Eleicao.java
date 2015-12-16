@@ -89,10 +89,7 @@ public abstract class Eleicao {
 		this.votantes.add(e.getnIdent());
 	}
 
-	public void terminar() {
-		this.estado = TERMINADA;
-		this.permitirVotar = false;
-	}
+	
 
 	public boolean estado(int est) {
 		if (this.estado == est)
@@ -100,7 +97,9 @@ public abstract class Eleicao {
 		return false;
 	}
 
+	
 	public abstract void iniciar();
+	public abstract void terminar();
 	public abstract void addLista(Listavel lista);
 	public abstract void removeLista(Listavel lista);
 	public abstract void addVoto(Listavel lista);

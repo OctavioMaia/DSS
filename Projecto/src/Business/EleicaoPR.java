@@ -1,8 +1,11 @@
 package Business;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.Random;
 import java.util.Set;
 
 import Data.ListaPRDAO;
@@ -77,12 +80,6 @@ public class EleicaoPR extends Eleicao {
 	}
 
 	@Override
-	public void iniciar() {
-		super.setEstado(0);
-		super.setPermitirVotar(true);
-	}
-
-	@Override
 	public void addLista(Listavel lista) {
 		ListaPR listpr = (ListaPR) lista;
 		if (listpr.equals(this.listas.get(listpr.getIdListaPR()))) {
@@ -140,8 +137,44 @@ public class EleicaoPR extends Eleicao {
 	@Override
 	public Boletim getBoletim(int idCirculo) {
 		Boletim b = null;
-		if(super.estado(0) && volta2==true ){
-			b = ;
+		if (super.estado(0) && volta2 == false) {
+			b = boletim1;
+		} else
+			b = boletim2;
+		return b;
+	}
+
+	@Override
+	public void iniciar() {
+		if (super.estado(-1)) {
+			super.setEstado(0);
+			super.setPermitirVotar(true);
+			this.boletim1 = gerarBoletim();
+		} else {
+			super.setEstado(0);
+			super.setPermitirVotar(true);
+			this.boletim2 = gerarBoletim();
+		}
+	}
+
+	@Override
+	public void terminar() {
+		if(super.estado(-1))
+	}
+
+	private Boletim geraBoletim() {
+		Boletim b = new Boletim();
+		int nListas = this.listas.size() - 1;
+		int rand;
+		ArrayList<ListaPR> list = (ArrayList<ListaPR>) this.listas.values();
+		while (nListas > 0) {
+			Random r = new Random();
+			rand = r.nextInt(nListas);
+			ListaPR lpr = list.get(rand);
+			lpr.setOrdem1(rand);
+			b.
+			nListas = nListas - 1;
+
 		}
 		return null;
 	}

@@ -1,7 +1,7 @@
 package Business;
 
 /*
- * Lista da Presid�ncia da Rep�blica
+ * Lista da Presidencia da Republica
  */
 
 public class ListaPR implements Listavel {

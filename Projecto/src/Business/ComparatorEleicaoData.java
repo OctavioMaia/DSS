@@ -1,7 +1,6 @@
 package Business;
 
 import java.util.Comparator;
-import java.util.Date;
 
 public class ComparatorEleicaoData implements Comparator<Eleicao>{
 
