@@ -17,16 +17,6 @@ new FormModel {
 				"x": 25
 				"y": 25
 			} )
-			add( new FormComponent( "javax.swing.JLabel" ) {
-				name: "label2"
-				"text": "Data fim da eleição:"
-				"font": #Font0
-			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
-				"width": 139
-				"height": 17
-				"x": 25
-				"y": 55
-			} )
 			add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
 				name: "tableCandidatos"
 				"font": new java.awt.Font( "Arial", 0, 12 )
@@ -47,7 +37,7 @@ new FormModel {
 				"width": 265
 				"height": 215
 				"x": 25
-				"y": 95
+				"y": 60
 			} )
 			add( new FormComponent( "javax.swing.JLabel" ) {
 				name: "imagem"
@@ -56,7 +46,7 @@ new FormModel {
 				"width": 165
 				"height": 170
 				"x": 360
-				"y": 95
+				"y": 60
 			} )
 			add( new FormComponent( "javax.swing.JButton" ) {
 				name: "eliminar"
@@ -65,7 +55,7 @@ new FormModel {
 				"enabled": false
 			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
 				"x": 360
-				"y": 285
+				"y": 250
 				"width": 165
 			} )
 			add( new FormComponent( "javax.swing.JLabel" ) {
@@ -76,7 +66,7 @@ new FormModel {
 				"width": 139
 				"height": 22
 				"x": 25
-				"y": 325
+				"y": 290
 			} )
 			add( new FormComponent( "javax.swing.JLabel" ) {
 				name: "label4"
@@ -86,14 +76,14 @@ new FormModel {
 				"width": 35
 				"height": 22
 				"x": 25
-				"y": 355
+				"y": 320
 			} )
 			add( new FormComponent( "javax.swing.JTextField" ) {
 				name: "nomeCandidato"
 				"font": new java.awt.Font( "Arial", 0, 14 )
 			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
 				"x": 165
-				"y": 325
+				"y": 290
 				"width": 375
 			} )
 			add( new FormComponent( "javax.swing.JButton" ) {
@@ -103,7 +93,7 @@ new FormModel {
 				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "buttonProcurarActionPerformed", true ) )
 			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
 				"x": 65
-				"y": 355
+				"y": 320
 				"width": 95
 			} )
 			add( new FormComponent( "javax.swing.JTextField" ) {
@@ -111,7 +101,7 @@ new FormModel {
 				"editable": false
 			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
 				"x": 165
-				"y": 355
+				"y": 320
 				"width": 375
 				"height": 25
 			} )
@@ -125,7 +115,7 @@ new FormModel {
 				"width": 95
 				"height": 25
 				"x": 65
-				"y": 385
+				"y": 350
 			} )
 			add( new FormComponent( "javax.swing.JButton" ) {
 				name: "buttonConfirmar"
@@ -135,7 +125,7 @@ new FormModel {
 				"width": 105
 				"height": 25
 				"x": 305
-				"y": 415
+				"y": 380
 			} )
 			add( new FormComponent( "javax.swing.JButton" ) {
 				name: "buttonSair"
@@ -146,12 +136,12 @@ new FormModel {
 				"width": 95
 				"height": 25
 				"x": 435
-				"y": 415
+				"y": 380
 			} )
 			add( new FormComponent( "javax.swing.JComboBox" ) {
 				name: "diasInicio"
 				"font": new java.awt.Font( "Arial", 0, 12 )
-				"model": &DefaultComboBoxModel0 new javax.swing.DefaultComboBoxModel {
+				"model": new javax.swing.DefaultComboBoxModel {
 					selectedItem: "1"
 					addElement( "1" )
 					addElement( "2" )
@@ -192,19 +182,9 @@ new FormModel {
 				"height": 25
 			} )
 			add( new FormComponent( "javax.swing.JComboBox" ) {
-				name: "diasFim"
-				"font": new java.awt.Font( "Arial", 0, 12 )
-				"model": #DefaultComboBoxModel0
-			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
-				"width": 40
-				"height": 25
-				"x": 170
-				"y": 50
-			} )
-			add( new FormComponent( "javax.swing.JComboBox" ) {
 				name: "mesInicio"
-				"font": &Font2 new java.awt.Font( "Arial", 0, 12 )
-				"model": &DefaultComboBoxModel1 new javax.swing.DefaultComboBoxModel {
+				"font": new java.awt.Font( "Arial", 0, 12 )
+				"model": new javax.swing.DefaultComboBoxModel {
 					selectedItem: "Janeiro"
 					addElement( "Janeiro" )
 					addElement( "Fevereiro" )
@@ -226,19 +206,9 @@ new FormModel {
 				"height": 25
 			} )
 			add( new FormComponent( "javax.swing.JComboBox" ) {
-				name: "mesFim"
-				"font": #Font2
-				"model": #DefaultComboBoxModel1
-			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
-				"width": 120
-				"height": 25
-				"x": 215
-				"y": 50
-			} )
-			add( new FormComponent( "javax.swing.JComboBox" ) {
 				name: "anoInicio"
-				"font": &Font3 new java.awt.Font( "Tahoma", 0, 12 )
-				"model": &DefaultComboBoxModel2 new javax.swing.DefaultComboBoxModel {
+				"font": new java.awt.Font( "Tahoma", 0, 12 )
+				"model": new javax.swing.DefaultComboBoxModel {
 					selectedItem: "1990"
 					addElement( "1990" )
 					addElement( "1991" )
@@ -288,19 +258,9 @@ new FormModel {
 				"width": 75
 				"height": 25
 			} )
-			add( new FormComponent( "javax.swing.JComboBox" ) {
-				name: "anoFim"
-				"font": #Font3
-				"model": #DefaultComboBoxModel2
-			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
-				"width": 75
-				"height": 25
-				"x": 340
-				"y": 50
-			} )
 		}, new FormLayoutConstraints( null ) {
 			"location": new java.awt.Point( 5, 5 )
-			"size": new java.awt.Dimension( 570, 485 )
+			"size": new java.awt.Dimension( 570, 450 )
 		} )
 		add( new FormWindow( "javax.swing.JDialog", new FormLayoutManager( class com.jformdesigner.runtime.NullLayout ) ) {
 			name: "dialog1"
