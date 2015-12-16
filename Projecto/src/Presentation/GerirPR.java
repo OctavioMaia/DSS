@@ -42,7 +42,7 @@ public class GerirPR {
 	
 	private void initComponents() {
 		// JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
-		// Generated using JFormDesigner Evaluation license - Octavio Maia
+		// Generated using JFormDesigner Evaluation license - Rui Freitas
 		GerirPR = new JFrame();
 		label1 = new JLabel();
 		spinnerDataInicio = new JSpinner();
@@ -236,7 +236,7 @@ public class GerirPR {
 
 	
 	// JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables
-	// Generated using JFormDesigner Evaluation license - Octavio Maia
+	// Generated using JFormDesigner Evaluation license - Rui Freitas
 	private JFrame GerirPR;
 	private JLabel label1;
 	private JSpinner spinnerDataInicio;
