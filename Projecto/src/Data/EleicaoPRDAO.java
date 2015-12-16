@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
@@ -12,12 +13,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
-import Business.Boletim;
-import Business.Candidato;
-import Business.Circulo;
+
 import Business.EleicaoPR;
-import Business.ResultadoPR;
-import Business.ListaPR;
+
 
 public class EleicaoPRDAO implements Map<Integer,EleicaoPR>{
 
@@ -192,7 +190,7 @@ public class EleicaoPRDAO implements Map<Integer,EleicaoPR>{
 				psElei.setDate(3, (java.sql.Date) value.getData()); //atencao aqui
 				psElei.setBoolean(5, value.isPermitirVotar());
 				psElei.close();
-				PreparedStatement pseicaoPR = conn.prepareStatement("INSERT INTO EleicaoPR"
+				PreparedStatement pseicaoPR = conn.prepareStatement("INSERT INTO EleicoesPR"
 						+ "VALUES"
 						+ "(idEleicao,volta2,data2)"
 						+ "(?,?,?)");
@@ -200,37 +198,8 @@ public class EleicaoPRDAO implements Map<Integer,EleicaoPR>{
 				pseicaoPR.setBoolean(2, value.isVolta2());
 				pseicaoPR.setDate(3, (java.sql.Date) value.getData2());
 				pseicaoPR.close();
-				InsertEleitorVota(key,value,conn);
-				//eleicao ja inserida
-				//inserir votantes volta1
-				/*
-				PreparedStatement psisnsert = conn.prepareStatement("INSERT INTRO Eleitor_vota_Eleicao"
-						+ "VALUES"
-						+ "(nrIdeleitor,idEleicao,volta)"
-						+ "(?,?,?)");
-				psisnsert.setInt(3,1);
-				psisnsert.setInt(2,key);
-				Iterator<Integer> iv1 = value.getVotantes().iterator();
-				while(iv1.hasNext()){
-					int idv = iv1.next();
-					psisnsert.setInt(1, idv);
-					psisnsert.executeQuery();
-				}
-				
-				//inserir votantes volta2
-				psisnsert.setInt(3,2);
-				Iterator<Integer> iv2 = value.getVotantes2().iterator();
-				while(iv2.hasNext()){
-					int idv = iv2.next();
-					psisnsert.setInt(1, idv);
-					psisnsert.executeQuery();
-				}
-				psisnsert.close();
-				*/
 			}else{//existe na BD Update
-				/*UPDATE table_name
-				SET column1=value1,column2=value2,...
-				WHERE some_column=some_value;*/
+
 				//Update Eleicao
 				PreparedStatement eleicUpdate =conn.prepareStatement("UPDATE Eleicoes"
 						+ "SET estado=?,data=?,permitirVotar=?"
@@ -242,7 +211,7 @@ public class EleicaoPRDAO implements Map<Integer,EleicaoPR>{
 				eleicUpdate.execute();
 				eleicUpdate.close();
 				//Update EleicaoPR
-				PreparedStatement eleicUpdatePR = conn.prepareStatement("UPDATE EleicaoPR"
+				PreparedStatement eleicUpdatePR = conn.prepareStatement("UPDATE EleicoesPR"
 						+ "VALUES"
 						+ "volta2 = ? ,data2 = ?)"
 						+ "WHERE idEleicao= ?");
@@ -254,40 +223,19 @@ public class EleicaoPRDAO implements Map<Integer,EleicaoPR>{
 				PreparedStatement p = conn.prepareStatement("DELETE FROM Eleitor_vota_Eleicao WHERE idEleicao=?");
 				p.setInt(1, key);
 				p.executeQuery();
-				p.close();
-				InsertEleitorVota(key,value,conn);
-				/*
-				//inserir votantes
-				PreparedStatement psvota = conn.prepareStatement("INSERT INTRO Eleitor_vota_Eleicao"
-						+ "VALUES"
-						+ "(nrIdEleitor,idEleicao,volta)"
-						+ "(?,?,?)");
-				psvota.setInt(2, key);
-				//inserir votantes volta 1
-				psvota.setInt(3, 1);
-				Iterator<Integer> votantes = value.getVotantes().iterator();
-				while(votantes.hasNext()){
-					int eleit = votantes.next();
-					psvota.setInt(1, eleit);
-				}
-				//inserir votantes volta 2
-				psvota.setInt(3, 2);
-				votantes = value.getVotantes2().iterator();
-				while(votantes.hasNext()){
-					int eleit = votantes.next();
-					psvota.setInt(1, eleit);
-				}*/
-	
+				p.close();				
 			}
+			//inserir votantes
+			InsertEleitorVota(key,value,conn);
 			conn.commit();
-			return ret;
+			
 		}catch(Exception e){
     		try {
 				conn.rollback();
 			} catch (SQLException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
-				return null;
+				return ret=null;
 			}
     	}finally{
     		try {
@@ -297,6 +245,7 @@ public class EleicaoPRDAO implements Map<Integer,EleicaoPR>{
 				e.printStackTrace();
 			}
     	}
+		return ret;
 	}
 
 	@Override
@@ -314,7 +263,7 @@ public class EleicaoPRDAO implements Map<Integer,EleicaoPR>{
 			psReleit.setInt(1, (Integer)key);
 			psReleit.executeQuery();
 			psReleit.close();
-			PreparedStatement psReleicaoPRt = conn.prepareStatement("DELETE FROM EleicaoPR"
+			PreparedStatement psReleicaoPRt = conn.prepareStatement("DELETE FROM EleicoesPR"
 					+ "WHERE idEleicao = ?");
 			psReleicaoPRt.setInt(1, (Integer)key);
 			psReleicaoPRt.executeQuery();
@@ -325,7 +274,6 @@ public class EleicaoPRDAO implements Map<Integer,EleicaoPR>{
 			psReleicao.executeQuery();
 			psReleicao.close();
 			conn.commit();	
-			return ret;
 		}catch(Exception e){
     		try {
 				conn.rollback();
@@ -333,6 +281,7 @@ public class EleicaoPRDAO implements Map<Integer,EleicaoPR>{
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
+    		ret=null; //ver isto
     	}finally{
     		try {
 				conn.close();
@@ -340,7 +289,6 @@ public class EleicaoPRDAO implements Map<Integer,EleicaoPR>{
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-    		return null;
     	}
 		
 		return ret;
@@ -354,20 +302,58 @@ public class EleicaoPRDAO implements Map<Integer,EleicaoPR>{
 
 	@Override
 	public void clear() {
-		// TODO Auto-generated method stub
+		Set<Integer> ks = this.keySet();
+		if(ks==null || ks.isEmpty()) return;
+		Iterator<Integer> i = ks.iterator();
+		while(i.hasNext()){
+			this.remove(i.next());
+		}
 		
 	}
 
 	@Override
 	public Set<Integer> keySet() {
 		Set<Integer> ret  = new TreeSet<>();
-		
+		Connection conn = null;
+		try{
+			conn = Connector.newConnection();
+			PreparedStatement ps = conn.prepareStatement("SELECT idEleicao FROM EleicoesPR");
+			ResultSet rs = ps.executeQuery();
+			while(rs.next()){
+				ret.add(rs.getInt("idEleicao"));
+			}
+			rs.close();
+			ps.close();
+			conn.commit();
+		}catch(Exception e){
+    		try {
+				conn.rollback();
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+    		ret=new TreeSet<>(); //ver isto
+    	}finally{
+    		try {
+				conn.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+    	}
+		return ret;
 	}
 
 	@Override
 	public Collection<EleicaoPR> values() {
-		// TODO Auto-generated method stub
-		return null;
+		ArrayList<EleicaoPR> ret = new ArrayList<>();
+		Set<Integer> keys = this.keySet();
+		if(keys==null || keys.isEmpty()) return ret;
+		Iterator<Integer> i = keys.iterator();
+		while(i.hasNext()){
+			ret.add(this.get(i.next()));
+		}
+		return ret;
 	}
 
 	@Override

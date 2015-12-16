@@ -1,6 +1,7 @@
 package Business;
 
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
@@ -75,7 +76,7 @@ public class SGE {
 		return idEleicaoAtiva;
 	}
 
-	public void inserirCadernoRecenciamento() {
+	public List<Eleitor> lerCadernoRecenciamento() {
 
 		ArrayList<Eleitor> listaEleitores = new ArrayList<Eleitor>();
 
@@ -109,14 +110,17 @@ public class SGE {
 				}
 			}
 		}
+		return listaEleitores;
+	}
 
+	public void confirmarCadernoRecenciamento(List<Eleitor> listaEleitores) {
 		for (Eleitor e : listaEleitores) {
 			eleitores.put(e.getnIdent(), e);
 		}
 	}
 
 	public void iniciarEleicao(Eleicao e) {
-		if (this.ativa == -1) {
+		if (this.ativa != -1) {
 			throw new ExceptionEleicaoAtiva("Já existe uma eleição ativa");
 		} else {
 			e.iniciar();
@@ -215,13 +219,9 @@ public class SGE {
 		return eCriadas;
 	}
 
-	public void votar(Eleicao e, int idCirculo, Listavel lista) {
-		e.votar();
-		if (e.getClass().getName() == "EleicaoPR") {
-			this.eleicoesPR.put(e.getIdEleicao(), e);
-		} else {
-			this.eleicoesAR.put(e.getIdEleicao(), e);
-		}
+	public void addVoto(Eleicao e, Listavel lista, Eleitor eleitor) {
+		e.addVoto(lista);
+		e.addVotante(eleitor);
 	}
 
 	public boolean login(int id, String pin) {
@@ -266,13 +266,28 @@ public class SGE {
 			throw new ExceptionColigacaoNaoExiste("A coligação não se encontra registada");
 	}
 
-	public void addListaPR(EleicaoPR e, ListaPR l) {
-		e.addLista();
+	public void addLista(Eleicao el, Listavel lista, ){
+		el.addLista(lista);
 	}
 
-	public void addListaAR(EleicaoAR e, listaAR l) {
-		e.addLista();
+	public void removeLista(Eleicao e, Listavel lista) {
+		e.removeLista(lista);
+	}
+
+	public Boletim getBoletim(Eleicao e, Eleitor eleitor) {
+		return e.getBoletim(eleitor.getCirculo());
+	}
+
+	public void addVoto(Eleicao e, Listavel lista) {
+		e.addVoto(lista);
+	}
+
+	public void addVotoNulo(Eleicao e, int idCirculo) {
+		e.addVotoNulo(idCirculo);
+	}
+
+	public void addVotoBranco(Eleicao e, int idCirculo){
+		e.addVotoBranco(idCirculo);
 	}
 	
-	public 
 }
