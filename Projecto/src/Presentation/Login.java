@@ -5,12 +5,41 @@
 package Presentation;
 
 import java.awt.*;
+import java.awt.event.*;
 import javax.swing.*;
+
+import Business.SGE;
 
 /**
  * @author Octavio Maia
  */
 public class Login  {
+
+	private SGE sge = new SGE();
+	boolean boolean_erro = false;
+	
+	public Login(){
+		initComponents();
+		frameLogin.setVisible(true);
+	}
+	
+	private void buttonAutenticarActionPerformed(ActionEvent e) {		
+		try{
+			String pw = new String(textPassword.getPassword());
+			int numeroEleitor = Integer.parseInt(textUsername.getText());
+
+			if(sge.login(numeroEleitor, pw)) boolean_erro = false;
+			else boolean_erro = true;
+			
+		}catch(NumberFormatException ex){
+			JOptionPane.showMessageDialog(null, "Introduza o seu número de eleitor correto!");
+		}
+	}
+
+	private void buttonSairActionPerformed(ActionEvent e) {
+		//guardar antes de fechar? freitas faz, sgeSaveAll()
+		System.exit(0);
+	}
 
 	private void initComponents() {
 		// JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
@@ -30,7 +59,8 @@ public class Login  {
 			frameLogin.setResizable(false);
 			frameLogin.setTitle("Sistemas de Elei\u00e7\u00f5es");
 			frameLogin.setType(Window.Type.UTILITY);
-			frameLogin.setFont(new Font("Calibri", Font.PLAIN, 12));
+			frameLogin.setFont(new Font("Arial", Font.PLAIN, 12));
+			frameLogin.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 			Container frameLoginContentPane = frameLogin.getContentPane();
 			frameLoginContentPane.setLayout(new BoxLayout(frameLoginContentPane, BoxLayout.X_AXIS));
 
@@ -38,36 +68,31 @@ public class Login  {
 			{
 
 				// JFormDesigner evaluation mark
-				panel1.setBorder(new javax.swing.border.CompoundBorder(
-					new javax.swing.border.TitledBorder(new javax.swing.border.EmptyBorder(0, 0, 0, 0),
-						"JFormDesigner Evaluation", javax.swing.border.TitledBorder.CENTER,
-						javax.swing.border.TitledBorder.BOTTOM, new java.awt.Font("Dialog", java.awt.Font.BOLD, 12),
-						java.awt.Color.red), panel1.getBorder())); panel1.addPropertyChangeListener(new java.beans.PropertyChangeListener(){public void propertyChange(java.beans.PropertyChangeEvent e){if("border".equals(e.getPropertyName()))throw new RuntimeException();}});
-
+				
 				panel1.setLayout(null);
 
 				//---- label1 ----
 				label1.setText("Username");
-				label1.setFont(new Font("Calibri", Font.BOLD, 22));
+				label1.setFont(new Font("Arial", Font.BOLD, 22));
 				label1.setHorizontalAlignment(SwingConstants.CENTER);
 				panel1.add(label1);
 				label1.setBounds(40, 15, 120, 40);
 
 				//---- label2 ----
 				label2.setText("Password");
-				label2.setFont(new Font("Calibri", Font.BOLD, 22));
+				label2.setFont(new Font("Arial", Font.BOLD, 22));
 				label2.setHorizontalAlignment(SwingConstants.CENTER);
 				panel1.add(label2);
 				label2.setBounds(40, 60, 120, 40);
 
 				//---- textUsername ----
-				textUsername.setFont(new Font("Calibri", Font.PLAIN, 14));
+				textUsername.setFont(new Font("Arial", Font.PLAIN, 14));
 				textUsername.setHorizontalAlignment(SwingConstants.CENTER);
 				panel1.add(textUsername);
 				textUsername.setBounds(160, 20, 190, 35);
 
 				//---- textPassword ----
-				textPassword.setFont(new Font("Calibri", Font.PLAIN, 14));
+				textPassword.setFont(new Font("Arial", Font.PLAIN, 14));
 				textPassword.setHorizontalAlignment(SwingConstants.CENTER);
 				panel1.add(textPassword);
 				textPassword.setBounds(160, 60, 190, 35);
@@ -75,20 +100,23 @@ public class Login  {
 				//---- buttonAutenticar ----
 				buttonAutenticar.setText("Autenticar");
 				buttonAutenticar.setFont(new Font("Arial", Font.PLAIN, 14));
+				buttonAutenticar.addActionListener(e -> buttonAutenticarActionPerformed(e));
 				panel1.add(buttonAutenticar);
-				buttonAutenticar.setBounds(55, 125, 135, 35);
+				buttonAutenticar.setBounds(40, 125, 135, 35);
 
 				//---- buttonSair ----
 				buttonSair.setText("Sair");
 				buttonSair.setFont(new Font("Arial", Font.PLAIN, 14));
+				buttonSair.addActionListener(e -> buttonSairActionPerformed(e));
 				panel1.add(buttonSair);
-				buttonSair.setBounds(220, 125, 135, 35);
+				buttonSair.setBounds(215, 125, 135, 35);
 
 				//---- labelPasswordErrada ----
 				labelPasswordErrada.setText("Username/Password incorretos!");
 				labelPasswordErrada.setFont(new Font("Arial", Font.BOLD, 11));
 				labelPasswordErrada.setHorizontalAlignment(SwingConstants.CENTER);
 				labelPasswordErrada.setForeground(Color.red);
+				labelPasswordErrada.setVisible(boolean_erro);
 				panel1.add(labelPasswordErrada);
 				labelPasswordErrada.setBounds(new Rectangle(new Point(110, 105), labelPasswordErrada.getPreferredSize()));
 
