@@ -32,7 +32,12 @@ public class SGE {
 	private static final int CRIADA = -1;
 	private static final int ATIVA = 0;
 	private static final int TERMINADA = 1;
+	
 
+	
+	/**
+	 * ao criaar eleição passar no construtor todos os circulos
+	 */
 	private Connector cn;
 	private PartidosDAO partidos;
 	private CirculoDAO circulos;
@@ -290,4 +295,7 @@ public class SGE {
 		e.addVotoBranco(idCirculo);
 	}
 	
+	public Circulo getCirculoID(int idCirculo){
+		
+	}
 }

@@ -7,7 +7,7 @@ import java.util.ArrayList;
  */
 public class Lista implements Listavel{
 	private int id;
-	private int circulo;
+	private Circulo circulo;
 	private int ordem;
 	private String sigla;
 	private String nome;
@@ -103,5 +103,10 @@ public class Lista implements Listavel{
 
 	public void removeCandidato(Candidato candidato){
 		this.candidatos.remove(candidato);
+	}
+	
+	public int numCandPrim(){
+		Iterator<Candidatos> it = candidatos.iterator();
+		while(it.has)
 	}
 }
