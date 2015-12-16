@@ -1,25 +1,25 @@
 package Business;
 
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Boletim {
-	private Set<Listavel> listas;
+	private List<Listavel> listas;
 	
-	public Boletim() {
-		listas = new TreeSet<Listavel>(new ComparatorListaPRVolta1());
+	public Boletim(int nListas) {
+		listas = new ArrayList<Listavel>(nListas);
 	}
 
-	public Set<Listavel> getListas() {
+	public List<Listavel> getListas() {
 		return listas;
 	}
 
-	public void setListas(Set<Listavel> listas) {
+	public void setListas(List<Listavel> listas) {
 		this.listas = listas;
 	}
 	
-	public void addListavel(Listavel){
-		listas.add(e)
+	public void addLista(Listavel l){
+		if(l.getClass().getName())
 	}
 	
 }
