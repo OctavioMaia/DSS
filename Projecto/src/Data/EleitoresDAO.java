@@ -159,7 +159,7 @@ public class EleitoresDAO implements Map<Integer,Eleitor>{
         try{
         	conn=Connector.newConnection();
         	Statement s = conn.createStatement();
-            String querie = " Select nrId FROM Eleitores";
+            String querie = " Select nrID FROM Eleitores";
             ResultSet rs = s.executeQuery(querie);
             while(rs.next())
                ret.add(rs.getInt("nrID"));
@@ -191,7 +191,7 @@ public class EleitoresDAO implements Map<Integer,Eleitor>{
         
         try{
         	conn=Connector.newConnection();
-        	PreparedStatement ps = conn.prepareStatement("Select * FROM Eleitores WHERE nrId = ?");
+        	PreparedStatement ps = conn.prepareStatement("Select * FROM Eleitores WHERE nrID = ?");
         	ps.setInt(1, (Integer)key);
         	ResultSet rs = ps.executeQuery();
             while(rs.next()){
@@ -233,22 +233,34 @@ public class EleitoresDAO implements Map<Integer,Eleitor>{
     
     public Eleitor put(Integer key,  Eleitor value){
     	Connection conn=null;
-    	Eleitor el = this.remove(key);
+    	Eleitor el = this.get(key);
     	try{
     		conn = Connector.newConnection();
-    		PreparedStatement ps = conn.prepareStatement("insert into Eleitores " +
-                    "(nrId,nome,pin,idCirculo) " +
+    		if(el==null){//eleitor nao existe
+    			PreparedStatement ps = conn.prepareStatement("insert into Eleitores " +
+                    "(nrID,nome,pin,idCirculo) " +
                     "value " +
                     "(?,?,?,?)");
-    		ps.setInt(2, value.getnIdent());
-            ps.setString(1, value.getNome());
-            ps.setString(3, value.getPin());
-            ps.setInt(4, value.getCirculo());
-            ps.execute();
-            ps.close();
-            conn.commit();
+    			ps.setInt(1, key);
+    			ps.setString(2, value.getNome());
+    			ps.setString(3, value.getPin());
+    			ps.setInt(4, value.getCirculo());
+    			ps.execute();
+    			ps.close();
+    		}else{
+    			PreparedStatement ps = conn.prepareStatement("UPDATE Eleitores " + "SET nome=?,pin=?,idCirculo=? " +
+                        "WHERE nrID = ? ");
+        			ps.setInt(4, key);
+        			ps.setString(1, value.getNome());
+        			ps.setString(2, value.getPin());
+        			ps.setInt(3, value.getCirculo());
+        			ps.execute();
+        			ps.close();
+    		}
+    		conn.commit();
     	}catch(Exception e){
     		try {
+    			e.printStackTrace();
 				conn.rollback();
 			} catch (SQLException e1) {
 				// TODO Auto-generated catch block
