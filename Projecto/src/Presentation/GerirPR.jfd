@@ -1,4 +1,4 @@
-JFDML JFormDesigner: "5.2.2.2.228" Java: "1.8.0_51" encoding: "UTF-8"
+JFDML JFormDesigner: "5.2.2.2.228" Java: "1.8.0_65" encoding: "UTF-8"
 
 new FormModel {
 	contentType: "form/swing"
@@ -74,9 +74,9 @@ new FormModel {
 				"font": #Font0
 			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
 				"width": 139
-				"height": 17
+				"height": 22
 				"x": 25
-				"y": 330
+				"y": 325
 			} )
 			add( new FormComponent( "javax.swing.JLabel" ) {
 				name: "label4"
@@ -84,9 +84,9 @@ new FormModel {
 				"font": #Font0
 			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
 				"width": 35
-				"height": 17
+				"height": 22
 				"x": 25
-				"y": 360
+				"y": 355
 			} )
 			add( new FormComponent( "javax.swing.JTextField" ) {
 				name: "nomeCandidato"
@@ -233,6 +233,69 @@ new FormModel {
 				"width": 120
 				"height": 25
 				"x": 215
+				"y": 50
+			} )
+			add( new FormComponent( "javax.swing.JComboBox" ) {
+				name: "anoInicio"
+				"font": &Font3 new java.awt.Font( "Tahoma", 0, 12 )
+				"model": &DefaultComboBoxModel2 new javax.swing.DefaultComboBoxModel {
+					selectedItem: "1990"
+					addElement( "1990" )
+					addElement( "1991" )
+					addElement( "1992" )
+					addElement( "1993" )
+					addElement( "1994" )
+					addElement( "1995" )
+					addElement( "1996" )
+					addElement( "1997" )
+					addElement( "1998" )
+					addElement( "1999" )
+					addElement( "2000" )
+					addElement( "2001" )
+					addElement( "2002" )
+					addElement( "2003" )
+					addElement( "2004" )
+					addElement( "2005" )
+					addElement( "2006" )
+					addElement( "2007" )
+					addElement( "2008" )
+					addElement( "2009" )
+					addElement( "2010" )
+					addElement( "2011" )
+					addElement( "2012" )
+					addElement( "2013" )
+					addElement( "2014" )
+					addElement( "2015" )
+					addElement( "2016" )
+					addElement( "2017" )
+					addElement( "2018" )
+					addElement( "2019" )
+					addElement( "2020" )
+					addElement( "2021" )
+					addElement( "2022" )
+					addElement( "2023" )
+					addElement( "2024" )
+					addElement( "2025" )
+					addElement( "2026" )
+					addElement( "2027" )
+					addElement( "2028" )
+					addElement( "2029" )
+					addElement( "2030" )
+				}
+			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
+				"x": 340
+				"y": 20
+				"width": 75
+				"height": 25
+			} )
+			add( new FormComponent( "javax.swing.JComboBox" ) {
+				name: "anoFim"
+				"font": #Font3
+				"model": #DefaultComboBoxModel2
+			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
+				"width": 75
+				"height": 25
+				"x": 340
 				"y": 50
 			} )
 		}, new FormLayoutConstraints( null ) {

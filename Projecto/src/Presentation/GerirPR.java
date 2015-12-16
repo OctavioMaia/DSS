@@ -42,7 +42,7 @@ public class GerirPR {
 	
 	private void initComponents() {
 		// JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
-		// Generated using JFormDesigner Evaluation license - Rui Freitas
+		// Generated using JFormDesigner Evaluation license - Octavio Maia
 		GerirPR = new JFrame();
 		label1 = new JLabel();
 		label2 = new JLabel();
@@ -62,6 +62,8 @@ public class GerirPR {
 		diasFim = new JComboBox<>();
 		mesInicio = new JComboBox<>();
 		mesFim = new JComboBox<>();
+		anoInicio = new JComboBox<>();
+		anoFim = new JComboBox<>();
 		dialog1 = new JDialog();
 		fileChooser1 = new JFileChooser();
 
@@ -130,13 +132,13 @@ public class GerirPR {
 			label3.setText("Nome do candidato:");
 			label3.setFont(new Font("Arial", Font.PLAIN, 14));
 			GerirPRContentPane.add(label3);
-			label3.setBounds(25, 330, 139, 17);
+			label3.setBounds(25, 325, 139, 22);
 
 			//---- label4 ----
 			label4.setText("Foto");
 			label4.setFont(new Font("Arial", Font.PLAIN, 14));
 			GerirPRContentPane.add(label4);
-			label4.setBounds(25, 360, 35, 17);
+			label4.setBounds(25, 355, 35, 22);
 
 			//---- nomeCandidato ----
 			nomeCandidato.setFont(new Font("Arial", Font.PLAIN, 14));
@@ -290,6 +292,102 @@ public class GerirPR {
 			GerirPRContentPane.add(mesFim);
 			mesFim.setBounds(215, 50, 120, 25);
 
+			//---- anoInicio ----
+			anoInicio.setFont(new Font("Tahoma", Font.PLAIN, 12));
+			anoInicio.setModel(new DefaultComboBoxModel<>(new String[] {
+				"1990",
+				"1991",
+				"1992",
+				"1993",
+				"1994",
+				"1995",
+				"1996",
+				"1997",
+				"1998",
+				"1999",
+				"2000",
+				"2001",
+				"2002",
+				"2003",
+				"2004",
+				"2005",
+				"2006",
+				"2007",
+				"2008",
+				"2009",
+				"2010",
+				"2011",
+				"2012",
+				"2013",
+				"2014",
+				"2015",
+				"2016",
+				"2017",
+				"2018",
+				"2019",
+				"2020",
+				"2021",
+				"2022",
+				"2023",
+				"2024",
+				"2025",
+				"2026",
+				"2027",
+				"2028",
+				"2029",
+				"2030"
+			}));
+			GerirPRContentPane.add(anoInicio);
+			anoInicio.setBounds(340, 20, 75, 25);
+
+			//---- anoFim ----
+			anoFim.setFont(new Font("Tahoma", Font.PLAIN, 12));
+			anoFim.setModel(new DefaultComboBoxModel<>(new String[] {
+				"1990",
+				"1991",
+				"1992",
+				"1993",
+				"1994",
+				"1995",
+				"1996",
+				"1997",
+				"1998",
+				"1999",
+				"2000",
+				"2001",
+				"2002",
+				"2003",
+				"2004",
+				"2005",
+				"2006",
+				"2007",
+				"2008",
+				"2009",
+				"2010",
+				"2011",
+				"2012",
+				"2013",
+				"2014",
+				"2015",
+				"2016",
+				"2017",
+				"2018",
+				"2019",
+				"2020",
+				"2021",
+				"2022",
+				"2023",
+				"2024",
+				"2025",
+				"2026",
+				"2027",
+				"2028",
+				"2029",
+				"2030"
+			}));
+			GerirPRContentPane.add(anoFim);
+			anoFim.setBounds(340, 50, 75, 25);
+
 			{ // compute preferred size
 				Dimension preferredSize = new Dimension();
 				for(int i = 0; i < GerirPRContentPane.getComponentCount(); i++) {
@@ -341,7 +439,7 @@ public class GerirPR {
 
 	
 	// JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables
-	// Generated using JFormDesigner Evaluation license - Rui Freitas
+	// Generated using JFormDesigner Evaluation license - Octavio Maia
 	private JFrame GerirPR;
 	private JLabel label1;
 	private JLabel label2;
@@ -361,6 +459,8 @@ public class GerirPR {
 	private JComboBox<String> diasFim;
 	private JComboBox<String> mesInicio;
 	private JComboBox<String> mesFim;
+	private JComboBox<String> anoInicio;
+	private JComboBox<String> anoFim;
 	private JDialog dialog1;
 	private JFileChooser fileChooser1;
 	// JFormDesigner - End of variables declaration  //GEN-END:variables
