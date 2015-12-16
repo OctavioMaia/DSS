@@ -12,70 +12,76 @@ import java.util.*;
  * @author Nuno Oliveira
  */
 public class Candidato {
-    
-    private int bi;
-    private Date dataNasc;
-    private String nome;
-    private String prof;
-    private String residencia;
-    private String naturalidade;
 
-    public Candidato(String nome, int bi, String prof, Date dataNasc, String residencia, String naturalidade) {
-        this.nome = nome;
-        this.bi = bi;
-        this.prof = prof;
-        this.dataNasc = dataNasc;
-        this.residencia = residencia;
-        this.naturalidade = naturalidade;
-    }
-    
-    
-    public String getNome() {
-        return nome;
-    }
+	private int bi;
+	private Calendar dataNasc;
+	private String nome;
+	private String prof;
+	private String residencia;
+	private String naturalidade;
 
-    public int getBi() {
-        return bi;
-    }
+	public Candidato(String nome, int bi, String prof, Calendar dataNasc, String residencia, String naturalidade) {
+		this.nome = nome;
+		this.bi = bi;
+		this.prof = prof;
+		this.dataNasc = dataNasc;
+		this.residencia = residencia;
+		this.naturalidade = naturalidade;
+	}
 
-    public String getProf() {
-        return prof;
-    }
+	public String getNome() {
+		return nome;
+	}
 
-    public Date getDataNasc() {
-        return dataNasc;
-    }
+	public int getBi() {
+		return bi;
+	}
 
-    public String getResidencia() {
-        return residencia;
-    }
+	public String getProf() {
+		return prof;
+	}
 
-    public String getNaturalidade() {
-        return naturalidade;
-    }
+	public Calendar getDataNasc() {
+		return dataNasc;
+	}
 
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
+	public String getResidencia() {
+		return residencia;
+	}
 
-    public void setBi(int bi) {
-        this.bi = bi;
-    }
+	public String getNaturalidade() {
+		return naturalidade;
+	}
 
-    public void setProf(String prof) {
-        this.prof = prof;
-    }
+	public void setNome(String nome) {
+		this.nome = nome;
+	}
 
-    public void setResidencia(String residencia) {
-        this.residencia = residencia;
-    }
+	public void setBi(int bi) {
+		this.bi = bi;
+	}
 
-    public void setNaturalidade(String naturalidade) {
-        this.naturalidade = naturalidade;
-    }
+	public void setProf(String prof) {
+		this.prof = prof;
+	}
+
+	public void setResidencia(String residencia) {
+		this.residencia = residencia;
+	}
+
+	public void setNaturalidade(String naturalidade) {
+		this.naturalidade = naturalidade;
+	}
 
 	public String toString() {
-		return "Candidato " + nome + ", com BI nº"+bi + ", nascido a " + dataNasc.toGMTString();
+		StringBuilder stringBuilder = new StringBuilder();
+		stringBuilder.append("Candidato ");
+		stringBuilder.append(nome);
+		stringBuilder.append(", com BI nÂº ");
+		stringBuilder.append(bi);
+		stringBuilder.append(", nascido a ");
+		stringBuilder.append(dataNasc.toString());
+		return stringBuilder.toString();
 	}
-     
+
 }
