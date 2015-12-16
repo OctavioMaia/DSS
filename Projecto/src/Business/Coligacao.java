@@ -9,14 +9,14 @@ public class Coligacao implements Votavel{
 	private String sigla;
 	private String nome;
 	private String simbolo;
-	private HashSet<Integer> partidos;
+	private HashSet<Partido> partidos;
 	
-	public Coligacao(int id, String sigla, String nome, String simbolo, Set<Integer> partidos) {
+	public Coligacao(int id, String sigla, String nome, String simbolo, Set<Partido> partidos) {
 		this.id = id;
 		this.sigla = sigla;
 		this.nome = nome;
 		this.simbolo = simbolo;
-		this.partidos = new HashSet<Integer>();
+		this.partidos = new HashSet<Partido>();
 	}
 
 	public int getId() {
@@ -51,11 +51,11 @@ public class Coligacao implements Votavel{
 		this.simbolo = simbolo;
 	}
 
-	public HashSet<Integer> getPartidos() {
+	public HashSet<Partido> getPartidos() {
 		return partidos;
 	}
 
-	public void setPartidos(HashSet<Integer> partidos) {
+	public void setPartidos(HashSet<Partido> partidos) {
 		this.partidos = partidos;
 	}
 	

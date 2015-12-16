@@ -19,13 +19,6 @@ public class ResultadosPR extends JFrame {
 	public ResultadosPR() {
 		initComponents();
 	}
-
-	public static void main(String args[]){
-		ResultadosPR gui = new ResultadosPR();
-		gui.setVisible(true);
-		gui.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		gui.pack();
-	}
 	
 	private void initComponents() {
 		// JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
@@ -66,7 +59,7 @@ public class ResultadosPR extends JFrame {
 		//======== ResultadosAR ========
 		{
 			ResultadosAR.setResizable(false);
-			ResultadosAR.setTitle("Resultados Presidente da Rep\u00fablica");
+			ResultadosAR.setTitle("Resultados Presidencia da Rep\u00fablica");
 			Container ResultadosARContentPane = ResultadosAR.getContentPane();
 			ResultadosARContentPane.setLayout(null);
 

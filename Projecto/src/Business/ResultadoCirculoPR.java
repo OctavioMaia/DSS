@@ -7,41 +7,47 @@ package Business;
 
 import java.util.HashMap;
 
+
+/**
+ * Falta colocar no construtor os circulos
+ */
+
 /**
  *
  * @author ruifreitas
  */
 public class ResultadoCirculoPR {
-    private int brancos;
-    private int nulos;
-    private int totEleitores;
-    private HashMap<Integer,Integer> validos;
-    private int idcirculo;
-    
-    public ResultadoCirculoPR(){
-    	this.brancos = 0;
-    	this.nulos = 0;
-    	this.totEleitores = 0;
-    	this.validos =  new HashMap<>();
-    	this.idcirculo=0;
-    }
-    
-	public ResultadoCirculoPR(int brancos, int nulos, int totEleitores, HashMap<Integer, Integer> validos, int idcirculo) {
+	private Circulo circulo;
+	private int brancos;
+	private int nulos;
+	private HashMap<ListaPR, Integer> validos;
+	
+
+	public ResultadoCirculoPR() {
+		this.brancos = 0;
+		this.nulos = 0;
+		this.totEleitores = 0;
+		this.validos = new HashMap<>();
+		this.idcirculo = 0;
+	}
+
+	public ResultadoCirculoPR(int brancos, int nulos, int totEleitores, HashMap<ListaPR, Integer> validos,
+			int idcirculo) {
 		this.brancos = brancos;
 		this.nulos = nulos;
 		this.totEleitores = totEleitores;
 		this.validos = validos;
-		this.idcirculo=idcirculo;
+		this.idcirculo = idcirculo;
 	}
 
-	public int getIdcirculo(){
+	public int getIdcirculo() {
 		return this.idcirculo;
 	}
-	
-	public void setIdcirculo(int idcirculo){
-		this.idcirculo=idcirculo;
+
+	public void setIdcirculo(int idcirculo) {
+		this.idcirculo = idcirculo;
 	}
-	
+
 	public int getBrancos() {
 		return brancos;
 	}
@@ -74,7 +80,15 @@ public class ResultadoCirculoPR {
 		this.validos = validos;
 	}
 
-	public void addVoto(int idLista){
-		this.validos.put(idLista, this.validos.get(idLista)+1);
-	}     
+	public void addVoto(int idLista) {
+		this.validos.put(idLista, this.validos.get(idLista) + 1);
+	}
+
+	public void addVotoBranco() {
+		this.brancos++;
+	}
+
+	public void addVotoNulo() {
+		this.nulos++;
+	}
 }

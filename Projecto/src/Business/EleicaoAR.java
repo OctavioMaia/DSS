@@ -10,12 +10,18 @@ import Data.CirculoInfoDAO;
 import Data.ResultadoCirculoARDAO;
 
 public class EleicaoAR extends Eleicao {
+	private int mandatosAssembleia;
 	private CirculoInfoDAO circulos;
-	private HashSet<Votavel> concorrentes;
 	private ResultadoCirculoARDAO resultado;
-
-	public EleicaoAR(int idEleicao, Date data, Map<Integer, Integer> totEleitores) {
+	
+	
+	/**
+	 * Passar nos contrutor os circulos todos para depois criar os resultadosCirculo e passar o circulo ao CIRCULOINFO
+	 */
+	
+	public EleicaoAR(int idEleicao, Calendar data, int mandatosAssembleia) {
 		super(idEleicao, data);
+		this.mandatosAssembleia = mandatosAssembleia;
 		this.circulos = new CirculoInfoDAO(idEleicao);
 		for (int i = 1; i <= 22; i++) {
 			if (!this.circulos.containsKey(i))
@@ -25,13 +31,14 @@ public class EleicaoAR extends Eleicao {
 		this.resultado = new ResultadoCirculoARDAO(idEleicao);
 		for (int i = 1; i <= 22; i++) {
 			if (!this.resultado.containsKey(i))
-				this.resultado.put(i, new ResultadoCirculoAR(totEleitores.get(i)));
+				this.resultado.put(i, new ResultadoCirculoAR());
 		}
 	}
 
-	public EleicaoAR(int idEleicao, Date data, int estado, boolean permitirVotar, Set<Integer> vot,
+	public EleicaoAR(int idEleicao, Calendar data, int estado,int mandatosAssembleia, boolean permitirVotar, Set<Integer> vot,
 			Map<Integer, Integer> totEleitores, HashSet<Votavel> concorrentes) {
 		super(idEleicao, data,estado,permitirVotar,vot);
+		this.mandatosAssembleia = mandatosAssembleia;
 		this.circulos = new CirculoInfoDAO(idEleicao);
 		for (int i = 1; i <= 22; i++) {
 			if (!this.circulos.containsKey(i))
@@ -45,6 +52,14 @@ public class EleicaoAR extends Eleicao {
 		}
 	}
 	
+	public int getMandatosAssembleia() {
+		return mandatosAssembleia;
+	}
+
+	public void setMandatosAssembleia(int mandatosAssembleia) {
+		this.mandatosAssembleia = mandatosAssembleia;
+	}
+
 	public CirculoInfoDAO getCirculoInfo() {
 		return circulos;
 	}
@@ -113,6 +128,11 @@ public class EleicaoAR extends Eleicao {
 		this.circulos.get(l.getCirculo()).addLista(l);
 	}
 	
+	
+	/**
+	 * atenção ao fazer alteração no DAO das listas alterar tambem no HASHMAP do DAO dos resultados
+	 * 
+	 */
 	@Override
 	public void removeLista(Listavel lista){
 		Lista l = (Lista)lista;

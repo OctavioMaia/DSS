@@ -4,7 +4,7 @@ import java.util.Date;
 
 public class CandidatoAR extends Candidato {
 
-	private int partido;
+	private Partido partido;
 	private char tipo;
 
 	public CandidatoAR(String nome, int bi, String prof, Date dataNasc, String residencia, String naturalidade,int partido, char tipo) {
@@ -31,6 +31,6 @@ public class CandidatoAR extends Candidato {
 
 	@SuppressWarnings("deprecation")
 	public String toString() {
-		return "Candidato " + super.getNome() + ", com BI nº"+super.getBi() + ", nascido a " + super.getDataNasc().toGMTString() + ", filiado ao partido " + partido;
+		return "Candidato " + super.getNome() + ", com BI nï¿½"+super.getBi() + ", nascido a " + super.getDataNasc().toGMTString() + ", filiado ao partido " + partido;
 	}
 }
