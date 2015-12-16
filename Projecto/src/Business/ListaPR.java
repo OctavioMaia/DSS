@@ -13,8 +13,17 @@ public class ListaPR implements Listavel {
 	private int ordem2;
 	private Candidato candidato;
 
+	public ListaPR (int idEleicao,int idListaPR, Candidato candidato){
+		this.idEleicao = idEleicao;
+		this.idListaPR = idListaPR;
+		this.volta2 = false;
+		this.ordem1 = -1;
+		this.ordem2 = -1;
+		this.candidato = candidato;
+	}
+	
 	public ListaPR (int idEleicao,int idListaPR, boolean volta2, int ordem1, int ordem2, Candidato candidato){
-		this.setIdEleicao(idEleicao);
+		this.idEleicao = idEleicao;
 		this.idListaPR = idListaPR;
 		this.volta2 = volta2;
 		this.ordem1 = ordem1;
@@ -56,5 +65,10 @@ public class ListaPR implements Listavel {
 	}
 	public void setCandidato(Candidato c) {
 		this.candidato = c;
+	}
+	public boolean candidatoEquals(Candidato c){
+		boolean r = false;
+		r=this.candidato.equals(c);
+		return r;
 	}
 }
