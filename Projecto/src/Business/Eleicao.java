@@ -101,7 +101,6 @@ public abstract class Eleicao {
 	
 	public abstract void iniciar();
 	public abstract void terminar();
-	public abstract void addLista(Listavel lista);
 	public abstract void removeLista(Listavel lista);
 	public abstract void addVoto(Listavel lista);
 	public abstract void addVotoNulo(int idCirculo);

@@ -1,8 +1,11 @@
 package Business;
 
+import java.util.Calendar;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
@@ -14,41 +17,33 @@ public class EleicaoAR extends Eleicao {
 	private CirculoInfoDAO circulos;
 	private ResultadoCirculoARDAO resultado;
 	
-	
-	/**
-	 * Passar nos contrutor os circulos todos para depois criar os resultadosCirculo e passar o circulo ao CIRCULOINFO
-	 */
-	
-	public EleicaoAR(int idEleicao, Calendar data, int mandatosAssembleia) {
+	public EleicaoAR(int idEleicao, Calendar data,Collection<Circulo> circulos,int mandatosAssembleia) {
 		super(idEleicao, data);
 		this.mandatosAssembleia = mandatosAssembleia;
 		this.circulos = new CirculoInfoDAO(idEleicao);
-		for (int i = 1; i <= 22; i++) {
-			if (!this.circulos.containsKey(i))
-				this.circulos.put(i, new CirculoInfo());
-		}
-		this.concorrentes = new HashSet<>();
 		this.resultado = new ResultadoCirculoARDAO(idEleicao);
-		for (int i = 1; i <= 22; i++) {
-			if (!this.resultado.containsKey(i))
-				this.resultado.put(i, new ResultadoCirculoAR());
-		}
+		Iterator<Circulo> it = circulos.iterator();
+		while(it.hasNext()){
+			Circulo circulo = it.next();
+			if (!this.circulos.containsKey(circulo.getId()))
+				this.circulos.put(circulo.getId(), new CirculoInfo(circulo));
+			if (!this.resultado.containsKey(circulo.getId()))
+				this.resultado.put(circulo.getId(), new ResultadoCirculoAR(circulo));
+			}
 	}
 
-	public EleicaoAR(int idEleicao, Calendar data, int estado,int mandatosAssembleia, boolean permitirVotar, Set<Integer> vot,
-			Map<Integer, Integer> totEleitores, HashSet<Votavel> concorrentes) {
+	public EleicaoAR(int idEleicao, Calendar data, Collection<Circulo> circulos, int estado,int mandatosAssembleia, boolean permitirVotar, Set<Integer> vot) {
 		super(idEleicao, data,estado,permitirVotar,vot);
 		this.mandatosAssembleia = mandatosAssembleia;
 		this.circulos = new CirculoInfoDAO(idEleicao);
-		for (int i = 1; i <= 22; i++) {
-			if (!this.circulos.containsKey(i))
-				this.circulos.put(i, new CirculoInfo());
-		}
-		this.concorrentes = concorrentes;
 		this.resultado = new ResultadoCirculoARDAO(idEleicao);
-		for (int i = 1; i <= 22; i++) {
-			if (!this.resultado.containsKey(i))
-				this.resultado.put(i, new ResultadoCirculoAR(totEleitores.get(i)));
+		Iterator<Circulo> it = circulos.iterator();
+		while(it.hasNext()){
+			Circulo circulo = it.next();
+			if (!this.circulos.containsKey(circulo.getId()))
+				this.circulos.put(circulo.getId(), new CirculoInfo(circulo));
+			if (!this.resultado.containsKey(circulo.getId()))
+				this.resultado.put(circulo.getId(), new ResultadoCirculoAR(circulo));
 		}
 	}
 	
@@ -64,24 +59,10 @@ public class EleicaoAR extends Eleicao {
 		return circulos;
 	}
 
-	public HashSet<Votavel> getConcorrentes() {
-		return concorrentes;
-	}
-
 	public ResultadoCirculoARDAO getResultado() {
 		return resultado;
 	}
 
-	public void setTotEleitores(Map<Integer, Integer> totEleitores) {
-		for (int i : totEleitores.keySet()) {
-			if (i >= 1 && i <= 22) {
-				ResultadoCirculoAR rc = this.resultado.get(i);
-				rc.setTotEleitor(totEleitores.get(i));
-				this.resultado.put(i, rc);
-			}
-		}
-	}
-	
 	public ResultadoGlobalAR getResultadoGlobal(){
 		int nulos = 0;
 		int brancos = 0;
@@ -91,7 +72,7 @@ public class EleicaoAR extends Eleicao {
 		for(int circulo: this.circulos.keySet()){
 			nulos += this.resultado.get(circulo).getNulos();
 			brancos += this.resultado.get(circulo).getBrancos();
-			totEleitores += this.resultado.get(circulo).getTotEleitor();
+			totEleitores += this.resultado.get(circulo).getCirculo().getTotEleitores();
 			HashMap<Lista,Integer> validosCirculo = this.resultado.get(circulo).getValidos();
 			for(Lista lista: validosCirculo.keySet()){
 				Votavel mandante = lista.getMandante();
