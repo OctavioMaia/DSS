@@ -3,6 +3,7 @@ package Business;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -199,10 +200,10 @@ public class EleicaoPR extends Eleicao {
 		Iterator<ListaPR> list = collection.iterator();
 		while (list.hasNext()) {
 			listaPR = (ListaPR) list.next();
-			rand = r.nextInt(nListas-1);
-			if(!this.volta2){
+			rand = r.nextInt(nListas - 1);
+			if (!this.volta2) {
 				listaPR.setOrdem1(rand);
-			}else{
+			} else {
 				listaPR.setOrdem2(rand);
 			}
 			this.listas.put(listaPR.getIdEleicao(), listaPR);
@@ -212,9 +213,35 @@ public class EleicaoPR extends Eleicao {
 		return b;
 	}
 
-	
+	/**
+	 * ter em atenção a esta função possivel local de erro
+	 * 
+	 * @return
+	 */
+	private Map<ListaPR, Integer> listasSegundaVolta() {
+		HashMap<ListaPR, Integer> val;
+		HashMap<ListaPR, Integer> aux = new HashMap<>();
+		for (ResultadoCirculoPR resC : this.voltaR1.values()) {
+			val = resC.getValidos();
+			for (ListaPR l : val.keySet()) {
+				aux.put(l, aux.get(l) + val.get(l)); // linha a rever
+			}
+		}
+		return aux;
+	}
+
+	private void initResultadoCriculoListasVolta1(Collection<ListaPR> listas){
+		for(ResultadoCirculoPR resC : this.voltaR1.values()){
+			resC.addListas(listas);
+			this.voltaR1.put(resC.getCirculo().getId(), resC);
+		}
+		for()
+	}
+
 	/**
 	 * Falta para quando inicio a eleiçao colocar as listas nos resultados
+	 * preciso de colocar nos resultados volta1 as listas se for para a volta 2 colocar nos resultados as duas listas anteriores
+	 * gerarBoletins
 	 */
 	@Override
 	public void iniciar() {
@@ -228,11 +255,6 @@ public class EleicaoPR extends Eleicao {
 		}
 	}
 	
-	private List<ListaPR> listasSegundaVolta(){
-		List<ListaPR> listas = new ArrayList<ListaPR>();
-		return listas;
-	}
-
 	@Override
 	public void terminar() {
 		if(super.estado(-1))
