@@ -7,11 +7,13 @@ package Presentation;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
-
+import java.util.Calendar;
 import javax.swing.*;
 import javax.swing.table.*;
 
+import Business.Eleicao;
 import Business.EleicaoPR;
+import com.toedter.calendar.*;
 
 /**
  * @author Octavio Maia
@@ -19,7 +21,7 @@ import Business.EleicaoPR;
 public class GerirPR {
 	
 	public GerirPR(EleicaoPR eleicao) {
-		initComponents();
+		initComponents(eleicao);
 		GerirPR.setVisible(true);
 	}
 
@@ -42,18 +44,40 @@ public class GerirPR {
 
 	private void buttonAdicionarFotoActionPerformed(ActionEvent e) {
 		// TODO parse data inicio eleicao
+		/*int dia,mes,ano;
 		
-		Date data = new Date();
+		dia = Integer.parseInt((String) diasInicio.getSelectedItem());
+		ano = Integer.parseInt((String) anoInicio.getSelectedItem());
 		
+		mes = mesInicio.getSelectedIndex();
+		
+		
+		GregorianCalendar data = new GregorianCalendar(ano,mes,dia);
+		System.out.println("Ano " + data.get(Calendar.YEAR));
+		System.out.println("Mes " + data.get(Calendar.MONTH));
+		System.out.println("Dia " + data.get(Calendar.DAY_OF_MONTH));
+		*/
 		// TODO parse foto + filepath / nome candidato
 		// TODO apos parse adicionar a tabela
 	}
 
-	private void buttonConfirmarActionPerformed(ActionEvent e) {
-		
+	private void button1ActionPerformed(ActionEvent e) {
+		dialogoCalendario.setVisible(true);
+	}
+
+	private void buttonConfirmarDataActionPerformed(ActionEvent e) {
+		Calendar cal = calendar1.getCalendar();
+		int dia = cal.get(Calendar.DAY_OF_MONTH);
+		int mes = cal.get(Calendar.MONTH)+1;
+		int ano = cal.get(Calendar.YEAR);
+		System.out.println(dia + "/" + mes + "/"+ ano);
+	}
+
+	private void buttonCancelarDataActionPerformed(ActionEvent e) {
+		dialogoCalendario.setVisible(false);
 	}
 	
-	private void initComponents() {
+	private void initComponents(Eleicao eleicao) {
 		// JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
 		// Generated using JFormDesigner Evaluation license - Octavio Maia
 		GerirPR = new JFrame();
@@ -70,16 +94,20 @@ public class GerirPR {
 		buttonAdicionarFoto = new JButton();
 		buttonConfirmar = new JButton();
 		buttonSair = new JButton();
-		diasInicio = new JComboBox<>();
-		mesInicio = new JComboBox<>();
-		anoInicio = new JComboBox<>();
+		buttonData = new JButton();
+		data = new JLabel();
 		dialog1 = new JDialog();
 		fileChooser1 = new JFileChooser();
+		dialogoCalendario = new JDialog();
+		calendar1 = new JCalendar();
+		buttonConfirmarData = new JButton();
+		buttonCancelarData = new JButton();
 
 		//======== GerirPR ========
 		{
 			GerirPR.setTitle("Gerir Elei\u00e7\u00e3o Presid\u00eancia da Rep\u00fablica");
 			GerirPR.setResizable(false);
+			GerirPR.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 			Container GerirPRContentPane = GerirPR.getContentPane();
 			GerirPRContentPane.setLayout(null);
 
@@ -120,7 +148,7 @@ public class GerirPR {
 			tableCandidatos.setBounds(25, 60, 265, 215);
 
 			//---- imagem ----
-			imagem.setIcon(new ImageIcon(getClass().getResource("/img/PS.png")));
+			imagem.setIcon(new ImageIcon(getClass().getResource("/PS.png")));
 			GerirPRContentPane.add(imagem);
 			imagem.setBounds(360, 60, 165, 170);
 
@@ -181,110 +209,18 @@ public class GerirPR {
 			GerirPRContentPane.add(buttonSair);
 			buttonSair.setBounds(435, 380, 95, 25);
 
-			//---- diasInicio ----
-			diasInicio.setFont(new Font("Arial", Font.PLAIN, 12));
-			diasInicio.setModel(new DefaultComboBoxModel<>(new String[] {
-				"1",
-				"2",
-				"3",
-				"4",
-				"5",
-				"6",
-				"7",
-				"8",
-				"9",
-				"10",
-				"11",
-				"12",
-				"13",
-				"14",
-				"15",
-				"16",
-				"17",
-				"18",
-				"19",
-				"20",
-				"21",
-				"22",
-				"23",
-				"24",
-				"25",
-				"26",
-				"27",
-				"28",
-				"29",
-				"30",
-				"31"
-			}));
-			GerirPRContentPane.add(diasInicio);
-			diasInicio.setBounds(170, 20, 40, 25);
+			//---- buttonData ----
+			buttonData.setText("Alterar");
+			buttonData.setFont(new Font("Arial", Font.PLAIN, 12));
+			buttonData.addActionListener(e -> button1ActionPerformed(e));
+			GerirPRContentPane.add(buttonData);
+			buttonData.setBounds(300, 20, 80, 25);
 
-			//---- mesInicio ----
-			mesInicio.setFont(new Font("Arial", Font.PLAIN, 12));
-			mesInicio.setModel(new DefaultComboBoxModel<>(new String[] {
-				"Janeiro",
-				"Fevereiro",
-				"Mar\u00e7o",
-				"Abril",
-				"Maio",
-				"Junho",
-				"Julho",
-				"Agosto",
-				"Setembro",
-				"Outubro",
-				"Novembro",
-				"Dezembro"
-			}));
-			GerirPRContentPane.add(mesInicio);
-			mesInicio.setBounds(215, 20, 120, 25);
-
-			//---- anoInicio ----
-			anoInicio.setFont(new Font("Tahoma", Font.PLAIN, 12));
-			anoInicio.setModel(new DefaultComboBoxModel<>(new String[] {
-				"1990",
-				"1991",
-				"1992",
-				"1993",
-				"1994",
-				"1995",
-				"1996",
-				"1997",
-				"1998",
-				"1999",
-				"2000",
-				"2001",
-				"2002",
-				"2003",
-				"2004",
-				"2005",
-				"2006",
-				"2007",
-				"2008",
-				"2009",
-				"2010",
-				"2011",
-				"2012",
-				"2013",
-				"2014",
-				"2015",
-				"2016",
-				"2017",
-				"2018",
-				"2019",
-				"2020",
-				"2021",
-				"2022",
-				"2023",
-				"2024",
-				"2025",
-				"2026",
-				"2027",
-				"2028",
-				"2029",
-				"2030"
-			}));
-			GerirPRContentPane.add(anoInicio);
-			anoInicio.setBounds(340, 20, 75, 25);
+			//---- data ----
+			data.setText("dd/mm/aa");
+			data.setFont(new Font("Arial", Font.PLAIN, 14));
+			GerirPRContentPane.add(data);
+			data.setBounds(170, 25, 115, 17);
 
 			{ // compute preferred size
 				Dimension preferredSize = new Dimension();
@@ -332,6 +268,47 @@ public class GerirPR {
 			dialog1.pack();
 			dialog1.setLocationRelativeTo(dialog1.getOwner());
 		}
+
+		//======== dialogoCalendario ========
+		{
+			dialogoCalendario.setTitle("Calendario");
+			dialogoCalendario.setResizable(false);
+			dialogoCalendario.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+			Container dialogoCalendarioContentPane = dialogoCalendario.getContentPane();
+			dialogoCalendarioContentPane.setLayout(null);
+			dialogoCalendarioContentPane.add(calendar1);
+			calendar1.setBounds(0, 0, 210, 155);
+
+			//---- buttonConfirmarData ----
+			buttonConfirmarData.setText("Confirmar");
+			buttonConfirmarData.setFont(new Font("Arial", Font.PLAIN, 12));
+			buttonConfirmarData.addActionListener(e -> buttonConfirmarDataActionPerformed(e));
+			dialogoCalendarioContentPane.add(buttonConfirmarData);
+			buttonConfirmarData.setBounds(5, 155, 90, 28);
+
+			//---- buttonCancelarData ----
+			buttonCancelarData.setText("Sair");
+			buttonCancelarData.setFont(new Font("Arial", Font.PLAIN, 12));
+			buttonCancelarData.addActionListener(e -> buttonCancelarDataActionPerformed(e));
+			dialogoCalendarioContentPane.add(buttonCancelarData);
+			buttonCancelarData.setBounds(110, 155, 90, 28);
+
+			{ // compute preferred size
+				Dimension preferredSize = new Dimension();
+				for(int i = 0; i < dialogoCalendarioContentPane.getComponentCount(); i++) {
+					Rectangle bounds = dialogoCalendarioContentPane.getComponent(i).getBounds();
+					preferredSize.width = Math.max(bounds.x + bounds.width, preferredSize.width);
+					preferredSize.height = Math.max(bounds.y + bounds.height, preferredSize.height);
+				}
+				Insets insets = dialogoCalendarioContentPane.getInsets();
+				preferredSize.width += insets.right;
+				preferredSize.height += insets.bottom;
+				dialogoCalendarioContentPane.setMinimumSize(preferredSize);
+				dialogoCalendarioContentPane.setPreferredSize(preferredSize);
+			}
+			dialogoCalendario.setSize(225, 235);
+			dialogoCalendario.setLocationRelativeTo(null);
+		}
 		// JFormDesigner - End of component initialization  //GEN-END:initComponents
 	}
 
@@ -352,10 +329,13 @@ public class GerirPR {
 	private JButton buttonAdicionarFoto;
 	private JButton buttonConfirmar;
 	private JButton buttonSair;
-	private JComboBox<String> diasInicio;
-	private JComboBox<String> mesInicio;
-	private JComboBox<String> anoInicio;
+	private JButton buttonData;
+	private JLabel data;
 	private JDialog dialog1;
 	private JFileChooser fileChooser1;
+	private JDialog dialogoCalendario;
+	private JCalendar calendar1;
+	private JButton buttonConfirmarData;
+	private JButton buttonCancelarData;
 	// JFormDesigner - End of variables declaration  //GEN-END:variables
 }
