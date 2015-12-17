@@ -5,33 +5,38 @@ import Data.ListaARDAO;
 public class CirculoInfo {
 	private Circulo circulo;
 	private Boletim boletim;
-	private ListaARDAO listasDAO;
+	private ListaARDAO listas;
 	private int mandatos;
 	
-	public CirculoInfo(){
+	public CirculoInfo(Circulo circulo){
+		this.circulo = circulo;
 		this.boletim = null;
-		this.listasDAO = new ListaARDAO();
+		this.listas = new ListaARDAO();
 		this.mandatos = 0;
 	}
 	
-	public CirculoInfo(int maxCand) {
+	public CirculoInfo(Circulo circulo, int mandatos) {
+		this.circulo = circulo;
 		this.boletim = null;
-		this.listasDAO = new ListaARDAO();
-		this.mandatos = maxCand;
+		this.listas = new ListaARDAO();
+		this.mandatos = mandatos;
 	}
 
 	public void addLista(Lista lista){
-		this.listasDAO.put(lista.getID(),lista);
+		this.listas.put(lista.getID(),lista);
 	}
 	
 	public void removeLista(Lista lista){
-		this.listasDAO.remove(lista.getID());
+		this.listas.remove(lista.getID());
 	}
 	
-	public void addCandidatoLista(Lista l, Candidato c){
-		Lista lista = this.listasDAO.get(l.getID());
-		lista.getCandidatos();
-		
-		jhjm
+	public void addCandidatoLista(Lista l, CandidatoAR c){
+		l.addCandidato(c);
+		this.listas.put(l.getID(),l);
+	}
+	
+	public void removeCandidato(Lista l, CandidatoAR c){
+		l.removeCandidato(c);
+		this.listas.put(l.getID(),l);
 	}
 }
