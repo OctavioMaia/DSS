@@ -71,6 +71,7 @@ public class GerirPR {
 		int mes = cal.get(Calendar.MONTH)+1;
 		int ano = cal.get(Calendar.YEAR);
 		System.out.println(dia + "/" + mes + "/"+ ano);
+		dialogoCalendario.setVisible(false);
 	}
 
 	private void buttonCancelarDataActionPerformed(ActionEvent e) {
@@ -214,7 +215,7 @@ public class GerirPR {
 			buttonData.setFont(new Font("Arial", Font.PLAIN, 12));
 			buttonData.addActionListener(e -> button1ActionPerformed(e));
 			GerirPRContentPane.add(buttonData);
-			buttonData.setBounds(300, 20, 80, 25);
+			buttonData.setBounds(305, 20, 80, 25);
 
 			//---- data ----
 			data.setText("dd/mm/aa");
@@ -287,25 +288,13 @@ public class GerirPR {
 			buttonConfirmarData.setBounds(5, 155, 90, 28);
 
 			//---- buttonCancelarData ----
-			buttonCancelarData.setText("Sair");
+			buttonCancelarData.setText("Cancelar");
 			buttonCancelarData.setFont(new Font("Arial", Font.PLAIN, 12));
 			buttonCancelarData.addActionListener(e -> buttonCancelarDataActionPerformed(e));
 			dialogoCalendarioContentPane.add(buttonCancelarData);
 			buttonCancelarData.setBounds(110, 155, 90, 28);
 
-			{ // compute preferred size
-				Dimension preferredSize = new Dimension();
-				for(int i = 0; i < dialogoCalendarioContentPane.getComponentCount(); i++) {
-					Rectangle bounds = dialogoCalendarioContentPane.getComponent(i).getBounds();
-					preferredSize.width = Math.max(bounds.x + bounds.width, preferredSize.width);
-					preferredSize.height = Math.max(bounds.y + bounds.height, preferredSize.height);
-				}
-				Insets insets = dialogoCalendarioContentPane.getInsets();
-				preferredSize.width += insets.right;
-				preferredSize.height += insets.bottom;
-				dialogoCalendarioContentPane.setMinimumSize(preferredSize);
-				dialogoCalendarioContentPane.setPreferredSize(preferredSize);
-			}
+			dialogoCalendarioContentPane.setPreferredSize(new Dimension(225, 235));
 			dialogoCalendario.setSize(225, 235);
 			dialogoCalendario.setLocationRelativeTo(null);
 		}
