@@ -1,23 +1,24 @@
 package Business;
 
+import java.util.Calendar;
 import java.util.Date;
 
 public class CandidatoAR extends Candidato {
 
 	private Partido partido;
-	private char tipo;
+	private char tipo; 	// P:Primário; S:Secundário
 
-	public CandidatoAR(String nome, int bi, String prof, Date dataNasc, String residencia, String naturalidade,int partido, char tipo) {
+	public CandidatoAR(String nome, int bi, String prof, Calendar dataNasc, String residencia, String naturalidade,Partido partido, char tipo) {
 		super(nome, bi, prof, dataNasc, residencia, naturalidade);
 		this.partido = partido;
 		this.tipo = tipo;
 	}
 
-	public int getPartido() {
+	public Partido getPartido() {
 		return partido;
 	}
 
-	public void setPartido(int partido) {
+	public void setPartido(Partido partido) {
 		this.partido = partido;
 	}
 
@@ -31,6 +32,6 @@ public class CandidatoAR extends Candidato {
 
 	@SuppressWarnings("deprecation")
 	public String toString() {
-		return "Candidato " + super.getNome() + ", com BI n�"+super.getBi() + ", nascido a " + super.getDataNasc().toGMTString() + ", filiado ao partido " + partido;
+		return "Candidato " + super.getNome() + ", com BI n�"+super.getBi() + ", nascido a " + super.getDataNasc().toGMTString() + ", pertencente ao partido " + partido;
 	}
 }
