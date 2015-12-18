@@ -5,8 +5,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
@@ -18,35 +20,55 @@ import Business.EleicaoPR;
 
 
 public class EleicaoPRDAO implements Map<Integer,EleicaoPR>{
+	//Tabela EleicoesPR
+	private static String TabnamePR = "EleicoesPR";
+	private static String TabId = "idEleicao";
+	private static String Volta2 = "volta2";
+	private static String Data2 = "data2";
+	
+	//Tabela eleicoes
+	private static String Tabname = "Eleicoes";
+	private static String Estado = "estado";
+	private static String Data = "data";
+	private static String PVot = "permitidoVotar";
+	
+	//Tabela de votacao
+	private static String TabVotName = "Eleitor_vota_Eleicao";
+	private static String IdEleit = "nrIdEleitor";
+	private static String Volta = "volta";
 
 	public EleicaoPRDAO() {
 	}
 
+	
+	private int size_aux(Connection c) throws SQLException{
+		int ret=0;
+		PreparedStatement ps = c.prepareStatement("SELECT COUNT(*) FROM " + TabnamePR);
+		ResultSet rs = ps.executeQuery();
+		if(rs.next()) ret = rs.getInt(1);
+		rs.close();
+		ps.close();
+		return ret;
+	}
+	
 	@Override
 	public int size() {
 		int ret=0;
     	Connection conn = null;
     	try{
-    		conn = Connector.newConnection(); 
-    		PreparedStatement ps = conn.prepareStatement("Select count(*) FROM EleicoesPR");
-    		ResultSet rs = ps.executeQuery();
-    		if(rs.next()) ret = rs.getInt(1);
-    		rs.close();
-    		ps.close();
-    		conn.commit();
+    		conn = Connector.newConnection(true); 
+    		ret=this.size_aux(conn);
     	}catch(Exception e){
-    		try {
-				conn.rollback();
-			} catch (SQLException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			throw new RuntimeException(e.getMessage());
     	}finally{
     		try {
 				conn.close();
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+				throw new RuntimeException(e.getMessage());
 			}
     	}
         return ret; 
@@ -57,27 +79,29 @@ public class EleicaoPRDAO implements Map<Integer,EleicaoPR>{
 		return this.size()==0;
 	}
 
+	private boolean containsKey_aux(Integer key,Connection c) throws SQLException{
+		boolean b=false;
+		PreparedStatement ps = c.prepareStatement("SELECT EXISTS (SELECT "+TabId+" FROM "+TabnamePR+
+                " WHERE "+TabId+" = ?)");
+		ps.setInt(1,key);
+		ResultSet rs = ps.executeQuery();
+		if (rs.next()){
+			b = (rs.getInt(1)!=0);
+		}
+		rs.close();
+		ps.close();
+		return b;
+	}
+
 	@Override
 	public boolean containsKey(Object key) {
 		boolean b=false;
         Connection conn = null;
         try{
-        	conn =Connector.newConnection();
-        	PreparedStatement ps = conn.prepareStatement(" Select  EXISTS (SELECT idEleicao FROM EleicoesPR " +
-                " WHERE idEleicao = ?)");
-        	ps.setInt(1,(Integer) key);
-        	ResultSet rs = ps.executeQuery();
-        	if (rs.next()) b = (rs.getInt(1)!=0);
-        	rs.close();
-        	ps.close();
-        	conn.commit();
+        	conn =Connector.newConnection(true);
+        	b = this.containsKey_aux((Integer)key, conn);
         }catch(Exception e){
-        	try {
-				conn.rollback();
-			} catch (SQLException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
+			e.printStackTrace();
         	throw new RuntimeException(e.getMessage());
         }finally{
         	try {
@@ -85,6 +109,7 @@ public class EleicaoPRDAO implements Map<Integer,EleicaoPR>{
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+				throw new RuntimeException(e.getMessage());
 			}
         }
         return b;
@@ -95,51 +120,70 @@ public class EleicaoPRDAO implements Map<Integer,EleicaoPR>{
 		return this.containsKey(((EleicaoPR)value).getIdEleicao());
 	}
 
+	
+	private EleicaoPR get_aux(Integer key,Connection c) throws SQLException{
+		EleicaoPR eleic = null;
+		PreparedStatement psEleicaoPR = c.prepareStatement("SELECT * FROM "+TabnamePR+" WHERE "+TabId+" = ?");
+		psEleicaoPR.setInt(1,key);
+		PreparedStatement psEleicao = c.prepareStatement("SELECT * FROM "+Tabname+" WHERE "+TabId+" = ?");
+		psEleicao.setInt(1,key);
+		PreparedStatement psEleiteleic = c.prepareStatement("SELECT * FROM "+TabVotName+" WHERE "+TabId+" = ?");
+		psEleiteleic.setInt(1,key);
+		//Queries resultados em Memoria
+		ResultSet rsEleicao = psEleicao.executeQuery();
+    	ResultSet rsEleicaoPR = psEleicaoPR.executeQuery();
+    	ResultSet rsEleiteleic = psEleiteleic.executeQuery();
+    	Set<Integer> vota1Eleit = new HashSet<Integer>();
+    	Set<Integer> vota2Eleit = new HashSet<Integer>();
+    	
+    	while(rsEleiteleic.next()){
+    		int num = rsEleiteleic.getInt(IdEleit);
+    		int volta = rsEleiteleic.getInt(Volta);
+    		if(volta ==1){
+    			vota1Eleit.add(num);
+    		}else{
+    			vota2Eleit.add(num);
+    		}
+    	}
+    	rsEleiteleic.close();
+    	psEleiteleic.close();
+    	//Lista de votantes das duas voltas criados
+    	//Criar Eleicoes a partir das duas tabelas
+    	if(rsEleicao.next() && rsEleicaoPR.next()){
+    		CirculoDAO ci = new CirculoDAO();	
+    		Calendar d1 = new GregorianCalendar();
+    		Calendar d2 = new GregorianCalendar();
+    		d1.setTime(rsEleicao.getDate(Data));
+    		d2.setTime(rsEleicaoPR.getDate(Data2));
+    		eleic = new EleicaoPR(rsEleicao.getInt(TabId), d1,rsEleicao.getInt(Estado), 
+    				rsEleicao.getBoolean(PVot),vota1Eleit,ci.values(),vota2Eleit, 
+    				rsEleicaoPR.getBoolean(Volta2), d2);
+    	}
+    	psEleicaoPR.close();
+    	psEleicao.close();
+    	rsEleicaoPR.close();
+    	rsEleicao.close();
+		return eleic;
+	}
+	
 	@Override
 	public EleicaoPR get(Object key) {
 		EleicaoPR eleic = null;
-		Connection conn = null;
-		if(!this.containsKey(key)) return eleic;
-        
+		Connection conn = null;   
         try{
-        	conn=Connector.newConnection();
-        	PreparedStatement psEleicaoPR = conn.prepareStatement("SELECT * FROM EleicoesPR WHERE idEleicao = ?");
-        	PreparedStatement psEleicao = conn.prepareStatement("SELECT * FROM Eleicoes WHERE idEleicao = ?");
-        	PreparedStatement psEleiteleic = conn.prepareStatement("SELECT * FROM Eleitor_vota_Eleicao WHERE idEleicao = ?");
-        	psEleicaoPR.setInt(1,(Integer)key );
-        	psEleicao.setInt(1,(Integer)key);
-        	psEleiteleic.setInt(1, (Integer)key);
-        	ResultSet rsEleicao = psEleicao.executeQuery();
-        	ResultSet rsEleicaoPR = psEleicaoPR.executeQuery();
-        	ResultSet rsEleiteleic = psEleiteleic.executeQuery();
-        	Set<Integer> vota = new HashSet<Integer>();
-        	Set<Integer> vota2 = new HashSet<Integer>();
-        	while(rsEleiteleic.next()){
-        		int num = rsEleiteleic.getInt("nrIdEleitor");
-        		int volta = rsEleiteleic.getInt("volta");
-        		if(volta ==1){
-        			vota.add(num);
-        		}else{
-        			vota2.add(num);
-        		}
-        	}
-        	if(rsEleicao.next() && rsEleicaoPR.next()){
-        		eleic = new EleicaoPR(rsEleicao.getInt("idEleicao"), rsEleicao.getDate("data"), rsEleicao.getInt("estado"), rsEleicao.getBoolean("permitidoVotar"), vota,vota2, rsEleicaoPR.getBoolean("volta2"), 
-        				rsEleicaoPR.getDate("data2"), null, null);
-        	}	
+        	conn=Connector.newConnection(true);
+        	if(this.containsKey(key)){
+    			eleic = this.get_aux((Integer)key, conn);
+    		}
         }catch(Exception e){
-    		try {
-				conn.rollback();
-			} catch (SQLException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
+			e.printStackTrace();
+			throw new RuntimeException(e.getMessage());
     	}finally{
     		try {
 				conn.close();
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
+				throw new RuntimeException(e.getMessage());
 			}
     	}
 		

@@ -29,27 +29,23 @@ public class EleicaoPR extends Eleicao {
 	private ListaPRDAO listas;
 	private Set<Integer> votantes2;
 
-	public EleicaoPR(int idEleicao, Calendar data, List<Circulo> c) {
-		super(idEleicao, data);
+	public EleicaoPR(int idEleicao, Calendar data, Collection<Circulo> c) {
+		super(idEleicao, data,c);
 		this.volta2 = false;
 		this.data2 = null;
-		this.voltaR1 = initResultadoCirculoPRDAO(idEleicao, 1, c);
-		this.voltaR2 = initResultadoCirculoPRDAO(idEleicao, 2, c);
-		this.boletim1 = null;
-		this.boletim2 = null;
+		this.voltaR1 = initResultadoCirculoPRDAO(idEleicao, 1);
+		this.voltaR2 = initResultadoCirculoPRDAO(idEleicao, 2);
 		this.listas = new ListaPRDAO(idEleicao);
 		this.votantes2 = new HashSet<>();
 	}
 
-	public EleicaoPR(int idEleicao, Calendar data, int estado, boolean permitirVotar, Set<Integer> vot, List<Circulo> c,
-			Set<Integer> vot2, boolean volta2, Calendar data2, Boletim boletim1, Boletim boletim2) {
-		super(idEleicao, data, estado, permitirVotar, vot);
+	public EleicaoPR(int idEleicao, Calendar data, int estado, boolean permitirVotar, Set<Integer> vot, Collection<Circulo> c,
+			Set<Integer> vot2, boolean volta2, Calendar data2) {
+		super(idEleicao, data, estado, permitirVotar, vot,c);
 		this.volta2 = volta2;
 		this.data2 = data2;
 		this.voltaR1 = new ResultadoCirculoPRDAO(idEleicao, 1);
 		this.voltaR2 = new ResultadoCirculoPRDAO(idEleicao, 2);
-		this.boletim1 = boletim1;
-		this.boletim2 = boletim2;
 		this.listas = new ListaPRDAO(idEleicao);
 		this.votantes2 = vot2;
 	}

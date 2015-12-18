@@ -73,7 +73,7 @@ public class Eleitor {
     }
     
     public boolean autenticar(int id, String pin){
-    	if(this.nIdent == id && this.pin == pin){
+    	if(this.nIdent == id && this.pin.equals(pin)){
     		return true;
     	}
     	return false;
