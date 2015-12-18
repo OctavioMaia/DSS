@@ -26,8 +26,6 @@ public class EleicaoPR extends Eleicao {
 	private Calendar data2;
 	private ResultadoCirculoPRDAO voltaR1;
 	private ResultadoCirculoPRDAO voltaR2;
-	private Boletim boletim1;
-	private Boletim boletim2;
 	private ListaPRDAO listas;
 	private Set<Integer> votantes2;
 
@@ -168,38 +166,41 @@ public class EleicaoPR extends Eleicao {
 		}
 	}
 
+	/**
+	 * Metodo que vai criar um objecto boletim com todas as listas que vao
+	 * participar na eleiçao
+	 */
 	@Override
 	public Boletim getBoletim(int idCirculo) {
-		Boletim b = null;
-		if (boletim1 != null) {
-			this.criarBoletim();
-		}
-		if (super.estado(0) && volta2 == false) {
-			b = boletim1;
+		Boletim b;
+		if (!volta2) {
+			b = new Boletim(this.listas.size());
+			for (ListaPR l : this.listas.values()) {
+				b.addLista(l);
+			}
 		} else {
-			b = boletim2;
+			b = new Boletim(2);
+			for (ListaPR l : this.listas.values()) {
+				if (l.ordem2() != -1) {
+					b.addLista(l);
+				}
+			}
 		}
 		return b;
 	}
 
-	private Boletim criarBoletim() {
-		Boletim b = new Boletim(this.listas.size());
-		Iterator<ListaPR> it = this.listas.values().iterator();
-		while (it.hasNext()) {
-			b.addLista(it.next());
-		}
-		return b;
-	}
-
-	private Boletim geraBoletim(Collection<ListaPR> collection) {
+	/**
+	 * Metodo que vai gerar os numeros de ordem para as listas
+	 * 
+	 * @param collection
+	 * @return
+	 */
+	private Boletim geraBoletim(Collection<ListaPR> listas) {
 		Random r = new Random();
-		int nListas = collection.size();
+		int nListas = listas.size();
 		Boletim b = new Boletim(nListas);
 		int rand;
-		ListaPR listaPR;
-		Iterator<ListaPR> list = collection.iterator();
-		while (list.hasNext()) {
-			listaPR = (ListaPR) list.next();
+		for (ListaPR listaPR : listas) {
 			rand = r.nextInt(nListas - 1);
 			if (!this.volta2) {
 				listaPR.setOrdem1(rand);
@@ -230,35 +231,55 @@ public class EleicaoPR extends Eleicao {
 		return aux;
 	}
 
-	private void initResultadoCriculoListasVolta1(Collection<ListaPR> listas){
-		for(ResultadoCirculoPR resC : this.voltaR1.values()){
+	private void initResultadoCriculoListasVolta1(Collection<ListaPR> listas) {
+		for (ResultadoCirculoPR resC : this.voltaR1.values()) {
 			resC.addListas(listas);
 			this.voltaR1.put(resC.getCirculo().getId(), resC);
 		}
-		for()
 	}
 
 	/**
 	 * Falta para quando inicio a eleiçao colocar as listas nos resultados
-	 * preciso de colocar nos resultados volta1 as listas se for para a volta 2 colocar nos resultados as duas listas anteriores
-	 * gerarBoletins
+	 * preciso de colocar nos resultados volta1 as listas se for para a volta 2
+	 * colocar nos resultados as duas listas anteriores gerarBoletins
 	 */
 	@Override
-	public void iniciar() {
-		if (super.estado(-1)) {
-			super.setEstado(0);
-			super.setPermitirVotar(true);
-			this.boletim1 = geraBoletim(this.listas.values());
+	public boolean iniciar() {
+		boolean ini = false;
+		;
+		if (super.estado(-1)) {// iniciar depois da eleicao ter sido criada
+			Collection<ListaPR> list = this.listas.values();
+			for (ResultadoCirculoPR resC : this.voltaR1.values()) {
+				resC.addListas(list);
+				this.voltaR1.put(resC.getCirculo().getId(), resC);
+
+			}
+			ini = true;
 		} else {
-			super.setEstado(0);
-			super.setPermitirVotar(true);
+			if (super.estado(0) && this.volta2) { // iniciar segunda volta
+				Collection<ListaPR> list = this.listasSegundaVolta().keySet();
+				for (ResultadoCirculoPR resC : this.voltaR2.values()) {
+					resC.addListas(list);
+					this.voltaR2.put(resC.getCirculo().getId(), resC);
+				}
+				ini = true;
+			}
+		}
+		return ini;
+	}
+
+	@Override
+	public boolean terminar() {
+		boolean fim = false;
+		if (super.estado(0) && this.volta2 == false) { // terminar primeira
+														// volta
+
+		} else {// segunda volta
+
 		}
 	}
-	
-	@Override
-	public void terminar() {
-		if(super.estado(-1))
-	}
+
+	// metodo para calcular se ouve vencedor com maioria absoluta
 
 	private void defData2() {
 
