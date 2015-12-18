@@ -94,7 +94,7 @@ public class CirculoDAO implements Map<Integer,Circulo>{
         
         try{
         	conn=Connector.newConnection();
-        	PreparedStatement ps = conn.prepareStatement("Select * FROM Circulos WHERE Id = ?");
+        	PreparedStatement ps = conn.prepareStatement("Select * FROM Circulos WHERE idCirculo = ?");
         	ps.setInt(1, (Integer)key);
         	ResultSet rs = ps.executeQuery();
             while(rs.next()){
@@ -106,6 +106,7 @@ public class CirculoDAO implements Map<Integer,Circulo>{
         }catch(Exception e){
     		try {
 				conn.rollback();
+				e.printStackTrace();
 			} catch (SQLException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
