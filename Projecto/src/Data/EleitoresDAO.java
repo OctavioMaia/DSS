@@ -29,7 +29,7 @@ public class EleitoresDAO implements Map<Integer,Eleitor>{
 	private static String EleitID = "nrID";
 	private static String Eleitpin = "pin";
 	private static String Eleinome = "nome";
-	private static String elitCirc = "idCirculo";
+	private static String ElitCirc = "idCirculo";
     public EleitoresDAO(){
     }
 
@@ -192,36 +192,51 @@ public class EleitoresDAO implements Map<Integer,Eleitor>{
        return e;  
     }
 
-    ///// Aqui a altear
+    
+    private Set<Integer> keySet_aux(Connection c) throws SQLException{
+    	Set<Integer> ret  =new TreeSet<Integer>();
+    	PreparedStatement ps  = c.prepareStatement("SELECT " +EleitID + " FROM " + Tabname );
+    	ResultSet rs = ps.executeQuery();
+    	while(rs.next()){
+    		int num = rs.getInt(EleitID);
+    		ret.add(num);
+    	}
+    	
+    	return ret;
+    	
+    }
+    
     public Set<Integer> keySet(){
-        Set<Integer> ret = new TreeSet<Integer>();
+        Set<Integer> ret = null;
         Connection conn = null;
         try{
-        	conn=Connector.newConnection();
-        	Statement s = conn.createStatement();
-            String querie = " Select nrID FROM Eleitores";
-            ResultSet rs = s.executeQuery(querie);
-            while(rs.next())
-               ret.add(rs.getInt("nrID"));
-            rs.close();
-            s.close();
-            conn.commit();
+        	conn=Connector.newConnection(true);
+        	ret = this.keySet_aux(conn);
         }catch(Exception e){
-    		try {
-				conn.rollback();
-			} catch (SQLException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
+			e.printStackTrace();
+			throw new RuntimeException(e.getMessage());
     	}finally{
     		try {
 				conn.close();
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
+				throw new RuntimeException(e.getMessage());
 			}
     	}
         return ret;
+    }
+    
+    private Eleitor get_aux(Integer key,Connection c) throws SQLException{
+    	Eleitor e =null;
+    	PreparedStatement ps = c.prepareStatement("SELECT * FROM "+Tabname+" WHERE "+EleitID+" = ?");
+    	ps.setInt(1,key);
+    	ResultSet rs = ps.executeQuery();
+    	if(rs.next()){
+    		e =new Eleitor(rs.getString(Eleinome), rs.getInt(ElitCirc), rs.getInt(EleitID), rs.getString(Eleitpin));
+    	}
+    	rs.close();
+    	ps.close();
+    	return e;
     }
     
     @Override
@@ -230,52 +245,81 @@ public class EleitoresDAO implements Map<Integer,Eleitor>{
         Connection conn = null;
         
         try{
-        	conn=Connector.newConnection();
-        	PreparedStatement ps = conn.prepareStatement("Select * FROM Eleitores WHERE nrID = ?");
-        	ps.setInt(1, (Integer)key);
-        	ResultSet rs = ps.executeQuery();
-            while(rs.next()){
-               el = new Eleitor (rs.getString("nome"),rs.getInt("idCirculo"),rs.getInt("nrID"),rs.getString("pin"));
-            }
-            rs.close();
-            ps.close();
-            conn.commit();
+        	conn=Connector.newConnection(true);
+        	el = this.get_aux((Integer)key, conn);
         }catch(Exception e){
-    		try {
-				conn.rollback();
-			} catch (SQLException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
+			e.printStackTrace();
+			throw new RuntimeException(e.getMessage());
     	}finally{
     		try {
 				conn.close();
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
+				throw new RuntimeException(e.getMessage());
 			}
     	}
         return el;
      
     }
     
-    
     public Collection<Eleitor> values(){
-        ArrayList <Eleitor> ret  = new ArrayList<>();
-        Set<Integer> keys = this.keySet();
-        Iterator<Integer> i  = keys.iterator();
-        while (i.hasNext()){
-            ret.add(this.get((int) i.next()));
-        }
+    	Connection c = null;
+    	ArrayList <Eleitor> ret  = new ArrayList<>();
+    	try{
+    		c = Connector.newConnection(true);
+    		Set<Integer> keys = this.keySet_aux(c);
+    		Iterator<Integer> i  = keys.iterator();
+            while (i.hasNext()){
+                ret.add(this.get_aux((Integer)i.next(), c));
+            }
+    	}catch(Exception e){
+    		e.printStackTrace();
+    		throw new RuntimeException(e.getMessage());
+    	}finally {
+    		try {
+				c.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+				throw new RuntimeException(e.getMessage());
+			}
+		}
+
         return ret;
     }
   
     
-    public Eleitor put(Integer key,  Eleitor value){
+    private Eleitor put_aux(Integer key, Eleitor value, Connection c) throws SQLException{
+    	Eleitor e = this.get_aux(key, c);
+    	if(e==null){//novo registo
+    		PreparedStatement ps = c.prepareStatement("INSERT INTO "+ Tabname +
+                    "("+Eleinome+","+EleitID+","+Eleitpin+","+ElitCirc+")" +
+                    "value " +
+                    "(?,?,?,?)");
+    		ps.setString(1, value.getNome());
+    		ps.setInt(2, key);
+    		ps.setString(3, value.getPin());
+    		ps.setInt(4, value.getCirculo());
+    		ps.execute();
+    		ps.close();
+    	}else{//registo existente
+    		PreparedStatement ps = c.prepareStatement("UPDATE "+ Tabname + 
+    				" SET "+Eleinome+" = ?, "+Eleitpin +" = ?,"+ElitCirc+" = ? " +
+                    " WHERE "+EleitID+" = ? ");
+    		ps.setInt(4, key);
+    		ps.setString(1, value.getNome());
+    		ps.setString(2, value.getPin());
+    		ps.setInt(3, value.getCirculo());
+    		ps.execute();
+    		ps.close();
+    	}
+    	return e;
+    }
+///// Aqui a altear   
+    public Eleitor put(Object key,  Eleitor value){
     	Connection conn=null;
     	Eleitor el = this.get(key);
     	try{
-    		conn = Connector.newConnection();
+    		conn = Connector.newConnection(false);
     		if(el==null){//eleitor nao existe
     			PreparedStatement ps = conn.prepareStatement("insert into Eleitores " +
                     "(nrID,nome,pin,idCirculo) " +
