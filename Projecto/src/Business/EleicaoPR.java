@@ -33,8 +33,8 @@ public class EleicaoPR extends Eleicao {
 		super(idEleicao, data,c);
 		this.volta2 = false;
 		this.data2 = null;
-		this.voltaR1 = initResultadoCirculoPRDAO(idEleicao, 1);
-		this.voltaR2 = initResultadoCirculoPRDAO(idEleicao, 2);
+		this.voltaR1 = initResultadoCirculoPRDAO(idEleicao, 1,c);
+		this.voltaR2 = initResultadoCirculoPRDAO(idEleicao, 2, c);
 		this.listas = new ListaPRDAO(idEleicao);
 		this.votantes2 = new HashSet<>();
 	}
@@ -50,7 +50,7 @@ public class EleicaoPR extends Eleicao {
 		this.votantes2 = vot2;
 	}
 
-	private ResultadoCirculoPRDAO initResultadoCirculoPRDAO(int idEleicao, int volta, List<Circulo> c) {
+	private ResultadoCirculoPRDAO initResultadoCirculoPRDAO(int idEleicao, int volta, Collection<Circulo> c) {
 		ResultadoCirculoPRDAO resDAO = new ResultadoCirculoPRDAO(idEleicao, volta);
 		Iterator<Circulo> itC = c.iterator();
 		while (itC.hasNext()) {
