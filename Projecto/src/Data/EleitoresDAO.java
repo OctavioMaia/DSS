@@ -14,6 +14,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
+import com.sun.org.glassfish.external.statistics.annotations.Reset;
+
 
 
 /**
@@ -21,24 +23,39 @@ import java.util.TreeSet;
  * @author jms 04_12_2015
  */
 public class EleitoresDAO implements Map<Integer,Eleitor>{
+	private static String Tabname ="Eleitores";
+	private static String EleitoresEleicao = "Eleitor_vota_Eleicao";
+	private static String EleitoresEleicaoEleit = "nrIdEleitor";
+	private static String EleitID = "nrID";
+	private static String Eleitpin = "pin";
+	private static String Eleinome = "nome";
+	private static String elitCirc = "idCirculo";
     public EleitoresDAO(){
     }
 
+    
+    private void clear_aux(Connection c) throws SQLException{
+    	PreparedStatement psVota = c.prepareStatement("DELETE FROM " +EleitoresEleicao );
+    	psVota.executeQuery();
+    	psVota.close();
+    	PreparedStatement psEleit = c.prepareStatement("DELETE FROM " +Tabname );
+    	psEleit.executeQuery();
+    	psEleit.close();
+    }
     public void clear(){
+    	
     	Connection conn = null;
     	try{
-    		conn = Connector.newConnection();
-    		Statement s = conn.createStatement();
-    		s.executeUpdate("DELETE FROM Eleitores");
-    		s.close();
+    		conn = Connector.newConnection(false);
+    		this.clear_aux(conn);
     		conn.commit();
-    	}catch(Exception e){
+    	}catch(SQLException e){
     		try {
 				conn.rollback();
 			} catch (SQLException e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
+    	}catch(Exception e){
     		throw new RuntimeException(e.getMessage());
     	}
     	finally {
@@ -51,34 +68,33 @@ public class EleitoresDAO implements Map<Integer,Eleitor>{
 		} 
     }
     
+    
+    private boolean containsKey_aux(Integer key,Connection c) throws SQLException{
+    	boolean b=false;
+    	PreparedStatement ps = c.prepareStatement(" SELECT  EXISTS (SELECT " +EleitID + " FROM "+ Tabname +
+                " WHERE "+EleitID +" = ?)");
+    	ps.setInt(1,key);
+    	ResultSet rs = ps.executeQuery();
+    	if(rs.next()){
+    		b = (rs.getInt(1)!=0);
+    	}
+    	return b;
+    }
+    
     @Override
     public boolean containsKey(Object key){
         boolean b=false;
         Connection conn = null;
         try{
-        	conn = Connector.newConnection();
-        	PreparedStatement ps = conn.prepareStatement(" Select  EXISTS (SELECT nrID FROM Eleitores " +
-                " WHERE nrID = ?)");
-        	ps.setInt(1,(Integer) key);
-        	ResultSet rs = ps.executeQuery();
-        	while(rs.next())
-        		b = (rs.getInt(1)!=0);
-        	rs.close();
-        	ps.close();
-        	conn.commit();
+        	conn = Connector.newConnection(true);
+        	b = this.containsKey_aux((Integer)key, conn);
         }catch(Exception e){
-        	try {
-				conn.rollback();
-			} catch (SQLException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
+        	e.printStackTrace();
         	throw new RuntimeException(e.getMessage());
         }finally{
         	try {
 				conn.close();
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
         }
@@ -93,24 +109,27 @@ public class EleitoresDAO implements Map<Integer,Eleitor>{
     public boolean isEmpty(){
         return this.size()==0;
     }
+    private int size_aux(Connection c) throws SQLException{
+    	int ret=0;
+    	PreparedStatement ps = c.prepareStatement("SELECT COUNT(*) FROM " + Tabname);
+		ResultSet rs = ps.executeQuery();
+		if(rs.next()) ret = rs.getInt(1);
+		rs.close();
+		ps.close();
+    	return ret;
+    }
+
     
     public int size(){
     	int ret=0;
     	Connection conn = null;
     	try{
-    		conn = Connector.newConnection(); 
-    		PreparedStatement ps = conn.prepareStatement("Select count(*) FROM Eleitores");
-    		ResultSet rs = ps.executeQuery();
-    		if(rs.next()) ret = rs.getInt(1);
-    		rs.close();
-    		ps.close();
-    		conn.commit();
-    	}catch(Exception e){
-    		try {
-				conn.rollback();
-			} catch (SQLException e1) {
+    		conn = Connector.newConnection(true); 
+    		ret = this.size_aux(conn);
+    	}catch(Exception e){{
 				// TODO Auto-generated catch block
-				e1.printStackTrace();
+				e.printStackTrace();
+				throw new RuntimeException(e.getMessage());
 			}
     	}finally{
     		try {
@@ -123,36 +142,57 @@ public class EleitoresDAO implements Map<Integer,Eleitor>{
         return ret;    
     }
 
+    
+    private Eleitor remove_aux(Integer key,Connection c) throws SQLException{
+    	Eleitor e =null;
+    	e = this.get_aux(key);
+    	if(e!=null){
+    		PreparedStatement psVota = c.prepareStatement("DELETE FROM " + EleitoresEleicao + " WHERE " +
+    				EleitoresEleicaoEleit  + " = ?");
+    		psVota.setInt(1, key);
+    		psVota.executeQuery();
+    		psVota.close();
+    		PreparedStatement psEleit = c.prepareStatement("DELETE FROM " + Tabname + " WHERE " +
+    				EleitID  + " = ?");
+    		psEleit.setInt(1, key);
+    		psEleit.executeQuery();
+    		psEleit.close();	
+    	}
+    	return e;
+    }
+   
+    
     @Override
     public Eleitor remove(Object key){
     	Connection conn  = null;
     	Eleitor e =null;
     	try{
-    		conn = Connector.newConnection();
-    	    e  = this.get(key); 
-    	    PreparedStatement ps = conn.prepareStatement("DELETE FROM Eleitores where nrID= ?");
-    	    ps.setInt(1,(Integer)key);
-    	    ps.execute();
+    		conn = Connector.newConnection(false);
+    	    e  = this.remove_aux((Integer)key, conn);
     	    conn.commit();
-    	}catch(Exception e2){
-    		try {
-				conn.rollback();
-			} catch (SQLException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
+    	}catch(SQLException ex){
+    		try{
+    			conn.rollback();
+    		}catch(Exception ex1){
+    			ex1.printStackTrace();
+    			throw new RuntimeException(ex1.getMessage());
+    		}
+    	}
+    	catch(Exception ex){
+			ex.printStackTrace();
+			throw new RuntimeException(ex.getMessage());
     	}finally{
     		try {
 				conn.close();
 			} catch (SQLException e2) {
-				// TODO Auto-generated catch block
 				e2.printStackTrace();
+				throw new RuntimeException(e2.getMessage());
 			}
     	}
        return e;  
     }
 
-    
+    ///// Aqui a altear
     public Set<Integer> keySet(){
         Set<Integer> ret = new TreeSet<Integer>();
         Connection conn = null;
