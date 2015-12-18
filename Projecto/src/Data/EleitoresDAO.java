@@ -145,7 +145,7 @@ public class EleitoresDAO implements Map<Integer,Eleitor>{
     
     private Eleitor remove_aux(Integer key,Connection c) throws SQLException{
     	Eleitor e =null;
-    	e = this.get_aux(key);
+    	e = this.get_aux(key,c);
     	if(e!=null){
     		PreparedStatement psVota = c.prepareStatement("DELETE FROM " + EleitoresEleicao + " WHERE " +
     				EleitoresEleicaoEleit  + " = ?");
@@ -314,41 +314,22 @@ public class EleitoresDAO implements Map<Integer,Eleitor>{
     	}
     	return e;
     }
-///// Aqui a altear   
-    public Eleitor put(Object key,  Eleitor value){
+  
+    public Eleitor put(Integer key,  Eleitor value){
     	Connection conn=null;
-    	Eleitor el = this.get(key);
+    	Eleitor el = null;
     	try{
     		conn = Connector.newConnection(false);
-    		if(el==null){//eleitor nao existe
-    			PreparedStatement ps = conn.prepareStatement("insert into Eleitores " +
-                    "(nrID,nome,pin,idCirculo) " +
-                    "value " +
-                    "(?,?,?,?)");
-    			ps.setInt(1, key);
-    			ps.setString(2, value.getNome());
-    			ps.setString(3, value.getPin());
-    			ps.setInt(4, value.getCirculo());
-    			ps.execute();
-    			ps.close();
-    		}else{
-    			PreparedStatement ps = conn.prepareStatement("UPDATE Eleitores " + "SET nome=?,pin=?,idCirculo=? " +
-                        "WHERE nrID = ? ");
-        			ps.setInt(4, key);
-        			ps.setString(1, value.getNome());
-        			ps.setString(2, value.getPin());
-        			ps.setInt(3, value.getCirculo());
-        			ps.execute();
-        			ps.close();
-    		}
+    		el = this.put_aux(key, value, conn);
     		conn.commit();
     	}catch(Exception e){
     		try {
+    			conn.rollback();
     			e.printStackTrace();
-				conn.rollback();
+				throw new RuntimeException(e.getMessage());
 			} catch (SQLException e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
+				throw new RuntimeException(e1.getMessage());
 			}
     	}finally{
     		try {
@@ -356,12 +337,14 @@ public class EleitoresDAO implements Map<Integer,Eleitor>{
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+				throw new RuntimeException(e.getMessage());
 			}
     	}
     	return el;
     }
 
 
+///// Aqui a altear 
 	@Override
 	public void putAll(Map<? extends Integer, ? extends Eleitor> m) {
 		// TODO Auto-generated method stub
@@ -375,4 +358,6 @@ public class EleitoresDAO implements Map<Integer,Eleitor>{
 		throw new RuntimeException("Funçao não implementada");
 		//return null;
 	}
+
+
 }
