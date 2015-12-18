@@ -6,6 +6,7 @@
 package Business;
 
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -25,21 +26,26 @@ public abstract class Eleicao {
 	private boolean permitirVotar;
 	private int estado;
 	private Set<Integer> votantes;
+	private Collection<Circulo> circulos;
 
-	public Eleicao(int idEleicao, Calendar data) {
+	public Eleicao(int idEleicao, Calendar data,Collection<Circulo> c) {
 		this.idEleicao = idEleicao;
 		this.data = data;
 		this.permitirVotar = false;
 		this.estado = CRIADA;
 		this.votantes = new HashSet<>();
+		this.circulos =c;
+		
+		
 	}
 
-	public Eleicao(int idEleicao, Calendar data, int estado, boolean permitirVotar, Set<Integer> vot) {
+	public Eleicao(int idEleicao, Calendar data, int estado, boolean permitirVotar, Set<Integer> vot,Collection<Circulo> c) {
 		this.idEleicao = idEleicao;
 		this.data = data;
 		this.permitirVotar = permitirVotar;
 		this.estado = estado;
 		this.votantes = vot;
+		this.circulos=c;
 	}
 
 	public int getIdEleicao() {
