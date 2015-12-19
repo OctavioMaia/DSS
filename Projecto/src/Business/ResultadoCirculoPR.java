@@ -5,7 +5,9 @@
  */
 package Business;
 
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 
 import Exception.ExceptionListaNaoExiste;
 
@@ -66,12 +68,12 @@ public class ResultadoCirculoPR {
 		this.validos = validos;
 	}
 
-	public void addVoto(ListaPR l) throws ExceptionListaNaoExiste{
-		if(this.validos.containsKey(l)){
+	public void addVoto(ListaPR l) /*throws ExceptionListaNaoExiste*/{
+		//if(this.validos.containsKey(l)){
 			this.validos.put(l, this.validos.get(l.getIdListaPR()) + 1);
-		}else{
+		/*}else{
 			throw new ExceptionListaNaoExiste("Impossivel votar numa lista que nao existe");
-		}
+		}*/
 	}
 
 	public void addVotoBranco() {
@@ -80,5 +82,30 @@ public class ResultadoCirculoPR {
 
 	public void addVotoNulo() {
 		this.nulos++;
+	}
+	
+	public void addListas(Collection<ListaPR> listas){
+		ListaPR listaPR;
+		Iterator<ListaPR> itL = listas.iterator();
+		while (itL.hasNext()) {
+			listaPR = (ListaPR) itL.next();
+			this.validos.put(listaPR, 0);
+		}
+	}
+	
+	public ListaPR maisVotada(){
+		int maxVotos=0;
+		ListaPR l = null;
+		for(ListaPR lista : this.validos.keySet()){
+			if(this.validos.get(lista)>maxVotos){
+				l=lista;
+				maxVotos=this.validos.get(lista);
+			}
+		}
+		return l;
+	}
+	
+	public int votosLista(ListaPR l){
+		return this.validos.get(l);
 	}
 }

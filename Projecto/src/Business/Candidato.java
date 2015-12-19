@@ -84,4 +84,9 @@ public class Candidato {
 		return stringBuilder.toString();
 	}
 
+	@Override
+	public boolean equals(Object obj) {
+		Candidato c = (Candidato) obj;
+		return	this.bi==c.getBi();
+	}
 }

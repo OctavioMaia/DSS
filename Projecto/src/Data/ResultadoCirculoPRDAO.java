@@ -23,6 +23,10 @@ public class ResultadoCirculoPRDAO implements Map<Integer,ResultadoCirculoPR>{
 		this.idEleicao = idEleicao;
 		this.volta = volta;
 	}
+	protected void clear_aux(Connection c)throws SQLException{
+		this.clear();
+		
+	}
 
 	@Override
 	public int size() {
