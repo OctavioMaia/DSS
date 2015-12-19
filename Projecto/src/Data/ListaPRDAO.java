@@ -26,6 +26,10 @@ public class ListaPRDAO implements Map<Integer,ListaPR> {
 		this.idEleicao=idEleicao;
 	}
 	
+	protected void clear_aux(Connection c)throws SQLException{
+		this.clear();
+		
+	}
 	public int size() {
 		int ret = 0;
 		Connection conn = null;

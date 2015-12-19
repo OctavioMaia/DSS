@@ -15,5 +15,13 @@ public class Connector {
         conn.setTransactionIsolation(Connection.TRANSACTION_REPEATABLE_READ);
         return conn;
 	}
+	/*
+	public static Connection newConnection() throws Exception {
+		Class.forName("com.mysql.jdbc.Driver");
+		Connection conn = DriverManager.getConnection(url,username,password);
+		conn.setAutoCommit(false);
+        conn.setTransactionIsolation(Connection.TRANSACTION_REPEATABLE_READ);
+        return conn;
+	}*/
 
 }
