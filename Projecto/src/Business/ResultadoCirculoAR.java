@@ -69,6 +69,16 @@ public class ResultadoCirculoAR {
 	public void setMandatosLista(Lista lista, int mandatos) {
 		this.mandatos.put(lista, mandatos);
 	}
+	
+	public void addLista(Lista lista){
+		this.validos.put(lista,0);
+		this.mandatos.put(lista,0);
+	}
+	
+	public void removeLista(Lista lista){
+		this.validos.remove(lista);
+		this.mandatos.remove(lista);
+	}
 
 	public void addVoto(Lista lista) {
 		this.validos.put(lista, this.validos.get(lista) + 1);
