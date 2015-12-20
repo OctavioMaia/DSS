@@ -11,11 +11,18 @@ import java.util.Set;
 
 import Data.CirculoInfoDAO;
 import Data.ResultadoCirculoARDAO;
+import Exception.ExceptionLimiteCandidatos;
+import Exception.ExceptionListaExiste;
 
 public class EleicaoAR extends Eleicao {
 	private int mandatosAssembleia;
 	private CirculoInfoDAO circulos;
 	private ResultadoCirculoARDAO resultado;
+	
+	/*
+	 * Os construtores nao calculam os mandatos em cada circulo.
+	 * Chamar a funcao calcularMandatosCirculos para fazer isso.
+	 */
 	
 	public EleicaoAR(int idEleicao, Calendar data,Collection<Circulo> circulos,int mandatosAssembleia) {
 		super(idEleicao, data);
@@ -97,27 +104,67 @@ public class EleicaoAR extends Eleicao {
 		return this.resultado.get(idCirculo);
 	}
 	
+	
+	public void calcularMandatosCirculos(){
+		HashMap<Integer,Integer> eleitores = new HashMap<>();
+		for(int circulo: this.circulos.keySet()){
+			eleitores.put(circulo,this.circulos.get(circulo).getCirculo().getTotEleitores());
+		}
+		@SuppressWarnings({ "static-access", "unchecked" })
+		HashMap<Integer,Integer> mandatos = (HashMap<Integer,Integer>)new Hondt().getMandatos(mandatosAssembleia, eleitores);
+		for(int circulo: mandatos.keySet()){
+			CirculoInfo cinfo = this.circulos.get(circulo);
+			cinfo.setMandatos(mandatos.get(circulo));
+			this.circulos.put(circulo,cinfo);
+		}
+	}
+	
+	public void atribuirMandatosListas(){
+		for(Integer circulo: this.resultado.keySet()){
+			int mandatosCirculo = this.circulos.get(circulo).getMandatos();
+			ResultadoCirculoAR resultadoCirculo = this.resultado.get(circulo);
+			HashMap<Lista,Integer> votos = resultadoCirculo.getValidos();
+			@SuppressWarnings({ "unchecked", "static-access" })
+			HashMap<Lista,Integer> mandatos = (HashMap<Lista,Integer>)new Hondt().getMandatos(mandatosCirculo, votos);
+			resultadoCirculo.setMandatos(mandatos);
+		}
+	}
+	
 	@Override
 	public void iniciar(){
 		super.setEstado(0);
 		super.setPermitirVotar(true);
+		this.calcularMandatosCirculos();
 	}
 	
 	@Override
-	public void addLista(Listavel lista){
-		Lista l = (Lista)lista;
-		this.circulos.get(l.getCirculo()).addLista(l);
+	public void terminar(){
+		super.setEstado(1);
+		super.setPermitirVotar(false);
+		this.atribuirMandatosListas();
 	}
 	
+	public void addCandidato(Lista lista,CandidatoAR candidato) throws ExceptionLimiteCandidatos{
+		CirculoInfo cinfo = this.circulos.get(lista.getCirculo().getId());
+		cinfo.addCandidatoLista(lista,candidato);
+	}
 	
-	/**
-	 * atenção ao fazer alteração no DAO das listas alterar tambem no HASHMAP do DAO dos resultados
-	 * 
-	 */
+	//@Override
+	public void addLista(Listavel lista) throws ExceptionListaExiste{
+		Lista l = (Lista)lista;
+		this.circulos.get(l.getCirculo().getId()).addLista(l);
+		ResultadoCirculoAR resultadoCirculo = this.resultado.get(l.getCirculo().getId());
+		resultadoCirculo.addLista(l);
+		this.resultado.put(l.getCirculo().getId(), resultadoCirculo);
+	}
+	
 	@Override
 	public void removeLista(Listavel lista){
 		Lista l = (Lista)lista;
-		this.circulos.get(l.getCirculo()).removeLista(l);
+		this.circulos.get(l.getCirculo().getId()).removeLista(l);
+		ResultadoCirculoAR resultadoCirculo = this.resultado.get(l.getCirculo().getId());
+		resultadoCirculo.removeLista(l);
+		this.resultado.put(l.getCirculo().getId(), resultadoCirculo);
 	}
 	
 	@Override
@@ -134,6 +181,12 @@ public class EleicaoAR extends Eleicao {
 	@Override
 	public void addVotoNulo(int idCirculo){
 		this.resultado.get(idCirculo).addVotoNulo();
+	}
+
+	@Override
+	public Boletim getBoletim(int idCirculo) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 }
