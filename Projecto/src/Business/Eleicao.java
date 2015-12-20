@@ -26,26 +26,21 @@ public abstract class Eleicao {
 	private boolean permitirVotar;
 	private int estado;
 	private Set<Integer> votantes;
-	private Collection<Circulo> circulos;
 
-	public Eleicao(int idEleicao, Calendar data,Collection<Circulo> c) {
+	public Eleicao(int idEleicao, Calendar data) {
 		this.idEleicao = idEleicao;
 		this.data = data;
 		this.permitirVotar = false;
 		this.estado = CRIADA;
-		this.votantes = new HashSet<>();
-		this.circulos =c;
-		
-		
+		this.votantes = new HashSet<>();		
 	}
 
-	public Eleicao(int idEleicao, Calendar data, int estado, boolean permitirVotar, Set<Integer> vot,Collection<Circulo> c) {
+	public Eleicao(int idEleicao, Calendar data, int estado, boolean permitirVotar, Set<Integer> vot) {
 		this.idEleicao = idEleicao;
 		this.data = data;
 		this.permitirVotar = permitirVotar;
 		this.estado = estado;
 		this.votantes = vot;
-		this.circulos=c;
 	}
 
 	public int getIdEleicao() {
@@ -108,7 +103,7 @@ public abstract class Eleicao {
 	public abstract void iniciar();
 	public abstract void terminar();
 	public abstract void removeLista(Listavel lista);
-	public abstract void addVoto(Listavel lista);
+	public abstract void addVoto(Listavel lista, Circulo circulo);
 	public abstract void addVotoNulo(int idCirculo);
 	public abstract void addVotoBranco(int idCirculo);
 	public abstract Boletim getBoletim(int idCirculo);
