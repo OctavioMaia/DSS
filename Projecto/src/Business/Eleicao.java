@@ -11,6 +11,8 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+import Exception.*;
+
 /**
  *
  * @author Octavio
@@ -102,6 +104,7 @@ public abstract class Eleicao {
 	
 	public abstract void iniciar();
 	public abstract void terminar();
+	public abstract void addLista(Listavel lista) throws ExceptionListaExiste, ExceptionLimiteCandidatos, ExceptionMandanteInvalido;
 	public abstract void removeLista(Listavel lista);
 	public abstract void addVoto(Listavel lista, Circulo circulo);
 	public abstract void addVotoNulo(int idCirculo);

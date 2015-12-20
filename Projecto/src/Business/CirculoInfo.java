@@ -1,8 +1,11 @@
 package Business;
 
+import java.util.HashMap;
+
 import Data.ListaARDAO;
 import Exception.ExceptionLimiteCandidatos;
 import Exception.ExceptionListaExiste;
+import Exception.ExceptionMandanteInvalido;
 
 public class CirculoInfo {
 	private Circulo circulo;
@@ -32,8 +35,12 @@ public class CirculoInfo {
 		this.circulo = circulo;
 	}
 
-	public ListaARDAO getListas() {
-		return listas;
+	public HashMap<Integer,Lista> getListas() {
+		HashMap<Integer,Lista> listasRet = new HashMap<>();
+		for(int idLista: this.listas.keySet()){
+			listasRet.put(idLista,this.listas.get(idLista));
+		}
+		return listasRet;
 	}
 
 	public int getMandatos() {
@@ -44,16 +51,11 @@ public class CirculoInfo {
 		this.mandatos = mandatos;
 	}
 
-	public void addLista(Lista lista) throws ExceptionListaExiste{
-
+	public void addLista(Lista lista) throws ExceptionListaExiste, ExceptionLimiteCandidatos{
+		if(lista.getNumCandPrim() >= this.mandatos) throw new ExceptionLimiteCandidatos("Limite de candidatos primarios ("+this.mandatos+") excedido");
 		for(Lista l: this.listas.values()){
 			if(l.equals(lista))
 				throw new ExceptionListaExiste();
-			/*
-			 * TODO: Caso a lista pertenca a um partido, verificar se esse partido ja existe
-			 * 		 Caso pertenca a uma coligacao, verificar se algum dos partidos da coligacao ja existe
-			 * 		 E atirar excepcoes 
-			 */
 		}
 		this.listas.put(lista.getID(),lista);
 	}
