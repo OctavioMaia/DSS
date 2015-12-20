@@ -23,6 +23,8 @@ import java.sql.SQLException;
 
 public class ListaPRDAO implements Map<Integer,ListaPR> {
 	private int idEleicao;
+	private ResultadoCirculoPRDAO v1;
+	private ResultadoCirculoPRDAO v2;
 	//Tabela de Lista 
 	private static String TabLista ="listasPR";
 	private static String TabId ="idlistaPR";
@@ -50,6 +52,8 @@ public class ListaPRDAO implements Map<Integer,ListaPR> {
 	
 	public ListaPRDAO (int idEleicao){
 		this.idEleicao=idEleicao;
+		this.v1 = new ResultadoCirculoPRDAO(this.idEleicao, 1);
+		this.v2 = new ResultadoCirculoPRDAO(this.idEleicao, 2);
 	}
 	
 	
@@ -131,19 +135,20 @@ public class ListaPRDAO implements Map<Integer,ListaPR> {
 	}
 	
 	protected void clear_aux(Connection c)throws SQLException{
-		//Elimina os resultados de todas as listas desta eleicao
-		PreparedStatement psResul  = c.prepareStatement("DELETE FROM " + TabRes 
-				+ " WHERE " +IdEleic + " = ?");
-		psResul.setInt(1, this.idEleicao);
-		psResul.execute();
-		psResul.close();
+		//Limpar Resultados das lsiats desta eleicao
+		this.v1.clear_aux(c);
+		this.v2.clear_aux(c);
+		Iterator<ListaPR> ls = this.values().iterator();//Todas as listas da eleicao
 		//EliminaTodas as listas Desta eleicao
 		PreparedStatement psList  = c.prepareStatement("DELETE FROM " + TabLista 
 				+ " WHERE " +Eleicao + " = ?");
 		psList.setInt(1, this.idEleicao);
 		psList.execute();
 		psList.close();
-		//Ver se é para eliminar os candidados ao eleiminar a lista	
+		//eliminar o candidato de todas as listas
+		while(ls.hasNext()){
+			this.removeCand(ls.next().getCandidato().getBi(), c);
+		}
 	}
 	
 	@Override
@@ -178,7 +183,6 @@ public class ListaPRDAO implements Map<Integer,ListaPR> {
 	public boolean containsValue(Object value) {
 		return this.containsKey(((Lista)value).getID());
 	}
-	
 	
 	private boolean containsCand(Integer key, Connection c) throws SQLException{
 		boolean ret =false;
@@ -250,8 +254,7 @@ public class ListaPRDAO implements Map<Integer,ListaPR> {
 	}
 	
 	
-	
-	private ListaPR get_aux(Integer key, Connection c) throws SQLException{
+	protected ListaPR get_aux(Integer key, Connection c) throws SQLException{
 		
 		ListaPR ret = null;
 		if(this.containsKey_aux(key, c)){
@@ -362,6 +365,13 @@ public class ListaPRDAO implements Map<Integer,ListaPR> {
 		return ret;
 	}
 
+	private void removeCand(Integer key,Connection c) throws SQLException{
+		PreparedStatement ps = c.prepareStatement("DELETE FROM "+TabCandid
+				+ " WHERE " + TabCandidID + "= ?");
+		ps.setInt(1, key);
+		ps.execute();
+		ps.close();
+	}
 	
 	private ListaPR remove_aux(Integer key, Connection c) throws SQLException{
 		ListaPR ret = this.get_aux(key,c);
@@ -370,8 +380,21 @@ public class ListaPRDAO implements Map<Integer,ListaPR> {
 			PreparedStatement psRes = c.prepareStatement("DELETE FROM "+TabRes+" WHERE"
 					+ IdEleic+" =? AND"
 					+ IdListaPR+"= ?");
-			
+			psRes.setInt(1,this.idEleicao);
+			psRes.setInt(2,key);
+			psRes.execute();
+			psRes.close();
+			//Remover Lista
+			PreparedStatement ps = c.prepareStatement("DELETE FROM "+TabLista+" WHERE"
+					+ Eleicao+ "= ? AND"
+					+ TabId+ " = ?");
+			ps.setInt(1, this.idEleicao);
+			ps.setInt(2,key);
+			ps.execute();
+			ps.close();
 			//Remover o candidadto?
+			this.removeCand(ret.getCandidato().getBi(), c);
+			
 		}
 		
 		return ret;
@@ -454,16 +477,22 @@ public class ListaPRDAO implements Map<Integer,ListaPR> {
 		return ret;
 	}
 
+	protected Collection<ListaPR> values_aux(Connection c) throws SQLException{
+		ArrayList<ListaPR> ret = new ArrayList<>();
+		Iterator<Integer> i = this.keySet_aux(c).iterator();
+		while(i.hasNext()){
+			ret.add(this.get_aux(i.next(),c));
+		}
+		return ret;
+	}
+	
 	@Override
 	public Collection<ListaPR> values() {
-		ArrayList<ListaPR> ret = new ArrayList<>();
+		Collection<ListaPR> ret = new ArrayList<>();
 		Connection c = null;
 		try{
 			c = Connector.newConnection(true);
-			Iterator<Integer> i = this.keySet_aux(c).iterator();
-			while(i.hasNext()){
-				ret.add(this.get_aux(i.next(),c));
-			}
+			ret = this.values_aux(c);
 		}catch(Exception e){
 			e.printStackTrace();
 			throw new RuntimeException(e.getMessage());
