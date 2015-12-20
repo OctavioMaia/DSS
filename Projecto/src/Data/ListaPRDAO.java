@@ -454,16 +454,22 @@ public class ListaPRDAO implements Map<Integer,ListaPR> {
 		return ret;
 	}
 
+	protected Collection<ListaPR> values_aux(Connection c) throws SQLException{
+		ArrayList<ListaPR> ret = new ArrayList<>();
+		Iterator<Integer> i = this.keySet_aux(c).iterator();
+		while(i.hasNext()){
+			ret.add(this.get_aux(i.next(),c));
+		}
+		return ret;
+	}
+	
 	@Override
 	public Collection<ListaPR> values() {
-		ArrayList<ListaPR> ret = new ArrayList<>();
+		Collection<ListaPR> ret = new ArrayList<>();
 		Connection c = null;
 		try{
 			c = Connector.newConnection(true);
-			Iterator<Integer> i = this.keySet_aux(c).iterator();
-			while(i.hasNext()){
-				ret.add(this.get_aux(i.next(),c));
-			}
+			ret = this.values_aux(c);
 		}catch(Exception e){
 			e.printStackTrace();
 			throw new RuntimeException(e.getMessage());
