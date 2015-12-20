@@ -146,8 +146,7 @@ public class ResultadoCirculoPRDAO implements Map<Integer,ResultadoCirculoPR>{
 		ResultadoCirculoPR ret = null;
 		ListaPRDAO daoListas = new ListaPRDAO(this.idEleicao);
 		CirculoDAO cd = new CirculoDAO();
-		Collection<ListaPR> listas = daoListas.values_aux(c);
-		//Ja tenho as listas todas da eleicao
+
 		PreparedStatement psRLista = c.prepareStatement("SELECT "+Lista+", "+Votos+" FROM " + TabLista
 				+ "WHERE "+Eleicao+" = ? and "+Volta+" = ? and "+IdCirculo+" = ?)");
 		psRLista.setInt(1, this.idEleicao);
@@ -156,7 +155,7 @@ public class ResultadoCirculoPRDAO implements Map<Integer,ResultadoCirculoPR>{
 		ResultSet rs = psRLista.executeQuery();
 		while(rs.next()){
 			//presiso de um comparador de int com listaPR ou iquals
-			listasvotos.put(rs.getInt(Lista), rs.getInt(Votos));
+			listasvotos.put(daoListas.get_aux(rs.getInt(Lista),c), rs.getInt(Votos));
 		}
 		rs.close();
 		psRLista.close();
@@ -170,55 +169,30 @@ public class ResultadoCirculoPRDAO implements Map<Integer,ResultadoCirculoPR>{
 		if(rs2.next()){
 			//Ir buscar o circulo
 			Circulo ci = cd.get_aux(key,c);
-			r = new ResultadoCirculoPR(rs2.getInt("brancos"), rs2.getInt("nulos"), rs2.getInt("totEleitores"), 
-					listasvotos, (Integer)key);
+			ret = new ResultadoCirculoPR(ci,rs2.getInt(Brancos), rs2.getInt(Nulos), rs2.getInt(Toteleitores), 
+					listasvotos);
 		}
+		rs2.close();
+		circuloGeral.close();
 		return ret;
 	}
+	
 	@Override
 	public ResultadoCirculoPR get(Object key) {
 		ResultadoCirculoPR r =null;
 		Connection c=null;
 		try{
-			c = Connector.newConnection();
-			PreparedStatement psRLista = c.prepareStatement("SELECT idlistaPR, NrVotos FROM Circulo_tem_ListaPR_ResultadoPR "
-					+ "WHERE idEleicao = ? and volta = ? and idCirculo = ?)");
-			psRLista.setInt(1, this.idEleicao);
-			psRLista.setInt(2, this.volta);
-			psRLista.setInt(3, (Integer)key);
-			HashMap<Integer,Integer> listasvotos= new HashMap<>();
-			ResultSet rs = psRLista.executeQuery();
-			while(rs.next()){
-				listasvotos.put(rs.getInt("idlistaPR"), rs.getInt("NrVotos"));
-			}
-			PreparedStatement circuloGeral = c.prepareStatement("SELECT nulos, brancos, totEleitores FROM Circulo_tem_ResultadoPR "
-					+ "WHERE idEleicao = ? and volta = ? and idCirculo = ?)");
-			circuloGeral.setInt(1, this.idEleicao);
-			circuloGeral.setInt(2, this.volta);
-			circuloGeral.setInt(3, (Integer)key);
-			ResultSet rs2 = psRLista.executeQuery();
-			if(rs2.next()){
-				r = new ResultadoCirculoPR(rs2.getInt("brancos"), rs2.getInt("nulos"), rs2.getInt("totEleitores"), listasvotos, (Integer)key);
-			}
-			rs.close();
-			rs2.close();
-			psRLista.close();
-			circuloGeral.close();
-			c.commit();
+			c = Connector.newConnection(true);
+			r = this.get_aux((Integer)key, c);
 		}catch(Exception e){
-			try {
-				c.rollback();
-			} catch (SQLException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
+			e.printStackTrace();
 			throw new RuntimeException(e.getMessage());
 		}finally{
 			try {
 			c.close();
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
+				throw new RuntimeException(e.getMessage());
 			}
 		}
 		return r;

@@ -251,7 +251,7 @@ public class ListaPRDAO implements Map<Integer,ListaPR> {
 	
 	
 	
-	private ListaPR get_aux(Integer key, Connection c) throws SQLException{
+	protected ListaPR get_aux(Integer key, Connection c) throws SQLException{
 		
 		ListaPR ret = null;
 		if(this.containsKey_aux(key, c)){
