@@ -12,6 +12,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
+import Business.Circulo;
 import Business.ListaPR;
 import Business.ResultadoCirculoPR;
 import javafx.geometry.VPos;
@@ -144,6 +145,7 @@ public class ResultadoCirculoPRDAO implements Map<Integer,ResultadoCirculoPR>{
 	private ResultadoCirculoPR get_aux(Integer key,Connection c) throws SQLException{
 		ResultadoCirculoPR ret = null;
 		ListaPRDAO daoListas = new ListaPRDAO(this.idEleicao);
+		CirculoDAO cd = new CirculoDAO();
 		Collection<ListaPR> listas = daoListas.values_aux(c);
 		//Ja tenho as listas todas da eleicao
 		PreparedStatement psRLista = c.prepareStatement("SELECT "+Lista+", "+Votos+" FROM " + TabLista
@@ -153,7 +155,23 @@ public class ResultadoCirculoPRDAO implements Map<Integer,ResultadoCirculoPR>{
 		HashMap<ListaPR,Integer> listasvotos= new HashMap<>();
 		ResultSet rs = psRLista.executeQuery();
 		while(rs.next()){
-			listasvotos.put(rs.getInt("idlistaPR"), rs.getInt("NrVotos"));
+			//presiso de um comparador de int com listaPR ou iquals
+			listasvotos.put(rs.getInt(Lista), rs.getInt(Votos));
+		}
+		rs.close();
+		psRLista.close();
+		PreparedStatement circuloGeral = c.prepareStatement("SELECT "+Nulos+", "+Brancos+", " + Toteleitores
+				+ " FROM " + TabGlobal
+				+ " WHERE "+Eleicao+" = ? and "+Volta+" = ? and "+IdCirculo+" = ?)");
+		circuloGeral.setInt(1, this.idEleicao);
+		circuloGeral.setInt(2, this.volta);
+		circuloGeral.setInt(3,key);
+		ResultSet rs2 = psRLista.executeQuery();
+		if(rs2.next()){
+			//Ir buscar o circulo
+			Circulo ci = cd.get_aux(key,c);
+			r = new ResultadoCirculoPR(rs2.getInt("brancos"), rs2.getInt("nulos"), rs2.getInt("totEleitores"), 
+					listasvotos, (Integer)key);
 		}
 		return ret;
 	}
