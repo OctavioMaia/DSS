@@ -106,7 +106,7 @@ public class Lista implements Listavel{
 		this.candidatos.remove(candidato);
 	}
 	
-	public int numCandPrim(){
+	public int getNumCandPrim(){
 		int count = 0;
 		Iterator<CandidatoAR> it = candidatos.iterator();
 		while(it.hasNext()){
@@ -116,7 +116,20 @@ public class Lista implements Listavel{
 		return count;
 	}
 	
-	public int numCandSec(){
-		return this.candidatos.size()-this.numCandPrim();
+	public int getNumCandSec(){
+		return this.candidatos.size()-this.getNumCandPrim();
+	}
+	
+	@Override
+	public boolean equals(Object o){
+        if (o == null) {
+            return false;
+        }
+        if (getClass() != o.getClass()) {
+            return false;
+        }
+        Lista lista = (Lista)o;
+        return this.circulo.equals(lista.getCirculo()) 
+        		&& this.nome.equals(lista.getNome());
 	}
 }

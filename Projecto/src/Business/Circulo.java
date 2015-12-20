@@ -65,7 +65,8 @@ public class Circulo {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        return (this==(Circulo) obj);
+        Circulo circulo = (Circulo)obj;
+        return this.id == circulo.getId();
     }
     
     public String toString(){
