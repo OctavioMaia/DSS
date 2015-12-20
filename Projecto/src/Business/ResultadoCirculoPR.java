@@ -12,28 +12,39 @@ import java.util.Iterator;
 import Exception.ExceptionListaNaoExiste;
 
 /**
- * Classe que contem os resultados da Eleição.
- * Onde são guardados os votos.
+ * Classe que contem os resultados da Eleição. Onde são guardados os votos.
+ * 
  * @author ruifreitas
  */
 public class ResultadoCirculoPR {
 	private Circulo circulo;
+	private int totEleitores;
 	private int brancos;
 	private int nulos;
 	private HashMap<ListaPR, Integer> validos;
 
 	public ResultadoCirculoPR(Circulo c) {
 		this.circulo = c;
+		this.totEleitores = c.getTotEleitores();
 		this.brancos = 0;
 		this.nulos = 0;
 		this.validos = new HashMap<>();
 	}
 
-	public ResultadoCirculoPR(Circulo c, int brancos, int nulos, HashMap<ListaPR, Integer> validos) {
+	public ResultadoCirculoPR(Circulo c, int totEleitores, int brancos, int nulos, HashMap<ListaPR, Integer> validos) {
 		this.circulo = c;
+		this.totEleitores = totEleitores;
 		this.brancos = brancos;
 		this.nulos = nulos;
 		this.validos = validos;
+	}
+
+	public int getTotEleitores() {
+		return totEleitores;
+	}
+
+	public void setTotEleitores(int totEleitores) {
+		this.totEleitores = totEleitores;
 	}
 
 	public Circulo getCirculo() {
@@ -68,12 +79,8 @@ public class ResultadoCirculoPR {
 		this.validos = validos;
 	}
 
-	public void addVoto(ListaPR l) /*throws ExceptionListaNaoExiste*/{
-		//if(this.validos.containsKey(l)){
-			this.validos.put(l, this.validos.get(l.getIdListaPR()) + 1);
-		/*}else{
-			throw new ExceptionListaNaoExiste("Impossivel votar numa lista que nao existe");
-		}*/
+	public void addVoto(ListaPR l) {
+		this.validos.put(l, this.validos.get(l) + 1);
 	}
 
 	public void addVotoBranco() {
@@ -83,29 +90,23 @@ public class ResultadoCirculoPR {
 	public void addVotoNulo() {
 		this.nulos++;
 	}
-	
-	public void addListas(Collection<ListaPR> listas){
-		ListaPR listaPR;
-		Iterator<ListaPR> itL = listas.iterator();
-		while (itL.hasNext()) {
-			listaPR = (ListaPR) itL.next();
-			this.validos.put(listaPR, 0);
-		}
-	}
-	
-	public ListaPR maisVotada(){
-		int maxVotos=0;
-		ListaPR l = null;
-		for(ListaPR lista : this.validos.keySet()){
-			if(this.validos.get(lista)>maxVotos){
-				l=lista;
-				maxVotos=this.validos.get(lista);
+
+	public void addListas(Collection<ListaPR> listas) {
+		for (ListaPR lista : listas) {
+			if (!this.validos.containsKey(lista)) {
+				this.validos.put(lista, 0);
 			}
 		}
-		return l;
 	}
-	
-	public int votosLista(ListaPR l){
-		return this.validos.get(l);
+
+	/*
+	 * public ListaPR maisVotada(){ int maxVotos=0; ListaPR maisVotada = null;
+	 * for(ListaPR lista : this.validos.keySet()){
+	 * if(this.validos.get(lista)>maxVotos){ maisVotada=lista;
+	 * maxVotos=this.validos.get(lista); } } return maisVotada; }
+	 */
+
+	public int votosLista(ListaPR lista) {
+		return this.validos.get(lista);
 	}
 }
