@@ -15,6 +15,11 @@ public class CirculoDAO implements Map<Integer,Circulo>{
 	public CirculoDAO() {
 	}
 
+	
+	protected Circulo get_aux(Integer key,Connection c) throws SQLException{
+		return this.get(key);
+	}
+	
 	@Override
 	public int size() {
 		int ret=0;
