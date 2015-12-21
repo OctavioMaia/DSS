@@ -34,7 +34,7 @@ Coisas a considerar:
       - [x] Calculo percentagens votos brancos nulos e abstencao
     - [ ] Implementar selecao de colunas nas tabelas pra mostrar informacao
   - [ ] ResultadosPR
-    - [] Resultados globais
+    - [ ] Resultados globais
       - [ ] Calculo votos brancos nulos e abstencao 
       - [ ] Calculo percentagens votos brancos nulos e abstencao
     - [ ] Resultados circulo
