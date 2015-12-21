@@ -1,26 +1,20 @@
 package Business;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
-import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 import java.util.TreeSet;
 
 import Data.ListaPRDAO;
 import Data.ResultadoCirculoPRDAO;
-import Exception.ExceptionCandidatoExiste;
 import Exception.ExceptionIniciarEleicao;
 import Exception.ExceptionLimiteCandidatos;
 import Exception.ExceptionListaExiste;
-import Exception.ExceptionListaNaoExiste;
 import Exception.ExceptionMandanteInvalido;
 import Exception.ExceptionTerminarEleicao;
 
@@ -97,30 +91,6 @@ public class EleicaoPR extends Eleicao {
 
 	public void setData2(Calendar data2) {
 		this.data2 = data2;
-	}
-
-	/**
-	 * Metodo addLista que adiciona a listaPR com o candidato c á base de dados.
-	 * Apenas adiciona as listas e nao aos REsultadosCirculoPR
-	 * 
-	 * @param c
-	 * @throws ExceptionCandidatoExiste
-	 */
-	public void addLista(Candidato cand) throws ExceptionCandidatoExiste {
-		for (ListaPR l : this.listas.values()) {
-			if (l.candidatoEquals(cand)) {
-				throw new ExceptionCandidatoExiste(
-						"A lista que deseja adicionar tem um candidato que já se encontra a concorer para a mesma eleição");
-			}
-		}
-		ListaPR lista = new ListaPR(super.getIdEleicao(), this.listas.size() + 1, cand);
-		this.listas.put(lista.getIdListaPR(), lista);
-	}
-
-	@Override
-	public void removeLista(Listavel lista) {
-		ListaPR listpr = (ListaPR) lista;
-		this.listas.remove(listpr.getIdListaPR());
 	}
 
 	@Override
@@ -203,10 +173,9 @@ public class EleicaoPR extends Eleicao {
 	 * @param collection
 	 * @return
 	 */
-	private Boletim geraBoletim(Collection<ListaPR> listas) {
+	private void geraBoletim(Collection<ListaPR> listas) {
 		Random r = new Random();
 		int nListas = listas.size();
-		Boletim b = new Boletim(nListas);
 		int rand;
 		for (ListaPR listaPR : listas) {
 			rand = r.nextInt(nListas - 1);
@@ -216,10 +185,8 @@ public class EleicaoPR extends Eleicao {
 				listaPR.setOrdem2(rand);
 			}
 			this.listas.put(listaPR.getIdListaPR(), listaPR);
-			b.addLista(listaPR);
 			nListas--;
 		}
-		return b;
 	}
 
 	/**
@@ -295,16 +262,22 @@ public class EleicaoPR extends Eleicao {
 	}
 
 	@Override
-	public void terminar() throws ExceptionTerminarEleicao{
-		if (super.estado(0) && this.volta2 == false) { // terminar primeira
-														// volta
-			if(){//verificar se ouve maioria absoluta
-				
+	public void terminar() throws ExceptionTerminarEleicao {
+		if (super.estado(0) && this.volta2 == false) {
+			// terminar primeira volta
+			super.setPermitirVotar(false);
+			// verificar se ouve maioria absoluta
+			if (verifacarMaioria() == false) {
+				// criar segunda volta
+				this.volta2 = true;
+			} else {
+				super.setEstado(1);
 			}
-
-		} else {// segunda volta
-			if(){
-				
+		} else {
+			// terminar segunda volta
+			if (volta2) {
+				super.setPermitirVotar(false);
+				super.setEstado(1);
 			}
 		}
 	}
@@ -325,21 +298,34 @@ public class EleicaoPR extends Eleicao {
 	@Override
 	public void addLista(Listavel lista)
 			throws ExceptionListaExiste, ExceptionLimiteCandidatos, ExceptionMandanteInvalido {
-
+		ListaPR listaPR = (ListaPR) lista;
+		for (ListaPR l : this.listas.values()) {
+			if (l.candidatoEquals(listaPR.getCandidato())) {
+				throw new ExceptionListaExiste(
+						"A lista que deseja adicionar tem um candidato que já se encontra a concorrer para a mesma eleição");
+			}
+		}
+		this.listas.put(listaPR.getIdListaPR(), listaPR);
 	}
 
-	public int numeroEleitres() {
+	@Override
+	public void removeLista(Listavel lista) {
+		ListaPR listpr = (ListaPR) lista;
+		this.listas.remove(listpr.getIdListaPR());
+	}
+
+	public int numeroEleitores() {
 		int tot = 0;
 		for (ResultadoCirculoPR resC : this.voltaR1.values()) {
 			tot += resC.getTotEleitores();
 		}
 		return tot;
 	}
-	
-	private boolean verifacarMaioria(){
+
+	private boolean verifacarMaioria() {
 		boolean ver = false;
 		Iterator<ListavelVotos> itLV = this.resultadosPrimeiraVolta().iterator();
-		if(itLV.hasNext() && itLV.next().getVotos()>(numeroEleitres()/2)){
+		if (itLV.hasNext() && itLV.next().getVotos() > (super.numeroVotos() / 2)) {
 			ver = true;
 		}
 		return ver;
