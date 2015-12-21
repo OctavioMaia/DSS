@@ -31,11 +31,11 @@ Coisas a considerar:
 
 # Cenas do JMS:
 
-- [ ] Por Fazer
-  - [ ] CirculoDAO
+- [ ] Por Fazer/A fazer
+  - [X] CirculoDAO
   - [ ] EleiçãoARDAO
   - [ ] ListaARDAO
-  - [ ] ResultadoCirculoARDAO
+  - [X] ResultadoCirculoARDAO
 
 - [ ] Feitas/Testas
   - [X] AdminDAO
