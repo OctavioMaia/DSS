@@ -6,8 +6,6 @@
 package Business;
 
 import java.util.Calendar;
-import java.util.Collection;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -93,7 +91,9 @@ public abstract class Eleicao {
 		this.votantes.add(e.getnIdent());
 	}
 
-
+	public int numeroVotos(){
+		return this.votantes.size();
+	}
 
 	public boolean estado(int est) {
 		if (this.estado == est)
