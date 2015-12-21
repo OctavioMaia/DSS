@@ -285,6 +285,7 @@ public class SGE {
 
 	public void addVoto(Eleicao e, Listavel lista) {
 		e.addVoto(lista);
+		e.addVotante(e);
 	}
 
 	public void addVotoNulo(Eleicao e, int idCirculo) {

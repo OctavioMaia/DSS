@@ -17,8 +17,10 @@ import java.util.TreeSet;
 import Data.ListaPRDAO;
 import Data.ResultadoCirculoPRDAO;
 import Exception.ExceptionCandidatoExiste;
+import Exception.ExceptionIniciarEleicao;
 import Exception.ExceptionListaExiste;
 import Exception.ExceptionListaNaoExiste;
+import Exception.ExceptionTerminarEleicao;
 
 /**
  * Passar circulos tambem nos construtores
@@ -133,6 +135,10 @@ public class EleicaoPR extends Eleicao {
 			this.voltaR2.put(resPR.getCirculo().getId(), resPR);
 		}
 	}
+	
+	public void public void addVotante(Eleitor e) {
+		
+	};
 
 	@Override
 	public void addVotoNulo(int idCirculo) {
@@ -147,7 +153,7 @@ public class EleicaoPR extends Eleicao {
 			this.voltaR2.put(idCirculo, resPR);
 		}
 	}
-
+	
 	@Override
 	public void addVotoBranco(int idCirculo) {
 		ResultadoCirculoPR resPR;
@@ -253,9 +259,10 @@ public class EleicaoPR extends Eleicao {
 	 * Falta para quando inicio a eleiçao colocar as listas nos resultados
 	 * preciso de colocar nos resultados volta1 as listas se for para a volta 2
 	 * colocar nos resultados as duas listas anteriores gerarBoletins
+	 * @throws ExceptionTerminarEleicao 
 	 */
 	@Override
-	public void iniciar() {
+	public void iniciar() throws ExceptionIniciarEleicao {
 		if (super.estado(-1)) {// iniciar depois da eleicao ter sido criada
 			Collection<ListaPR> list = this.listas.values();
 			this.geraBoletim(list);
@@ -275,14 +282,13 @@ public class EleicaoPR extends Eleicao {
 				}
 				
 			}else{
-				//throw Exception não é possivel iniciar eleicao
+				throw new ExceptionIniciarEleicao("Inpossivel iniar Elicão;");
 			}
 		}
 	}
 
 	@Override
-	public boolean terminar() {
-		boolean fim = false;
+	public void terminar() {
 		if (super.estado(0) && this.volta2 == false) { // terminar primeira
 														// volta
 			if(){//verificar se ouve maioria absoluta

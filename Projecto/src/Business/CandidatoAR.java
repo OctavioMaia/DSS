@@ -30,7 +30,6 @@ public class CandidatoAR extends Candidato {
 		this.tipo = tipo;
 	}
 
-	@SuppressWarnings("deprecation")
 	public String toString() {
 		return "Candidato " + super.getNome() + ", com BI nº"+super.getBi() + ", nascido a " + super.getDataNasc().getTime() + ", pertencente ao partido " + partido;
 	}
