@@ -102,8 +102,8 @@ public abstract class Eleicao {
 	}
 
 
-	public abstract void iniciar();
-	public abstract void terminar();
+	public abstract void iniciar() throws ExceptionIniciarEleicao;
+	public abstract void terminar() throws ExceptionTerminarEleicao;
 	public abstract void addLista(Listavel lista) throws ExceptionListaExiste, ExceptionLimiteCandidatos, ExceptionMandanteInvalido;
 	public abstract void removeLista(Listavel lista);
 	public abstract void addVoto(Listavel lista, Eleitor eleitor);
