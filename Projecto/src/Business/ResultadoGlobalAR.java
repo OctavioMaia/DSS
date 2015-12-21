@@ -4,9 +4,7 @@
 package Business;
 
 import java.util.Map;
-import java.util.Collection;
 import java.util.HashMap;
-import java.util.Iterator;
 
 /**
  * @author Pedro Pinto
@@ -69,20 +67,6 @@ public class ResultadoGlobalAR {
 
 	public int getTotEleitores() {
 		return totEleitores;
-	}
-	
-	public int getAbstencao(){
-		int totVotos=0,abstencao;
-		Collection<Integer> c = validos.values();
-		Iterator<Integer> i = c.iterator();
-		
-		while(i.hasNext()){
-			totVotos+=i.next();
-		}
-		
-		abstencao = totVotos-brancos-nulos;
-		
-		return abstencao;
 	}
 
 	public HashMap<Votavel, Integer> getValidos() {

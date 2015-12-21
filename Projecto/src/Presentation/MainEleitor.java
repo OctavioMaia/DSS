@@ -80,16 +80,19 @@ public class MainEleitor {
 			label3.setBounds(20, 80, 103, 17);
 
 			//---- labelNome ----
+			labelNome.setText(nome);
 			labelNome.setFont(new Font("Arial", Font.PLAIN, 14));
 			frameEleitorContentPane.add(labelNome);
 			labelNome.setBounds(140, 20, 103, 17);
 
 			//---- labelEleicao ----
+			labelEleicao.setText(tipo);
 			labelEleicao.setFont(new Font("Arial", Font.PLAIN, 14));
 			frameEleitorContentPane.add(labelEleicao);
 			labelEleicao.setBounds(140, 50, 103, 17);
 
 			//---- labelDataInicio ----
+			labelDataInicio.setText(data);
 			labelDataInicio.setFont(new Font("Arial", Font.PLAIN, 14));
 			frameEleitorContentPane.add(labelDataInicio);
 			labelDataInicio.setBounds(140, 80, 103, 17);

@@ -6,7 +6,7 @@ public class TesteInterfaces{
 		//GerirPR i = new GerirPR(null); --nao acabado, ver git
 		//Login i = new Login(); --feito
 		//MainEleitor i = new MainEleitor(); --nao acabado, ver git
-		ResultadosAR i = new ResultadosAR(null);
+		//ResultadosAR i = new ResultadosAR();
 		//ResultadosPR i = new ResultadosPR();
 	}
 	

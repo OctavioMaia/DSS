@@ -16,11 +16,11 @@ import Business.SGE;
 public class Login  {
 
 	boolean boolean_erro = false;
-	private SGE local; //TODO verificar se esta correto
+	SGE local = null; //TODO verificar se esta correto
 	
 	public Login(SGE sge){
-		sge=local;
-		initComponents(local);
+		initComponents(sge);
+		local=sge;
 		frameLogin.setVisible(true);
 	}
 	
@@ -42,7 +42,7 @@ public class Login  {
 		System.exit(0);
 	}
 
-	private void initComponents(SGE local) {
+	private void initComponents(SGE sge) {
 		// JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
 		// Generated using JFormDesigner Evaluation license - Octavio Maia
 		frameLogin = new JFrame();
