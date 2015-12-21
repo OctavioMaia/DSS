@@ -109,4 +109,8 @@ public class ResultadoCirculoPR {
 	public int votosLista(ListaPR lista) {
 		return this.validos.get(lista);
 	}
+
+	public void atualizarTotEleitores(){
+		this.totEleitores = this.circulo.getTotEleitores();
+	}
 }
