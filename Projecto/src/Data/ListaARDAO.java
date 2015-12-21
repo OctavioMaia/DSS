@@ -19,6 +19,11 @@ import Business.Votavel;
 
 public class ListaARDAO implements Map<Integer,Lista>{
 
+	
+	protected void clear_aux(Connection c)throws SQLException{
+		this.clear();
+		
+	}
 	public ListaARDAO(){
 	}
 

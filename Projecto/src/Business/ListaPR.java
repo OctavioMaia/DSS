@@ -71,4 +71,13 @@ public class ListaPR implements Listavel {
 		r=this.candidato.equals(c);
 		return r;
 	}
+	@Override
+	public boolean equals(Object obj) {
+		ListaPR lista = (ListaPR) obj;
+		return this.idEleicao==lista.idEleicao;
+	}
+	
+	public boolean equalsID(int idLista){
+		return this.idEleicao==idLista;
+	}
 }
