@@ -9,15 +9,23 @@ import java.util.Map;
 import java.util.Set;
 
 import Business.CirculoInfo;
+import Business.Eleitor;
+import Business.Circulo;
 
 public class CirculoInfoDAO implements Map<Integer,CirculoInfo>{
 	private int idEleicao;
+	//Tabela CirculoInfo
 	private static String Tabname ="Circulo_has_EleicaoAR";
 	private static String Mandatos = "mandatos";
 	private static String Circulo = "idCirculo";
 	private static String Eleicao = "idEleicao";
+	//Tabela Eleicoes
 	private static String TabEleicoes = "EleicoesAR";
+	//Tabela Circulos
 	private static String TabCirculos = "Circulos";
+	private static String CirculoId = "idCirculo";
+	private static String CirculoNome = "nome";
+	private static String CirculoTotEleitores = "totEleitores";
 	
 	public CirculoInfoDAO(int idEleicao){
 		this.idEleicao = idEleicao;
@@ -80,34 +88,57 @@ public class CirculoInfoDAO implements Map<Integer,CirculoInfo>{
 	@Override
 	public boolean containsValue(Object arg0) {
 		// Apenas verifica a chave
-		// TODO return this.containsKey((CirculoInfo)arg0.);
+		return this.containsKey(((CirculoInfo)arg0).getCirculo().getId());
 	}
 
-	/* (non-Javadoc)
-	 * @see java.util.Map#entrySet()
-	 */
 	@Override
 	public Set<java.util.Map.Entry<Integer, CirculoInfo>> entrySet() {
-		// TODO Auto-generated method stub
-		return null;
+		throw new RuntimeException("Funçao não implementada");
 	}
 
-	/* (non-Javadoc)
-	 * @see java.util.Map#get(java.lang.Object)
-	 */
 	@Override
-	public CirculoInfo get(Object arg0) {
-		// TODO Auto-generated method stub
-		return null;
+	public CirculoInfo get(Object key) {
+		CirculoInfo ci  = null;
+		Circulo circulo = null;
+        Connection conn = null; 
+        try{
+        	conn=Connector.newConnection(true);
+        	PreparedStatement psCirculo = conn.prepareStatement("Select * FROM "+TabCirculos+
+        			"WHERE "+CirculoId+" = ?");
+        	psCirculo.setInt(1,(Integer)key);
+        	ResultSet rsCirculo = psCirculo.executeQuery();
+        	if(rsCirculo.next()){
+        		circulo = new Circulo(rsCirculo.getInt(CirculoId),
+        				rsCirculo.getString(CirculoNome),rsCirculo.getInt(CirculoTotEleitores));
+        	}
+        	rsCirculo.close();
+        	psCirculo.close();
+        	PreparedStatement ps = conn.prepareStatement("SELECT * FROM "+Tabname+
+        			" WHERE "+Eleicao+" = "+this.idEleicao+" AND "+Circulo+" = ?");
+        	ps.setInt(1,(Integer)key);
+        	ResultSet rs = ps.executeQuery();
+        	if(rs.next()){
+        		ci = new CirculoInfo(rs.getInt(Eleicao),circulo,rs.getInt(Mandatos));
+        	}
+        	rs.close();
+        	ps.close();
+        }catch(Exception e){
+			e.printStackTrace();
+			throw new RuntimeException(e.getMessage());
+    	}finally{
+    		try {
+				conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+				throw new RuntimeException(e.getMessage());
+			}
+    	}
+        return ci;
 	}
 
-	/* (non-Javadoc)
-	 * @see java.util.Map#isEmpty()
-	 */
 	@Override
 	public boolean isEmpty() {
-		// TODO Auto-generated method stub
-		return false;
+		return this.size()==0;
 	}
 
 	/* (non-Javadoc)
@@ -146,13 +177,31 @@ public class CirculoInfoDAO implements Map<Integer,CirculoInfo>{
 		return null;
 	}
 
-	/* (non-Javadoc)
-	 * @see java.util.Map#size()
-	 */
 	@Override
 	public int size() {
-		// TODO Auto-generated method stub
-		return 0;
+		int ret=0;
+    	Connection conn = null;
+    	try{
+    		conn = Connector.newConnection(true); 
+    		PreparedStatement ps = conn.prepareStatement("SELECT COUNT(*) FROM " + Tabname);
+    		ResultSet rs = ps.executeQuery();
+    		if(rs.next()) ret = rs.getInt(1);
+    		rs.close();
+    		ps.close();
+		}catch(Exception e){{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			throw new RuntimeException(e.getMessage());
+		}
+    	}finally{
+    		try {
+				conn.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+    	}
+        return ret;  
 	}
 
 	/* (non-Javadoc)
