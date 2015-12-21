@@ -9,14 +9,34 @@ public class Coligacao implements Votavel{
 	private String sigla;
 	private String nome;
 	private String simbolo;
-	private HashSet<Partido> partidos;
+	private Set<Partido> partidos;
+	private boolean removido;
 	
 	public Coligacao(int id, String sigla, String nome, String simbolo, Set<Partido> partidos) {
 		this.id = id;
 		this.sigla = sigla;
 		this.nome = nome;
 		this.simbolo = simbolo;
-		this.partidos = new HashSet<Partido>();
+		this.partidos = partidos;
+		this.removido=false;
+	}
+
+	public boolean isRemovido() {
+		return removido;
+	}
+
+	public void setRemovido(boolean removido) {
+		this.removido = removido;
+	}
+
+	public Coligacao(int id, String sigla, String nome, String simbolo, Set<Partido> partidos, boolean removido) {
+		super();
+		this.id = id;
+		this.sigla = sigla;
+		this.nome = nome;
+		this.simbolo = simbolo;
+		this.partidos = partidos;
+		this.removido = removido;
 	}
 
 	public int getId() {
@@ -51,7 +71,7 @@ public class Coligacao implements Votavel{
 		this.simbolo = simbolo;
 	}
 
-	public HashSet<Partido> getPartidos() {
+	public Set<Partido> getPartidos() {
 		return partidos;
 	}
 
