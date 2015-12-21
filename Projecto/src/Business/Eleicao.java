@@ -34,7 +34,7 @@ public abstract class Eleicao {
 		this.data = data;
 		this.permitirVotar = false;
 		this.estado = CRIADA;
-		this.votantes = new HashSet<>();		
+		this.votantes = new HashSet<>();
 	}
 
 	public Eleicao(int idEleicao, Calendar data, int estado, boolean permitirVotar, Set<Integer> vot) {
@@ -93,7 +93,7 @@ public abstract class Eleicao {
 		this.votantes.add(e.getnIdent());
 	}
 
-	
+
 
 	public boolean estado(int est) {
 		if (this.estado == est)
@@ -101,14 +101,14 @@ public abstract class Eleicao {
 		return false;
 	}
 
-	
-	public abstract void iniciar();
-	public abstract void terminar();
+
+	public abstract void iniciar() throws ExceptionIniciarEleicao;
+	public abstract void terminar() throws ExceptionTerminarEleicao;
 	public abstract void addLista(Listavel lista) throws ExceptionListaExiste, ExceptionLimiteCandidatos, ExceptionMandanteInvalido;
 	public abstract void removeLista(Listavel lista);
-	public abstract void addVoto(Listavel lista, Circulo circulo);
-	public abstract void addVotoNulo(int idCirculo);
-	public abstract void addVotoBranco(int idCirculo);
+	public abstract void addVoto(Listavel lista, Eleitor eleitor);
+	public abstract void addVotoNulo(Eleitor eleitor);
+	public abstract void addVotoBranco(Eleitor eleitor);
 	public abstract Boletim getBoletim(int idCirculo);
-	
+
 }
