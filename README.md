@@ -40,7 +40,7 @@ Coisas a considerar:
   - [ ] ResultadoCirculoARDAO
 
 - [ ] Feitas/Testas
-  - [ ] AdminDAO
+  - [X] AdminDAO
   - [ ] PartidosDAO
   - [X] Connector
   - [ ] EleiçãoPRDAO
