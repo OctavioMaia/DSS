@@ -2,6 +2,7 @@ package Business;
 
 import java.util.Calendar;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -193,6 +194,12 @@ public class EleicaoAR extends Eleicao {
 				}
 			}
 		}
+		int maxID = 0;
+		for(CirculoInfo cinfo: this.circulos.values()){
+			int maxcirculo = Collections.max(cinfo.getListas().keySet());
+			if(maxcirculo>=maxID) maxID = maxcirculo;
+		}
+		l.setID(maxID+1);
 		this.circulos.get(l.getCirculo().getId()).addLista(l);
 		ResultadoCirculoAR resultadoCirculo = this.resultado.get(l.getCirculo().getId());
 		resultadoCirculo.addLista(l);

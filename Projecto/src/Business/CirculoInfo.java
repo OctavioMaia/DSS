@@ -1,11 +1,11 @@
 package Business;
 
 import java.util.HashMap;
+import java.util.Set;
 
 import Data.ListaARDAO;
 import Exception.ExceptionLimiteCandidatos;
 import Exception.ExceptionListaExiste;
-import Exception.ExceptionMandanteInvalido;
 
 public class CirculoInfo {
 	private Circulo circulo;
@@ -54,7 +54,6 @@ public class CirculoInfo {
 			if(l.equals(lista))
 				throw new ExceptionListaExiste();
 		}
-		lista.setID(this.listas.size()+1);
 		this.listas.put(lista.getID(),lista);
 	}
 	
