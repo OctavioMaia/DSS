@@ -1,1 +1,5 @@
+/bin/Business
+/bin/Data
+/bin/Presentation
+*.bak
 *.class
