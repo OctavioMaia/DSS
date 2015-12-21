@@ -9,20 +9,17 @@ import Exception.ExceptionMandanteInvalido;
 
 public class CirculoInfo {
 	private Circulo circulo;
-	private Boletim boletim;
 	private ListaARDAO listas;
 	private int mandatos;
 	
 	public CirculoInfo(int idEleicao, Circulo circulo){
 		this.circulo = circulo;
-		this.boletim = null;
 		this.listas = new ListaARDAO(idEleicao,circulo.getId());
 		this.mandatos = 0;
 	}
 	
 	public CirculoInfo(int idEleicao, Circulo circulo, int mandatos) {
 		this.circulo = circulo;
-		this.boletim = null;
 		this.listas = new ListaARDAO(idEleicao,circulo.getId());
 		this.mandatos = mandatos;
 	}
@@ -57,6 +54,7 @@ public class CirculoInfo {
 			if(l.equals(lista))
 				throw new ExceptionListaExiste();
 		}
+		lista.setID(this.listas.size()+1);
 		this.listas.put(lista.getID(),lista);
 	}
 	
