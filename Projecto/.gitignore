@@ -1,4 +1,5 @@
 /bin/Business
 /bin/Data
 /bin/Presentation
-/bin/
+*.bak
+*.class
