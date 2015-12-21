@@ -16,6 +16,7 @@ public class Partido implements Votavel {
 	private String sigla;
 	private String nome;
 	private String simbolo;
+	private boolean removido;
 
 	public Partido() {
 	}
@@ -25,6 +26,22 @@ public class Partido implements Votavel {
 		this.sigla = sigla;
 		this.nome = nome;
 		this.simbolo = simbolo;
+		this.removido = false;
+	}
+
+	public Partido(int id, String sigla, String nome, String simbolo,boolean removido) {
+		this.id = id;
+		this.sigla = sigla;
+		this.nome = nome;
+		this.simbolo = simbolo;
+		this.removido = removido;
+	}
+	public boolean isRemovido() {
+		return removido;
+	}
+
+	public void setRemovido(boolean removido) {
+		this.removido = removido;
 	}
 
 	public int getId() {
