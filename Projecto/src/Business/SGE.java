@@ -32,9 +32,9 @@ public class SGE {
 	private static final int CRIADA = -1;
 	private static final int ATIVA = 0;
 	private static final int TERMINADA = 1;
-	
 
-	
+
+
 	/**
 	 * ao criaar eleição passar no construtor todos os circulos
 	 */
@@ -313,8 +313,8 @@ public class SGE {
 			this.eleicoesPR.put(eleicaoPR.getIdEleicao(), eleicaoPR);
 		}
 	}
-	
+
 	public Circulo getCirculoID(int idCirculo){
-		
+
 	}
 }

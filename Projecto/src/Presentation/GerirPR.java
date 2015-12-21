@@ -8,9 +8,11 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
 import java.util.Calendar;
+import java.util.GregorianCalendar;
+
 import javax.swing.*;
-import Business.Eleicao;
-import Business.EleicaoPR;
+import Business.SGE;
+
 import com.jgoodies.forms.factories.*;
 import com.toedter.calendar.*;
 
@@ -19,8 +21,8 @@ import com.toedter.calendar.*;
  */
 public class GerirPR {
 	
-	public GerirPR(EleicaoPR eleicao) {
-		initComponents(eleicao);
+	public GerirPR(SGE sge) {
+		initComponents(sge);
 		GerirPR.setVisible(true);
 	}
 
@@ -41,26 +43,40 @@ public class GerirPR {
 	}
 
 	private void buttonAdicionarFotoActionPerformed(ActionEvent e) {
-		// TODO parse data inicio eleicao
-		/*int dia,mes,ano;
+		String nome = nomeCandidato.getText();
+		String naturalidade = this.naturalidade.getText();
+		String residencia = this.residencia.getText();
+		String profissao = this.profissao.getText();
+		String bi = this.bi.getText();
 		
-		dia = Integer.parseInt((String) diasInicio.getSelectedItem());
-		ano = Integer.parseInt((String) anoInicio.getSelectedItem());
-		
-		mes = mesInicio.getSelectedIndex();
-		
-		
-		GregorianCalendar data = new GregorianCalendar(ano,mes,dia);
-		System.out.println("Ano " + data.get(Calendar.YEAR));
-		System.out.println("Mes " + data.get(Calendar.MONTH));
-		System.out.println("Dia " + data.get(Calendar.DAY_OF_MONTH));
-		*/
-		// TODO parse foto + filepath / nome candidato
-		// TODO apos parse adicionar a tabela
+		try{
+			sge.adicionarCandidatoPR(nome,naturalidade,residencia,profissao,bi);
+			nomeCandidato.setText("");
+			this.naturalidade.setText("");
+			this.residencia.setText("");
+			this.profissao.setText("");
+			this.bi.setText("");
+			this.dataNascimento.setText("dd/mm/aa");
+			this.pathImagem.setText("");
+		}catch(){
+			//TODO handle excecao
+		}
 	}
 
+	//data inicio
 	private void button1ActionPerformed(ActionEvent e) {
 		dialogoCalendario.setVisible(true);
+		
+		//TODO parse a info do calendario!
+		//TODO depois mudar a label dd/mm/aa pra data selecionada!!
+	}
+	
+	//data nascimento
+	private void buttonDataNascimentoActionPerformed(ActionEvent e) {
+		dialogoCalendario2.setVisible(true);
+		
+		//TODO parse a info do calendario!
+		//TODO depois mudar a label dd/mm/aa pra data selecionada!!
 	}
 
 	private void buttonConfirmarDataActionPerformed(ActionEvent e) {
@@ -68,28 +84,57 @@ public class GerirPR {
 		int dia = cal.get(Calendar.DAY_OF_MONTH);
 		int mes = cal.get(Calendar.MONTH)+1;
 		int ano = cal.get(Calendar.YEAR);
-		System.out.println(dia + "/" + mes + "/"+ ano);
+		dataInicioEleicao.setText(dia+"/"+mes+"/"+ano);
+		
+		GregorianCalendar dataInicio = new GregorianCalendar(ano, mes, dia);
+		//TODO implementar dataInicio
+		
 		dialogoCalendario.setVisible(false);
-	}
-
-	private void buttonCancelarDataActionPerformed(ActionEvent e) {
-		dialogoCalendario.setVisible(false);
+		dialogoCalendario2.setVisible(false);
 	}
 	
-	private void initComponents(Eleicao eleicao) {
+	private void buttonConfirmarDataNascimentoActionPerformed(ActionEvent e) {
+		Calendar cal = calendar2.getCalendar();
+		int dia = cal.get(Calendar.DAY_OF_MONTH);
+		int mes = cal.get(Calendar.MONTH)+1;
+		int ano = cal.get(Calendar.YEAR);
+		dataNascimento.setText(dia+"/"+mes+"/"+ano);
+		
+		GregorianCalendar dataNascimento = new GregorianCalendar(ano, mes, dia);
+		//TODO implementar dataInicio
+		
+		dialogoCalendario.setVisible(false);
+		dialogoCalendario2.setVisible(false);
+	}
+	
+	private void buttonCancelarDataActionPerformed(ActionEvent e) {
+		dialogoCalendario.setVisible(false);
+		dialogoCalendario2.setVisible(false);
+	}
+
+	private void buttonApagarInfoActionPerformed(ActionEvent e) {
+		nomeCandidato.setText("");
+		this.naturalidade.setText("");
+		this.residencia.setText("");
+		this.profissao.setText("");
+		this.bi.setText("");
+		this.dataNascimento.setText("dd/mm/aa");
+		this.pathImagem.setText("");
+	}
+	
+	private void initComponents(SGE sge) {
 		// JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
 		// Generated using JFormDesigner Evaluation license - Octavio Maia
 		DefaultComponentFactory compFactory = DefaultComponentFactory.getInstance();
 		GerirPR = new JFrame();
 		label1 = new JLabel();
-		buttonEliminarCandidato = new JButton();
+		buttonApagarInfo = new JButton();
 		label3 = new JLabel();
 		label4 = new JLabel();
 		nomeCandidato = new JTextField();
 		buttonProcurar = new JButton();
 		pathImagem = new JTextField();
 		buttonAdicionarCandidato = new JButton();
-		buttonConfirmar = new JButton();
 		buttonSair = new JButton();
 		buttonData = new JButton();
 		dataInicioEleicao = new JLabel();
@@ -101,7 +146,7 @@ public class GerirPR {
 		label2 = new JLabel();
 		dataNascimento = new JLabel();
 		buttonDataNascimento = new JButton();
-		residencia2 = new JTextField();
+		profissao = new JTextField();
 		label7 = new JLabel();
 		bi = new JTextField();
 		label8 = new JLabel();
@@ -110,8 +155,12 @@ public class GerirPR {
 		fileChooser1 = new JFileChooser();
 		dialogoCalendario = new JDialog();
 		calendar1 = new JCalendar();
-		buttonConfirmarData = new JButton();
+		buttonConfirmarDataInicio = new JButton();
 		buttonCancelarData = new JButton();
+		dialogoCalendario2 = new JDialog();
+		calendar2 = new JCalendar();
+		buttonConfirmarDataNascimento = new JButton();
+		buttonCancelarData2 = new JButton();
 
 		//======== GerirPR ========
 		{
@@ -127,11 +176,12 @@ public class GerirPR {
 			GerirPRContentPane.add(label1);
 			label1.setBounds(new Rectangle(new Point(15, 25), label1.getPreferredSize()));
 
-			//---- buttonEliminarCandidato ----
-			buttonEliminarCandidato.setText("Eliminar");
-			buttonEliminarCandidato.setFont(new Font("Arial", Font.PLAIN, 14));
-			GerirPRContentPane.add(buttonEliminarCandidato);
-			buttonEliminarCandidato.setBounds(365, 305, 165, buttonEliminarCandidato.getPreferredSize().height);
+			//---- buttonApagarInfo ----
+			buttonApagarInfo.setText("Apagar informa\u00e7\u00f5es");
+			buttonApagarInfo.setFont(new Font("Arial", Font.PLAIN, 14));
+			buttonApagarInfo.addActionListener(e -> buttonApagarInfoActionPerformed(e));
+			GerirPRContentPane.add(buttonApagarInfo);
+			buttonApagarInfo.setBounds(365, 305, 165, buttonApagarInfo.getPreferredSize().height);
 
 			//---- label3 ----
 			label3.setText("Nome do candidato:");
@@ -168,12 +218,6 @@ public class GerirPR {
 			buttonAdicionarCandidato.addActionListener(e -> buttonAdicionarFotoActionPerformed(e));
 			GerirPRContentPane.add(buttonAdicionarCandidato);
 			buttonAdicionarCandidato.setBounds(265, 305, 95, 25);
-
-			//---- buttonConfirmar ----
-			buttonConfirmar.setText("Confirmar");
-			buttonConfirmar.setFont(new Font("Arial", Font.PLAIN, 14));
-			GerirPRContentPane.add(buttonConfirmar);
-			buttonConfirmar.setBounds(310, 350, 105, 25);
 
 			//---- buttonSair ----
 			buttonSair.setText("Sair");
@@ -237,14 +281,14 @@ public class GerirPR {
 			//---- buttonDataNascimento ----
 			buttonDataNascimento.setText("Alterar");
 			buttonDataNascimento.setFont(new Font("Arial", Font.PLAIN, 12));
-			buttonDataNascimento.addActionListener(e -> button1ActionPerformed(e));
+			buttonDataNascimento.addActionListener(e -> buttonDataNascimentoActionPerformed(e));
 			GerirPRContentPane.add(buttonDataNascimento);
 			buttonDataNascimento.setBounds(305, 230, 80, 25);
 
-			//---- residencia2 ----
-			residencia2.setFont(new Font("Arial", Font.PLAIN, 14));
-			GerirPRContentPane.add(residencia2);
-			residencia2.setBounds(155, 170, 375, 23);
+			//---- profissao ----
+			profissao.setFont(new Font("Arial", Font.PLAIN, 14));
+			GerirPRContentPane.add(profissao);
+			profissao.setBounds(155, 170, 375, 23);
 
 			//---- label7 ----
 			label7.setText("Profiss\u00e3o:");
@@ -322,12 +366,12 @@ public class GerirPR {
 			dialogoCalendarioContentPane.add(calendar1);
 			calendar1.setBounds(0, 0, 210, 155);
 
-			//---- buttonConfirmarData ----
-			buttonConfirmarData.setText("Confirmar");
-			buttonConfirmarData.setFont(new Font("Arial", Font.PLAIN, 12));
-			buttonConfirmarData.addActionListener(e -> buttonConfirmarDataActionPerformed(e));
-			dialogoCalendarioContentPane.add(buttonConfirmarData);
-			buttonConfirmarData.setBounds(5, 155, 90, 28);
+			//---- buttonConfirmarDataInicio ----
+			buttonConfirmarDataInicio.setText("Confirmar");
+			buttonConfirmarDataInicio.setFont(new Font("Arial", Font.PLAIN, 12));
+			buttonConfirmarDataInicio.addActionListener(e -> buttonConfirmarDataActionPerformed(e));
+			dialogoCalendarioContentPane.add(buttonConfirmarDataInicio);
+			buttonConfirmarDataInicio.setBounds(5, 155, 90, 28);
 
 			//---- buttonCancelarData ----
 			buttonCancelarData.setText("Cancelar");
@@ -340,6 +384,35 @@ public class GerirPR {
 			dialogoCalendario.setSize(225, 235);
 			dialogoCalendario.setLocationRelativeTo(null);
 		}
+
+		//======== dialogoCalendario2 ========
+		{
+			dialogoCalendario2.setTitle("Calendario");
+			dialogoCalendario2.setResizable(false);
+			dialogoCalendario2.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+			Container dialogoCalendario2ContentPane = dialogoCalendario2.getContentPane();
+			dialogoCalendario2ContentPane.setLayout(null);
+			dialogoCalendario2ContentPane.add(calendar2);
+			calendar2.setBounds(0, 0, 210, 155);
+
+			//---- buttonConfirmarDataNascimento ----
+			buttonConfirmarDataNascimento.setText("Confirmar");
+			buttonConfirmarDataNascimento.setFont(new Font("Arial", Font.PLAIN, 12));
+			buttonConfirmarDataNascimento.addActionListener(e -> buttonConfirmarDataNascimentoActionPerformed(e));
+			dialogoCalendario2ContentPane.add(buttonConfirmarDataNascimento);
+			buttonConfirmarDataNascimento.setBounds(5, 155, 90, 28);
+
+			//---- buttonCancelarData2 ----
+			buttonCancelarData2.setText("Cancelar");
+			buttonCancelarData2.setFont(new Font("Arial", Font.PLAIN, 12));
+			buttonCancelarData2.addActionListener(e -> buttonCancelarDataActionPerformed(e));
+			dialogoCalendario2ContentPane.add(buttonCancelarData2);
+			buttonCancelarData2.setBounds(110, 155, 90, 28);
+
+			dialogoCalendario2ContentPane.setPreferredSize(new Dimension(225, 235));
+			dialogoCalendario2.setSize(225, 235);
+			dialogoCalendario2.setLocationRelativeTo(null);
+		}
 		// JFormDesigner - End of component initialization  //GEN-END:initComponents
 	}
 
@@ -348,14 +421,13 @@ public class GerirPR {
 	// Generated using JFormDesigner Evaluation license - Octavio Maia
 	private JFrame GerirPR;
 	private JLabel label1;
-	private JButton buttonEliminarCandidato;
+	private JButton buttonApagarInfo;
 	private JLabel label3;
 	private JLabel label4;
 	private JTextField nomeCandidato;
 	private JButton buttonProcurar;
 	private JTextField pathImagem;
 	private JButton buttonAdicionarCandidato;
-	private JButton buttonConfirmar;
 	private JButton buttonSair;
 	private JButton buttonData;
 	private JLabel dataInicioEleicao;
@@ -367,7 +439,7 @@ public class GerirPR {
 	private JLabel label2;
 	private JLabel dataNascimento;
 	private JButton buttonDataNascimento;
-	private JTextField residencia2;
+	private JTextField profissao;
 	private JLabel label7;
 	private JTextField bi;
 	private JLabel label8;
@@ -376,7 +448,11 @@ public class GerirPR {
 	private JFileChooser fileChooser1;
 	private JDialog dialogoCalendario;
 	private JCalendar calendar1;
-	private JButton buttonConfirmarData;
+	private JButton buttonConfirmarDataInicio;
 	private JButton buttonCancelarData;
+	private JDialog dialogoCalendario2;
+	private JCalendar calendar2;
+	private JButton buttonConfirmarDataNascimento;
+	private JButton buttonCancelarData2;
 	// JFormDesigner - End of variables declaration  //GEN-END:variables
 }
