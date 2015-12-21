@@ -1,5 +1,6 @@
 package Business;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.GregorianCalendar;
@@ -174,18 +175,22 @@ public class EleicaoPR extends Eleicao {
 	 * @return
 	 */
 	private void geraBoletim(Collection<ListaPR> listas) {
+		ArrayList<Integer> nums = new ArrayList<>();
 		Random r = new Random();
 		int nListas = listas.size();
 		int rand;
 		for (ListaPR listaPR : listas) {
 			rand = r.nextInt(nListas - 1);
+			while(nums.contains(rand)){
+				rand = r.nextInt(nListas-1);
+			}
 			if (!this.volta2) {
 				listaPR.setOrdem1(rand);
 			} else {
 				listaPR.setOrdem2(rand);
 			}
+			nums.add(rand);
 			this.listas.put(listaPR.getIdListaPR(), listaPR);
-			nListas--;
 		}
 	}
 

@@ -9,6 +9,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeSet;
 
 import Data.CirculoInfoDAO;
 import Data.ResultadoCirculoARDAO;
@@ -204,6 +205,14 @@ public class EleicaoAR extends Eleicao {
 		ResultadoCirculoAR resultadoCirculo = this.resultado.get(l.getCirculo().getId());
 		resultadoCirculo.addLista(l);
 		this.resultado.put(l.getCirculo().getId(), resultadoCirculo);
+	}
+	
+	public Set<Lista> getListasCirculo(int idCirculo){
+		TreeSet<Lista> listas = new TreeSet<>();
+		for(Lista lista: this.circulos.get(idCirculo).getListas().values()){
+			listas.add(lista);
+		}
+		return listas;
 	}
 	
 	@Override
