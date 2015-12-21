@@ -4,8 +4,10 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
@@ -166,18 +168,87 @@ public class CirculoInfoDAO implements Map<Integer,CirculoInfo>{
 	}
 
 	@Override
-	public CirculoInfo put(Integer arg0, CirculoInfo arg1) {
-		// TODO Auto-generated method stub
-		return null;
+	public CirculoInfo put(Integer key, CirculoInfo value) {
+		Connection conn=null;
+    	CirculoInfo cinfo = null;
+    	try{
+    		conn = Connector.newConnection(false);
+    		cinfo = this.get(key);
+        	if(cinfo==null){//novo registo
+        		PreparedStatement ps = conn.prepareStatement("INSERT INTO "+ Tabname +
+                        "("+Eleicao+","+Circulo+","+Mandatos+")" +
+                        "value " +
+                        "(?,?,?)");
+        		ps.setInt(1, this.idEleicao);
+        		ps.setInt(2, key);
+        		ps.setInt(3, value.getMandatos());
+        		ps.execute();
+        		ps.close();
+        	}else{//registo existente
+        		PreparedStatement ps = conn.prepareStatement("UPDATE "+ Tabname + 
+        				" SET "+Mandatos+" = ? WHERE "+Circulo+" = ? AND "+Eleicao+" = "+this.idEleicao);
+        		ps.setInt(1, value.getMandatos());
+        		ps.setInt(2, key);
+        		ps.execute();
+        		ps.close();
+        	}
+    		conn.commit();
+    	}catch(Exception e){
+    		try {
+    			conn.rollback();
+    			e.printStackTrace();
+				throw new RuntimeException(e.getMessage());
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+				throw new RuntimeException(e1.getMessage());
+			}
+    	}finally{
+    		try {
+				conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+				throw new RuntimeException(e.getMessage());
+			}
+    	}
+    	return cinfo;
 	}
 
-	/* (non-Javadoc)
-	 * @see java.util.Map#remove(java.lang.Object)
-	 */
 	@Override
-	public CirculoInfo remove(Object arg0) {
-		// TODO Auto-generated method stub
-		return null;
+	public CirculoInfo remove(Object key) {
+		Connection conn  = null;
+		CirculoInfo cinfo = null;
+		try{
+    		conn = Connector.newConnection(false);
+    		cinfo = this.get(key);
+        	if(cinfo!=null){
+        		PreparedStatement ps = conn.prepareStatement("DELETE FROM " + Tabname + " WHERE " +
+        				Circulo  + " = ? AND "+Eleicao+" = "+this.idEleicao);
+        		ps.setInt(1, (int)key);
+        		ps.executeUpdate();
+        		ps.close();
+        	}
+        	conn.commit();
+    	}catch(SQLException ex){
+    		try{
+    			conn.rollback();
+    		}catch(Exception ex1){
+    			ex1.printStackTrace();
+    			throw new RuntimeException(ex1.getMessage());
+    		}
+    	}
+    	catch(Exception ex){
+			ex.printStackTrace();
+			throw new RuntimeException(ex.getMessage());
+    	}
+		finally{
+    		try {
+				conn.close();
+			} catch (SQLException e2) {
+				e2.printStackTrace();
+				throw new RuntimeException(e2.getMessage());
+			}
+    	}
+       return cinfo;  
 	}
 
 	@Override
@@ -192,7 +263,6 @@ public class CirculoInfoDAO implements Map<Integer,CirculoInfo>{
     		rs.close();
     		ps.close();
 		}catch(Exception e){{
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			throw new RuntimeException(e.getMessage());
 		}
@@ -206,15 +276,35 @@ public class CirculoInfoDAO implements Map<Integer,CirculoInfo>{
         return ret;  
 	}
 
-	/* (non-Javadoc)
-	 * @see java.util.Map#values()
-	 */
 	@Override
 	public Collection<CirculoInfo> values() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+		Connection c = null;
+    	ArrayList <CirculoInfo> ret  = new ArrayList<>();
+    	try{
+    		c = Connector.newConnection(true);
+    		Set<Integer> keys = this.keySet();
+    		Iterator<Integer> i  = keys.iterator();
+            while (i.hasNext()){
+                ret.add(this.get(i.next()));
+            }
+    	}catch(Exception e){
+    		e.printStackTrace();
+    		throw new RuntimeException(e.getMessage());
+    	}finally {
+    		try {
+				c.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+				throw new RuntimeException(e.getMessage());
+			}
+		}
+        return ret;
+    }
+
 	
+/*
+ * 	Nao implementado
+ */
 	@Override
 	public void putAll(Map<? extends Integer, ? extends CirculoInfo> arg0) {
 		throw new RuntimeException("Funçao não implementada");		
