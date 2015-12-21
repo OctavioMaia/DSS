@@ -251,10 +251,13 @@ public class EleicaoAR extends Eleicao {
     	this.resultado.put(eleitor.getCirculo(),resCirculo);
 	}
 
-	@Override
 	public Boletim getBoletim(int idCirculo) {
-		// TODO Auto-generated method stub
-		return null;
+		int nListas = this.circulos.get(idCirculo).getListas().size();
+		Boletim boletim = new Boletim(nListas);
+		for(Lista lista: this.circulos.get(idCirculo).getListas().values()){
+			boletim.addLista(lista);
+		}
+		return boletim;
 	}
 	
 	public void geraBoletim(){
