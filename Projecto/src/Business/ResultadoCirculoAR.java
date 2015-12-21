@@ -1,6 +1,8 @@
 package Business;
 
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 
 import Exception.ExceptionListaExiste;
 
@@ -49,6 +51,20 @@ public class ResultadoCirculoAR {
 
 	public int getNulos() {
 		return nulos;
+	}
+	
+	public int getAbstencao() {
+		int totVotos=0,abstencao;
+		Collection<Integer> c = validos.values();
+		Iterator<Integer> i = c.iterator();
+		
+		while(i.hasNext()){
+			totVotos+=i.next();
+		}
+		
+		abstencao = totVotos-brancos-nulos;
+		
+		return abstencao;
 	}
 
 	public void setBrancos(int brancos) {
