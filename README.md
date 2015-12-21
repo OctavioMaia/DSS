@@ -46,7 +46,6 @@ Coisas a considerar:
 # Cenas do JMS:
 
 - [ ] Por Fazer/A fazer
-  - [X] CirculoDAO
   - [ ] EleiçãoARDAO
   - [ ] ListaARDAO
   - [X] ResultadoCirculoARDAO
@@ -62,3 +61,4 @@ Coisas a considerar:
   - [ ] ResultadoCirculoPRDAO
   - [X] CirculoInfoDAO
   - [ ] ColigaçãoDAO
+  - [X] CirculoDAO
