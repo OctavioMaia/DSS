@@ -48,12 +48,8 @@ public class CirculoInfo {
 		this.mandatos = mandatos;
 	}
 
-	public void addLista(Lista lista) throws ExceptionListaExiste, ExceptionLimiteCandidatos{
+	public void addLista(Lista lista) throws ExceptionLimiteCandidatos{
 		if(lista.getNumCandPrim() >= this.mandatos) throw new ExceptionLimiteCandidatos("Limite de candidatos primarios ("+this.mandatos+") excedido");
-		for(Lista l: this.listas.values()){
-			if(l.equals(lista))
-				throw new ExceptionListaExiste();
-		}
 		this.listas.put(lista.getID(),lista);
 	}
 	

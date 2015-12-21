@@ -1,5 +1,6 @@
 package Business;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
@@ -8,6 +9,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Random;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -253,6 +255,31 @@ public class EleicaoAR extends Eleicao {
 	public Boletim getBoletim(int idCirculo) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+	
+	public void geraBoletim(){
+		Random r = new Random();
+		ArrayList<Integer> nums = null;
+		Collection<Lista> listasCirculo = null;
+		int rand;
+		for(CirculoInfo cinfo: this.circulos.values()){
+			listasCirculo = cinfo.getListas().values();
+			nums = new ArrayList<>();
+			for(Lista listaCirculo: listasCirculo){
+				int nListas = listasCirculo.size();
+				rand = r.nextInt(nListas-1);
+				while(nums.contains(rand)){
+					rand = r.nextInt(nListas-1);
+				}
+				listaCirculo.setOrdem(rand);
+				nums.add(rand);
+				try {
+					cinfo.addLista(listaCirculo);
+				} catch (ExceptionLimiteCandidatos e) {
+					e.printStackTrace();
+				}
+			}
+		}
 	}
 	
 }
