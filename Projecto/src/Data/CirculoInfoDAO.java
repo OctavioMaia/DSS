@@ -5,8 +5,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeSet;
 
 import Business.CirculoInfo;
 import Business.Eleitor;
@@ -37,7 +39,7 @@ public class CirculoInfoDAO implements Map<Integer,CirculoInfo>{
     	try{
     		conn = Connector.newConnection(false);
     		PreparedStatement psClear = conn.prepareStatement("DELETE FROM " +Tabname + " WHERE "+Eleicao+" = "+this.idEleicao );
-        	psClear.executeQuery();
+        	psClear.executeUpdate();
         	psClear.close();    		
     		conn.commit();
     	}catch(SQLException e){
@@ -91,11 +93,6 @@ public class CirculoInfoDAO implements Map<Integer,CirculoInfo>{
 	}
 
 	@Override
-	public Set<java.util.Map.Entry<Integer, CirculoInfo>> entrySet() {
-		throw new RuntimeException("Funçao não implementada");
-	}
-
-	@Override
 	public CirculoInfo get(Object key) {
 		CirculoInfo ci  = null;
 		Circulo circulo = null;
@@ -140,31 +137,38 @@ public class CirculoInfoDAO implements Map<Integer,CirculoInfo>{
 		return this.size()==0;
 	}
 
-	/* (non-Javadoc)
-	 * @see java.util.Map#keySet()
-	 */
 	@Override
 	public Set<Integer> keySet() {
-		// TODO Auto-generated method stub
-		return null;
+		Set<Integer> ret = null;
+        Connection conn = null;
+        try{
+        	conn=Connector.newConnection(true);
+        	ret = new TreeSet<Integer>();
+        	PreparedStatement ps  = conn.prepareStatement("SELECT " +Circulo + " FROM " + Tabname
+        			+ "WHERE "+Eleicao+" = "+this.idEleicao);
+        	ResultSet rs = ps.executeQuery();
+        	while(rs.next()){
+        		int num = rs.getInt(Circulo);
+        		ret.add(num);
+        	}        
+        	}catch(Exception e){
+        		e.printStackTrace();
+        		throw new RuntimeException(e.getMessage());
+        	}finally{
+        		try {
+        			conn.close();
+        		} catch (SQLException e) {
+        			e.printStackTrace();
+        			throw new RuntimeException(e.getMessage());
+			}
+    	}
+        return ret;
 	}
 
-	/* (non-Javadoc)
-	 * @see java.util.Map#put(java.lang.Object, java.lang.Object)
-	 */
 	@Override
 	public CirculoInfo put(Integer arg0, CirculoInfo arg1) {
 		// TODO Auto-generated method stub
 		return null;
-	}
-
-	/* (non-Javadoc)
-	 * @see java.util.Map#putAll(java.util.Map)
-	 */
-	@Override
-	public void putAll(Map<? extends Integer, ? extends CirculoInfo> arg0) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	/* (non-Javadoc)
@@ -210,6 +214,15 @@ public class CirculoInfoDAO implements Map<Integer,CirculoInfo>{
 		// TODO Auto-generated method stub
 		return null;
 	}
+	
+	@Override
+	public void putAll(Map<? extends Integer, ? extends CirculoInfo> arg0) {
+		throw new RuntimeException("Funçao não implementada");		
+	}
 
+	@Override
+	public Set<java.util.Map.Entry<Integer, CirculoInfo>> entrySet() {
+		throw new RuntimeException("Funçao não implementada");
+	}
 	
 }
