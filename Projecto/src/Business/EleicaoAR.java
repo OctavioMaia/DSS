@@ -27,7 +27,7 @@ public class EleicaoAR extends Eleicao {
 		while(it.hasNext()){
 			Circulo circulo = it.next();
 			if (!this.circulos.containsKey(circulo.getId()))
-				this.circulos.put(circulo.getId(), new CirculoInfo(circulo));
+				this.circulos.put(circulo.getId(), new CirculoInfo(idEleicao,circulo));
 			if (!this.resultado.containsKey(circulo.getId()))
 				this.resultado.put(circulo.getId(), new ResultadoCirculoAR(circulo));
 			}
@@ -43,7 +43,7 @@ public class EleicaoAR extends Eleicao {
 		while(it.hasNext()){
 			Circulo circulo = it.next();
 			if (!this.circulos.containsKey(circulo.getId()))
-				this.circulos.put(circulo.getId(), new CirculoInfo(circulo));
+				this.circulos.put(circulo.getId(), new CirculoInfo(idEleicao,circulo));
 			if (!this.resultado.containsKey(circulo.getId()))
 				this.resultado.put(circulo.getId(), new ResultadoCirculoAR(circulo));
 		}

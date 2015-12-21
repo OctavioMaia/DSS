@@ -4,20 +4,32 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeSet;
 
 import Business.CirculoInfo;
+import Business.Eleitor;
+import Business.Circulo;
 
 public class CirculoInfoDAO implements Map<Integer,CirculoInfo>{
 	private int idEleicao;
+	//Tabela CirculoInfo
 	private static String Tabname ="Circulo_has_EleicaoAR";
 	private static String Mandatos = "mandatos";
 	private static String Circulo = "idCirculo";
 	private static String Eleicao = "idEleicao";
+	//Tabela Eleicoes
 	private static String TabEleicoes = "EleicoesAR";
+	//Tabela Circulos
 	private static String TabCirculos = "Circulos";
+	private static String CirculoId = "idCirculo";
+	private static String CirculoNome = "nome";
+	private static String CirculoTotEleitores = "totEleitores";
 	
 	public CirculoInfoDAO(int idEleicao){
 		this.idEleicao = idEleicao;
@@ -29,7 +41,7 @@ public class CirculoInfoDAO implements Map<Integer,CirculoInfo>{
     	try{
     		conn = Connector.newConnection(false);
     		PreparedStatement psClear = conn.prepareStatement("DELETE FROM " +Tabname + " WHERE "+Eleicao+" = "+this.idEleicao );
-        	psClear.executeQuery();
+        	psClear.executeUpdate();
         	psClear.close();    		
     		conn.commit();
     	}catch(SQLException e){
@@ -45,7 +57,6 @@ public class CirculoInfoDAO implements Map<Integer,CirculoInfo>{
     		try {
 				conn.close();
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		} 	
@@ -80,89 +91,228 @@ public class CirculoInfoDAO implements Map<Integer,CirculoInfo>{
 	@Override
 	public boolean containsValue(Object arg0) {
 		// Apenas verifica a chave
-		// TODO return this.containsKey((CirculoInfo)arg0.);
+		return this.containsKey(((CirculoInfo)arg0).getCirculo().getId());
 	}
 
-	/* (non-Javadoc)
-	 * @see java.util.Map#entrySet()
-	 */
 	@Override
-	public Set<java.util.Map.Entry<Integer, CirculoInfo>> entrySet() {
-		// TODO Auto-generated method stub
-		return null;
+	public CirculoInfo get(Object key) {
+		CirculoInfo ci  = null;
+		Circulo circulo = null;
+        Connection conn = null; 
+        try{
+        	conn=Connector.newConnection(true);
+        	PreparedStatement psCirculo = conn.prepareStatement("Select * FROM "+TabCirculos+
+        			"WHERE "+CirculoId+" = ?");
+        	psCirculo.setInt(1,(Integer)key);
+        	ResultSet rsCirculo = psCirculo.executeQuery();
+        	if(rsCirculo.next()){
+        		circulo = new Circulo(rsCirculo.getInt(CirculoId),
+        				rsCirculo.getString(CirculoNome),rsCirculo.getInt(CirculoTotEleitores));
+        	}
+        	rsCirculo.close();
+        	psCirculo.close();
+        	PreparedStatement ps = conn.prepareStatement("SELECT * FROM "+Tabname+
+        			" WHERE "+Eleicao+" = "+this.idEleicao+" AND "+Circulo+" = ?");
+        	ps.setInt(1,(Integer)key);
+        	ResultSet rs = ps.executeQuery();
+        	if(rs.next()){
+        		ci = new CirculoInfo(rs.getInt(Eleicao),circulo,rs.getInt(Mandatos));
+        	}
+        	rs.close();
+        	ps.close();
+        }catch(Exception e){
+			e.printStackTrace();
+			throw new RuntimeException(e.getMessage());
+    	}finally{
+    		try {
+				conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+				throw new RuntimeException(e.getMessage());
+			}
+    	}
+        return ci;
 	}
 
-	/* (non-Javadoc)
-	 * @see java.util.Map#get(java.lang.Object)
-	 */
-	@Override
-	public CirculoInfo get(Object arg0) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	/* (non-Javadoc)
-	 * @see java.util.Map#isEmpty()
-	 */
 	@Override
 	public boolean isEmpty() {
-		// TODO Auto-generated method stub
-		return false;
+		return this.size()==0;
 	}
 
-	/* (non-Javadoc)
-	 * @see java.util.Map#keySet()
-	 */
 	@Override
 	public Set<Integer> keySet() {
-		// TODO Auto-generated method stub
-		return null;
+		Set<Integer> ret = null;
+        Connection conn = null;
+        try{
+        	conn=Connector.newConnection(true);
+        	ret = new TreeSet<Integer>();
+        	PreparedStatement ps  = conn.prepareStatement("SELECT " +Circulo + " FROM " + Tabname
+        			+ "WHERE "+Eleicao+" = "+this.idEleicao);
+        	ResultSet rs = ps.executeQuery();
+        	while(rs.next()){
+        		int num = rs.getInt(Circulo);
+        		ret.add(num);
+        	}        
+        	}catch(Exception e){
+        		e.printStackTrace();
+        		throw new RuntimeException(e.getMessage());
+        	}finally{
+        		try {
+        			conn.close();
+        		} catch (SQLException e) {
+        			e.printStackTrace();
+        			throw new RuntimeException(e.getMessage());
+			}
+    	}
+        return ret;
 	}
 
-	/* (non-Javadoc)
-	 * @see java.util.Map#put(java.lang.Object, java.lang.Object)
-	 */
 	@Override
-	public CirculoInfo put(Integer arg0, CirculoInfo arg1) {
-		// TODO Auto-generated method stub
-		return null;
+	public CirculoInfo put(Integer key, CirculoInfo value) {
+		Connection conn=null;
+    	CirculoInfo cinfo = null;
+    	try{
+    		conn = Connector.newConnection(false);
+    		cinfo = this.get(key);
+        	if(cinfo==null){//novo registo
+        		PreparedStatement ps = conn.prepareStatement("INSERT INTO "+ Tabname +
+                        "("+Eleicao+","+Circulo+","+Mandatos+")" +
+                        "value " +
+                        "(?,?,?)");
+        		ps.setInt(1, this.idEleicao);
+        		ps.setInt(2, key);
+        		ps.setInt(3, value.getMandatos());
+        		ps.execute();
+        		ps.close();
+        	}else{//registo existente
+        		PreparedStatement ps = conn.prepareStatement("UPDATE "+ Tabname + 
+        				" SET "+Mandatos+" = ? WHERE "+Circulo+" = ? AND "+Eleicao+" = "+this.idEleicao);
+        		ps.setInt(1, value.getMandatos());
+        		ps.setInt(2, key);
+        		ps.execute();
+        		ps.close();
+        	}
+    		conn.commit();
+    	}catch(Exception e){
+    		try {
+    			conn.rollback();
+    			e.printStackTrace();
+				throw new RuntimeException(e.getMessage());
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+				throw new RuntimeException(e1.getMessage());
+			}
+    	}finally{
+    		try {
+				conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+				throw new RuntimeException(e.getMessage());
+			}
+    	}
+    	return cinfo;
 	}
 
-	/* (non-Javadoc)
-	 * @see java.util.Map#putAll(java.util.Map)
-	 */
 	@Override
-	public void putAll(Map<? extends Integer, ? extends CirculoInfo> arg0) {
-		// TODO Auto-generated method stub
-		
+	public CirculoInfo remove(Object key) {
+		Connection conn  = null;
+		CirculoInfo cinfo = null;
+		try{
+    		conn = Connector.newConnection(false);
+    		cinfo = this.get(key);
+        	if(cinfo!=null){
+        		PreparedStatement ps = conn.prepareStatement("DELETE FROM " + Tabname + " WHERE " +
+        				Circulo  + " = ? AND "+Eleicao+" = "+this.idEleicao);
+        		ps.setInt(1, (int)key);
+        		ps.executeUpdate();
+        		ps.close();
+        	}
+        	conn.commit();
+    	}catch(SQLException ex){
+    		try{
+    			conn.rollback();
+    		}catch(Exception ex1){
+    			ex1.printStackTrace();
+    			throw new RuntimeException(ex1.getMessage());
+    		}
+    	}
+    	catch(Exception ex){
+			ex.printStackTrace();
+			throw new RuntimeException(ex.getMessage());
+    	}
+		finally{
+    		try {
+				conn.close();
+			} catch (SQLException e2) {
+				e2.printStackTrace();
+				throw new RuntimeException(e2.getMessage());
+			}
+    	}
+       return cinfo;  
 	}
 
-	/* (non-Javadoc)
-	 * @see java.util.Map#remove(java.lang.Object)
-	 */
-	@Override
-	public CirculoInfo remove(Object arg0) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	/* (non-Javadoc)
-	 * @see java.util.Map#size()
-	 */
 	@Override
 	public int size() {
-		// TODO Auto-generated method stub
-		return 0;
+		int ret=0;
+    	Connection conn = null;
+    	try{
+    		conn = Connector.newConnection(true); 
+    		PreparedStatement ps = conn.prepareStatement("SELECT COUNT(*) FROM " + Tabname);
+    		ResultSet rs = ps.executeQuery();
+    		if(rs.next()) ret = rs.getInt(1);
+    		rs.close();
+    		ps.close();
+		}catch(Exception e){{
+			e.printStackTrace();
+			throw new RuntimeException(e.getMessage());
+		}
+    	}finally{
+    		try {
+				conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+    	}
+        return ret;  
 	}
 
-	/* (non-Javadoc)
-	 * @see java.util.Map#values()
-	 */
 	@Override
 	public Collection<CirculoInfo> values() {
-		// TODO Auto-generated method stub
-		return null;
+		Connection c = null;
+    	ArrayList <CirculoInfo> ret  = new ArrayList<>();
+    	try{
+    		c = Connector.newConnection(true);
+    		Set<Integer> keys = this.keySet();
+    		Iterator<Integer> i  = keys.iterator();
+            while (i.hasNext()){
+                ret.add(this.get(i.next()));
+            }
+    	}catch(Exception e){
+    		e.printStackTrace();
+    		throw new RuntimeException(e.getMessage());
+    	}finally {
+    		try {
+				c.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+				throw new RuntimeException(e.getMessage());
+			}
+		}
+        return ret;
+    }
+
+	
+/*
+ * 	Nao implementado
+ */
+	@Override
+	public void putAll(Map<? extends Integer, ? extends CirculoInfo> arg0) {
+		throw new RuntimeException("Funçao não implementada");		
 	}
 
+	@Override
+	public Set<java.util.Map.Entry<Integer, CirculoInfo>> entrySet() {
+		throw new RuntimeException("Funçao não implementada");
+	}
 	
 }
