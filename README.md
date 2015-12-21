@@ -18,3 +18,22 @@ Coisas a considerar:
   - [ ] ResultadosAR
   - [ ] ResultadosPR
   - [ ] Votar
+
+# Cenas do JMS:
+
+- [ ] Por Fazer
+  - [ ] AdminDAO
+  - [ ] CirculoDAO
+  - [ ] CirculoInfoDAO
+  - [ ] ColigaçãoDAO
+  - [ ] EleiçãoARDAO
+  - [ ] ListaARDAO
+  - [ ] PartidosDAO
+  - [ ] ResultadoCirculoARDAO
+
+- [ ] Feitas/Testas
+  - [X] Connector
+  - [ ] EleiçãoPRDAO
+  - [X] EleitoresDAO
+  - [ ] ListaPRDAO
+  - [ ] ResultadoCirculoPRDAO
