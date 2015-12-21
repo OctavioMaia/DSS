@@ -167,7 +167,7 @@ public class PartidosDAO implements Map<Integer,Partido>{
 	}
 
 	
-	private Partido put_aux(Integer key,Partido value, Connection c) throws SQLException{
+	protected Partido put_aux(Integer key,Partido value, Connection c) throws SQLException{
 		Partido p = this.get_aux(key, c);
 		if(p!=null){//update
 			PreparedStatement ps = c.prepareStatement("UPDATE " + TabPartName+ 
@@ -227,13 +227,22 @@ public class PartidosDAO implements Map<Integer,Partido>{
     	return partido;
 	}
 
-	private Partido remove_aux(Object key,Connection c)throws SQLException{
+	private Partido remove_aux(Integer key,Connection c)throws SQLException{
+		ColigacaoDAO cdao = new ColigacaoDAO();
 		Partido p = this.get_aux((Integer)key, c);
 		if(p!=null){
 			PreparedStatement ps = c.prepareStatement("UPDATE " + TabPartName+
 					"SET " + TabPartRemov +"=True");
 			ps.execute();
 			ps.close();
+			PreparedStatement ps1 = c.prepareStatement("SELECT idColigacao FROM Partido_pertence_Coligacao WHERE idPartido = ?");
+			ps1.setInt(1, key);
+			ResultSet rs = ps1.executeQuery();
+			while(rs.next()){
+				cdao.remove_aux(rs.getInt("idColigacao"), c);
+			}
+			p.setRemovido(true);
+			
 		}
 		return p;
 	}
