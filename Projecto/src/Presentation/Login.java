@@ -15,11 +15,12 @@ import Business.SGE;
  */
 public class Login  {
 
-	private SGE sge = new SGE();
 	boolean boolean_erro = false;
+	SGE local = null; //TODO verificar se esta correto
 	
-	public Login(){
-		initComponents();
+	public Login(SGE sge){
+		initComponents(sge);
+		local=sge;
 		frameLogin.setVisible(true);
 	}
 	
@@ -28,7 +29,7 @@ public class Login  {
 			String pw = new String(textPassword.getPassword());
 			int numeroEleitor = Integer.parseInt(textUsername.getText());
 
-			if(sge.login(numeroEleitor, pw)) boolean_erro = false;
+			if(local.login(numeroEleitor, pw)) boolean_erro = false;
 			else boolean_erro = true;
 			
 		}catch(NumberFormatException ex){
@@ -41,7 +42,7 @@ public class Login  {
 		System.exit(0);
 	}
 
-	private void initComponents() {
+	private void initComponents(SGE sge) {
 		// JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
 		// Generated using JFormDesigner Evaluation license - Octavio Maia
 		frameLogin = new JFrame();
