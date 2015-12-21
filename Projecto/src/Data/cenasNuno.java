@@ -69,10 +69,6 @@ public class cenasNuno {
 					
 					int a = Integer.parseInt(eleitores[1]);
 					int b = Integer.parseInt(eleitores[0]);
-					//System.out.println(a);
-					//System.out.println(b);
-					//System.out.println(eleitores[2]);
-					//System.out.println(eleitores[3]);
 					Eleitor e = new Eleitor(eleitores[2], a, b, eleitores[3]);
 					listaEleitores.add(e);
 				}

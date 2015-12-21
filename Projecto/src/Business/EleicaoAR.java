@@ -1,13 +1,17 @@
 package Business;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Random;
 import java.util.Set;
+import java.util.TreeSet;
 
 import Data.CirculoInfoDAO;
 import Data.ResultadoCirculoARDAO;
@@ -193,10 +197,24 @@ public class EleicaoAR extends Eleicao {
 				}
 			}
 		}
+		int maxID = 0;
+		for(CirculoInfo cinfo: this.circulos.values()){
+			int maxcirculo = Collections.max(cinfo.getListas().keySet());
+			if(maxcirculo>=maxID) maxID = maxcirculo;
+		}
+		l.setID(maxID+1);
 		this.circulos.get(l.getCirculo().getId()).addLista(l);
 		ResultadoCirculoAR resultadoCirculo = this.resultado.get(l.getCirculo().getId());
 		resultadoCirculo.addLista(l);
 		this.resultado.put(l.getCirculo().getId(), resultadoCirculo);
+	}
+	
+	public Set<Lista> getListasCirculo(int idCirculo){
+		TreeSet<Lista> listas = new TreeSet<>();
+		for(Lista lista: this.circulos.get(idCirculo).getListas().values()){
+			listas.add(lista);
+		}
+		return listas;
 	}
 	
 	@Override
@@ -237,6 +255,31 @@ public class EleicaoAR extends Eleicao {
 	public Boletim getBoletim(int idCirculo) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+	
+	public void geraBoletim(){
+		Random r = new Random();
+		ArrayList<Integer> nums = null;
+		Collection<Lista> listasCirculo = null;
+		int rand;
+		for(CirculoInfo cinfo: this.circulos.values()){
+			listasCirculo = cinfo.getListas().values();
+			nums = new ArrayList<>();
+			for(Lista listaCirculo: listasCirculo){
+				int nListas = listasCirculo.size();
+				rand = r.nextInt(nListas-1);
+				while(nums.contains(rand)){
+					rand = r.nextInt(nListas-1);
+				}
+				listaCirculo.setOrdem(rand);
+				nums.add(rand);
+				try {
+					cinfo.addLista(listaCirculo);
+				} catch (ExceptionLimiteCandidatos e) {
+					e.printStackTrace();
+				}
+			}
+		}
 	}
 	
 }

@@ -1,7 +1,9 @@
 package Business;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -12,6 +14,7 @@ import java.util.TreeSet;
 
 import Data.ListaPRDAO;
 import Data.ResultadoCirculoPRDAO;
+import Exception.ExceptionEleicaoEstado;
 import Exception.ExceptionIniciarEleicao;
 import Exception.ExceptionLimiteCandidatos;
 import Exception.ExceptionListaExiste;
@@ -174,18 +177,22 @@ public class EleicaoPR extends Eleicao {
 	 * @return
 	 */
 	private void geraBoletim(Collection<ListaPR> listas) {
+		ArrayList<Integer> nums = new ArrayList<>();
 		Random r = new Random();
 		int nListas = listas.size();
 		int rand;
 		for (ListaPR listaPR : listas) {
 			rand = r.nextInt(nListas - 1);
+			while(nums.contains(rand)){
+				rand = r.nextInt(nListas-1);
+			}
 			if (!this.volta2) {
 				listaPR.setOrdem1(rand);
 			} else {
 				listaPR.setOrdem2(rand);
 			}
+			nums.add(rand);
 			this.listas.put(listaPR.getIdListaPR(), listaPR);
-			nListas--;
 		}
 	}
 
@@ -254,9 +261,8 @@ public class EleicaoPR extends Eleicao {
 						this.voltaR2.put(resC.getCirculo().getId(), resC);
 					}
 				}
-
 			} else {
-				throw new ExceptionIniciarEleicao("Inpossivel iniar Elicão;");
+				throw new ExceptionIniciarEleicao("Inpossivel iniciar Elicão;");
 			}
 		}
 	}
@@ -297,15 +303,21 @@ public class EleicaoPR extends Eleicao {
 
 	@Override
 	public void addLista(Listavel lista)
-			throws ExceptionListaExiste, ExceptionLimiteCandidatos, ExceptionMandanteInvalido {
-		ListaPR listaPR = (ListaPR) lista;
-		for (ListaPR l : this.listas.values()) {
-			if (l.candidatoEquals(listaPR.getCandidato())) {
-				throw new ExceptionListaExiste(
-						"A lista que deseja adicionar tem um candidato que já se encontra a concorrer para a mesma eleição");
+			throws ExceptionListaExiste, ExceptionLimiteCandidatos, ExceptionMandanteInvalido, ExceptionEleicaoEstado {
+		if (super.estado(-1)) {
+			ListaPR listaPR = (ListaPR) lista;
+			for (ListaPR l : this.listas.values()) {
+				if (l.candidatoEquals(listaPR.getCandidato())) {
+					throw new ExceptionListaExiste(
+							"A lista que deseja adicionar tem um candidato que já se encontra a concorrer para a mesma eleição");
+				}
 			}
+			listaPR.setIdEleicao(super.getIdEleicao());
+			listaPR.setIdListaPR(chaveListaPR());
+			this.listas.put(listaPR.getIdListaPR(), listaPR);
+		} else {
+			throw new ExceptionEleicaoEstado("A eleicão não se encontra disponivel para ser gerida.");
 		}
-		this.listas.put(listaPR.getIdListaPR(), listaPR);
 	}
 
 	@Override
@@ -331,4 +343,24 @@ public class EleicaoPR extends Eleicao {
 		return ver;
 	}
 
+	public void atualizarCirculos() {
+		for (Integer circulo : this.voltaR1.keySet()) {
+			ResultadoCirculoPR resCirc = this.voltaR1.get(circulo);
+			resCirc.atualizarTotEleitores();
+			this.voltaR1.put(circulo, resCirc);
+		}
+		for (int circulo : this.voltaR2.keySet()) {
+			ResultadoCirculoPR resCirc = this.voltaR2.get(circulo);
+			resCirc.atualizarTotEleitores();
+			this.voltaR2.put(circulo, resCirc);
+		}
+	}
+
+	public int chaveListaPR(){
+		int max = 0;
+		if (this.listas.size() > 0) {
+			max = Collections.max(this.listas.keySet());
+		}
+		return max + 1;
+	}
 }
