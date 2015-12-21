@@ -12,8 +12,12 @@ Coisas a considerar:
     - [x] Butão sair
     - [x] Parse numero identificacao
     - [x] Parse password
-  - [ ] GerirPR
-    - [ ] Passar o eleitor quando formos votar 
+  - [x] GerirPR
+    - [x] Data Inicio + parse
+    - [x] Data nascimento + parse
+    - [x] Nome, naturalidade,residencia,profissao,bi, foto + parse
+    - [x] Apagar informacoes
+    - [ ] Adicionar ao SGE (falta metodos no SGE)
   - [ ] MainEleitor
   - [ ] ResultadosAR
   - [ ] ResultadosPR
