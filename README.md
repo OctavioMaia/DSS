@@ -39,7 +39,7 @@ Coisas a considerar:
   - [ ] ResultadoCirculoARDAO
 
 - [ ] Feitas/Testas
-  - [ ] AdminDAO
+  - [X] AdminDAO
   - [ ] PartidosDAO
   - [X] CirculoInfoDAO - Nao testado
   - [X] Connector
