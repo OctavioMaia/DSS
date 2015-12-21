@@ -99,10 +99,16 @@ public class Lista implements Listavel{
 	}
 	
 	public void addCandidato(CandidatoAR candidato){
+		candidato.setOrdem(this.candidatos.size()+1);
 		this.candidatos.add(candidato);
 	}
 
 	public void removeCandidato(CandidatoAR candidato){
+		int posicao = this.candidatos.indexOf(candidato);
+		for(int i = posicao; i<this.candidatos.size(); i++){
+			CandidatoAR candidatoAux = this.candidatos.get(i);
+			candidatoAux.setOrdem(candidatoAux.getOrdem()-1);
+		}
 		this.candidatos.remove(candidato);
 	}
 	

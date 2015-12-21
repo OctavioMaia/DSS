@@ -115,7 +115,4 @@ public abstract class Eleicao {
 	public abstract void addVotoNulo(Eleitor eleitor);
 
 	public abstract void addVotoBranco(Eleitor eleitor);
-
-	public abstract Boletim getBoletim(int idCirculo);
-
 }
