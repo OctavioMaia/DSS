@@ -91,7 +91,7 @@ public abstract class Eleicao {
 		this.votantes.add(e.getnIdent());
 	}
 
-	public int numeroVotos(){
+	public int numeroVotos() {
 		return this.votantes.size();
 	}
 
@@ -101,13 +101,24 @@ public abstract class Eleicao {
 		return false;
 	}
 
-
 	public abstract void iniciar() throws ExceptionIniciarEleicao;
+
 	public abstract void terminar() throws ExceptionTerminarEleicao;
-	public abstract void addLista(Listavel lista) throws ExceptionListaExiste, ExceptionLimiteCandidatos, ExceptionMandanteInvalido;
+
+	public abstract void addLista(Listavel lista)
+			throws ExceptionListaExiste, ExceptionLimiteCandidatos, ExceptionMandanteInvalido, ExceptionEleicaoEstado;
+
 	public abstract void removeLista(Listavel lista);
+
 	public abstract void addVoto(Listavel lista, Eleitor eleitor);
+
 	public abstract void addVotoNulo(Eleitor eleitor);
+
 	public abstract void addVotoBranco(Eleitor eleitor);
+<<<<<<< HEAD
+=======
+
+	public abstract Boletim getBoletim(int idCirculo);
+>>>>>>> refs/remotes/origin/master
 
 }
