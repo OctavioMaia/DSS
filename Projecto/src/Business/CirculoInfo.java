@@ -13,17 +13,17 @@ public class CirculoInfo {
 	private ListaARDAO listas;
 	private int mandatos;
 	
-	public CirculoInfo(Circulo circulo){
+	public CirculoInfo(int idEleicao, Circulo circulo){
 		this.circulo = circulo;
 		this.boletim = null;
-		this.listas = new ListaARDAO();
+		this.listas = new ListaARDAO(idEleicao,circulo.getId());
 		this.mandatos = 0;
 	}
 	
-	public CirculoInfo(Circulo circulo, int mandatos) {
+	public CirculoInfo(int idEleicao, Circulo circulo, int mandatos) {
 		this.circulo = circulo;
 		this.boletim = null;
-		this.listas = new ListaARDAO();
+		this.listas = new ListaARDAO(idEleicao,circulo.getId());
 		this.mandatos = mandatos;
 	}
 

@@ -12,19 +12,18 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import Business.Admin;
-import Business.Eleitor;
 
 public class AdminDAO implements Map<Integer,Admin> {
 
 	private static String idAdmin = "idAdmin";
-	private static String Tabname = "Admin";
+	private static String Tabname = "admins";
 	private static String pin = "pin";
 	
 	public AdminDAO(){}
 	
 	private void clear_aux(Connection c) throws SQLException{
     	PreparedStatement psDeleteAdmin = c.prepareStatement("DELETE FROM " +Tabname );
-    	psDeleteAdmin.executeQuery();
+    	psDeleteAdmin.executeUpdate();
     	psDeleteAdmin.close();
     }
 	
@@ -134,7 +133,7 @@ public class AdminDAO implements Map<Integer,Admin> {
     		PreparedStatement psAdmin = c.prepareStatement("DELETE FROM " + Tabname + " WHERE " +
     				idAdmin  + " = ?");
     		psAdmin.setInt(1, key);
-    		psAdmin.executeQuery();
+    		psAdmin.executeUpdate();
     		psAdmin.close();	
     	}
     	return e;
@@ -294,7 +293,9 @@ public class AdminDAO implements Map<Integer,Admin> {
     	Connection conn=null;
     	Admin el = null;
     	try{
+    		System.out.println("aqui");
     		conn = Connector.newConnection(false);
+    		System.out.println("aqui");
     		el = this.put_aux(key, value, conn);
     		conn.commit();
     	}catch(Exception e){

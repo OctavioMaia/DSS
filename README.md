@@ -32,16 +32,16 @@ Coisas a considerar:
 # Cenas do JMS:
 
 - [ ] Por Fazer
-  - [ ] AdminDAO
   - [ ] CirculoDAO
   - [ ] CirculoInfoDAO
   - [ ] ColigaçãoDAO
   - [ ] EleiçãoARDAO
   - [ ] ListaARDAO
-  - [ ] PartidosDAO
   - [ ] ResultadoCirculoARDAO
 
 - [ ] Feitas/Testas
+  - [X] AdminDAO
+  - [ ] PartidosDAO
   - [X] Connector
   - [ ] EleiçãoPRDAO
   - [X] EleitoresDAO
