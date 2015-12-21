@@ -162,7 +162,7 @@ public class ResultadoCirculoPRDAO implements Map<Integer,ResultadoCirculoPR>{
 		circuloGeral.setInt(1, this.idEleicao);
 		circuloGeral.setInt(2, this.volta);
 		circuloGeral.setInt(3,key);
-		ResultSet rs2 = psRLista.executeQuery();
+		ResultSet rs2 = circuloGeral.executeQuery();
 		if(rs2.next()){
 			//Ir buscar o circulo
 			Circulo ci = cd.get_aux(key,c);

@@ -2,6 +2,8 @@ package Business;
 
 import java.util.HashMap;
 
+import java.util.Map;
+
 import Exception.ExceptionListaExiste;
 
 public class ResultadoCirculoAR {
@@ -9,8 +11,8 @@ public class ResultadoCirculoAR {
 	private int totEleitores;
 	private int brancos;
 	private int nulos;
-	private HashMap<Lista, Integer> validos;
-	private HashMap<Lista, Integer> mandatos;
+	private Map<Lista, Integer> validos;
+	private Map<Lista, Integer> mandatos;
 
 	public ResultadoCirculoAR(Circulo c) {
 		this.circulo = c;
@@ -21,8 +23,8 @@ public class ResultadoCirculoAR {
 		this.mandatos = new HashMap<>();
 	}
 
-	public ResultadoCirculoAR(Circulo c, int totEleitores, int brancos, int nulos, HashMap<Lista, Integer> validos,
-			HashMap<Lista, Integer> mandatos) {
+	public ResultadoCirculoAR(Circulo c, int totEleitores, int brancos, int nulos, Map<Lista, Integer> validos,
+			Map<Lista, Integer> mandatos) {
 		this.circulo = c;
 		this.totEleitores = totEleitores;
 		this.brancos = brancos;
