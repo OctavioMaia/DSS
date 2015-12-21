@@ -58,7 +58,7 @@ public class GerirPR {
 			this.bi.setText("");
 			this.dataNascimento.setText("dd/mm/aa");
 			this.pathImagem.setText("");
-		}catch(){
+		}catch(Exception e){
 			//TODO handle excecao
 		}
 	}
