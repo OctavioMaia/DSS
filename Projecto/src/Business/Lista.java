@@ -1,6 +1,7 @@
 package Business;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 /*
  * Lista da Assembleia da Republica
@@ -15,7 +16,7 @@ public class Lista implements Listavel{
 	private Votavel mandante;
 	private ArrayList<CandidatoAR> candidatos;
 	
-	public Lista(int id, int circulo, String sigla, String nome, String simbolo, Votavel mandante) {
+	public Lista(int id, Circulo circulo, String sigla, String nome, String simbolo, Votavel mandante) {
 		this.id=id;
 		this.circulo = circulo;
 		this.ordem=-1;
@@ -26,10 +27,10 @@ public class Lista implements Listavel{
 		this.candidatos = new ArrayList<>();
 	}
 
-	public Lista(int id, int circulo, String sigla, String nome, String simbolo, Votavel mandante, ArrayList<CandidatoAR> candidatos) {
+	public Lista(int id, Circulo circulo,int ordem, String sigla, String nome, String simbolo, Votavel mandante, ArrayList<CandidatoAR> candidatos) {
 		this.id=id;
 		this.circulo = circulo;
-		this.ordem=-1;
+		this.ordem = ordem;
 		this.sigla = sigla;
 		this.nome = nome;
 		this.simbolo = simbolo;
@@ -45,11 +46,11 @@ public class Lista implements Listavel{
 		this.id=id;
 	}
 
-	public int getCirculo() {
+	public Circulo getCirculo() {
 		return circulo;
 	}
 
-	public void setCirculo(int circulo) {
+	public void setCirculo(Circulo circulo) {
 		this.circulo = circulo;
 	}
 
@@ -98,15 +99,37 @@ public class Lista implements Listavel{
 	}
 	
 	public void addCandidato(CandidatoAR candidato){
-		if(candidato != null) this.candidatos.add(candidato);
+		this.candidatos.add(candidato);
 	}
 
-	public void removeCandidato(Candidato candidato){
+	public void removeCandidato(CandidatoAR candidato){
 		this.candidatos.remove(candidato);
 	}
 	
-	public int numCandPrim(){
-		Iterator<Candidatos> it = candidatos.iterator();
-		while(it.has)
+	public int getNumCandPrim(){
+		int count = 0;
+		Iterator<CandidatoAR> it = candidatos.iterator();
+		while(it.hasNext()){
+			CandidatoAR candidato = it.next();
+			if(candidato.getTipo() == 'P') count++;
+		}
+		return count;
+	}
+	
+	public int getNumCandSec(){
+		return this.candidatos.size()-this.getNumCandPrim();
+	}
+	
+	@Override
+	public boolean equals(Object o){
+        if (o == null) {
+            return false;
+        }
+        if (getClass() != o.getClass()) {
+            return false;
+        }
+        Lista lista = (Lista)o;
+        return this.circulo.equals(lista.getCirculo()) 
+        		&& this.nome.equals(lista.getNome());
 	}
 }

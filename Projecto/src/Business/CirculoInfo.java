@@ -1,37 +1,79 @@
 package Business;
 
+import java.util.HashMap;
+
 import Data.ListaARDAO;
+import Exception.ExceptionLimiteCandidatos;
+import Exception.ExceptionListaExiste;
+import Exception.ExceptionMandanteInvalido;
 
 public class CirculoInfo {
 	private Circulo circulo;
 	private Boletim boletim;
-	private ListaARDAO listasDAO;
+	private ListaARDAO listas;
 	private int mandatos;
 	
-	public CirculoInfo(){
+	public CirculoInfo(Circulo circulo){
+		this.circulo = circulo;
 		this.boletim = null;
-		this.listasDAO = new ListaARDAO();
+		this.listas = new ListaARDAO();
 		this.mandatos = 0;
 	}
 	
-	public CirculoInfo(int maxCand) {
+	public CirculoInfo(Circulo circulo, int mandatos) {
+		this.circulo = circulo;
 		this.boletim = null;
-		this.listasDAO = new ListaARDAO();
-		this.mandatos = maxCand;
+		this.listas = new ListaARDAO();
+		this.mandatos = mandatos;
 	}
 
-	public void addLista(Lista lista){
-		this.listasDAO.put(lista.getID(),lista);
+	public Circulo getCirculo() {
+		return circulo;
+	}
+
+	public void setCirculo(Circulo circulo) {
+		this.circulo = circulo;
+	}
+
+	public HashMap<Integer,Lista> getListas() {
+		HashMap<Integer,Lista> listasRet = new HashMap<>();
+		for(int idLista: this.listas.keySet()){
+			listasRet.put(idLista,this.listas.get(idLista));
+		}
+		return listasRet;
+	}
+
+	public int getMandatos() {
+		return mandatos;
+	}
+
+	public void setMandatos(int mandatos) {
+		this.mandatos = mandatos;
+	}
+
+	public void addLista(Lista lista) throws ExceptionListaExiste, ExceptionLimiteCandidatos{
+		if(lista.getNumCandPrim() >= this.mandatos) throw new ExceptionLimiteCandidatos("Limite de candidatos primarios ("+this.mandatos+") excedido");
+		for(Lista l: this.listas.values()){
+			if(l.equals(lista))
+				throw new ExceptionListaExiste();
+		}
+		this.listas.put(lista.getID(),lista);
 	}
 	
 	public void removeLista(Lista lista){
-		this.listasDAO.remove(lista.getID());
+		this.listas.remove(lista.getID());
 	}
 	
-	public void addCandidatoLista(Lista l, Candidato c){
-		Lista lista = this.listasDAO.get(l.getID());
-		lista.getCandidatos();
-		
-		jhjm
+	public void addCandidatoLista(Lista l, CandidatoAR c) throws ExceptionLimiteCandidatos{
+		if((c.getTipo() == 'P') && l.getNumCandPrim() >= this.mandatos){
+			throw new ExceptionLimiteCandidatos("Limite de candidatos excedido ("+this.mandatos+")");
+		}
+		l.addCandidato(c);
+		this.listas.put(l.getID(),l);
+	}
+	
+	public void removeCandidato(Lista l, CandidatoAR c){
+		l.removeCandidato(c);
+		this.listas.put(l.getID(),l);
 	}
 }

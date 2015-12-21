@@ -28,11 +28,11 @@ public class cenasNuno {
 		System.out.println(circulos.size());
 		
 			//System.out.println(eleitores.values());
-		List<Eleitor> l = lerCadernoRecenciamento("C:"+File.separator+"Users"+File.separator+"Jorge Oliveira"+File.separator+"Documents"+File.separator+"GitHub"+File.separator+"DSS"+File.separator+"CadernosDSS"+File.separator+"nomes.csv");
+		List<Eleitor> l = lerCadernoRecenciamento(File.separator+"Users"+File.separator+"joaosilva"+File.separator+"Desktop"+File.separator+"nomes.csv");
 		Iterator<Eleitor> i = l.iterator();
 		int i1=0;
 		while(i.hasNext()){
-			System.out.println(i1++);
+			//System.out.println(i1++);
 			Eleitor e = i.next();
 			//System.out.println(i.next().toString());
 			Eleitor e1 = eleitores.put(e.getnIdent(), e);
@@ -43,6 +43,7 @@ public class cenasNuno {
 			}
 			
 		}
+		System.out.println("Tamanho:" + eleitores.size());
 		System.out.println("ok");
 	
 	}
@@ -59,12 +60,19 @@ public class cenasNuno {
 
 			br = new BufferedReader(new FileReader(path));
 			while ((line = br.readLine()) != null) {
+				//System.out.println(line);
 				if (line.contains(flin)){
 					csvSplit=line.split("=")[1];
+					System.out.println(csvSplit);
 				}else{
 					String[] eleitores = line.split(csvSplit);
+					
 					int a = Integer.parseInt(eleitores[1]);
 					int b = Integer.parseInt(eleitores[0]);
+					//System.out.println(a);
+					//System.out.println(b);
+					//System.out.println(eleitores[2]);
+					//System.out.println(eleitores[3]);
 					Eleitor e = new Eleitor(eleitores[2], a, b, eleitores[3]);
 					listaEleitores.add(e);
 				}

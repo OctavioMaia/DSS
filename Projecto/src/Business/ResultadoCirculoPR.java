@@ -5,47 +5,54 @@
  */
 package Business;
 
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 
-
-/**
- * Falta colocar no construtor os circulos
- */
+import Exception.ExceptionListaNaoExiste;
 
 /**
- *
+ * Classe que contem os resultados da Eleição. Onde são guardados os votos.
+ * 
  * @author ruifreitas
  */
 public class ResultadoCirculoPR {
 	private Circulo circulo;
+	private int totEleitores;
 	private int brancos;
 	private int nulos;
 	private HashMap<ListaPR, Integer> validos;
-	
 
-	public ResultadoCirculoPR() {
+	public ResultadoCirculoPR(Circulo c) {
+		this.circulo = c;
+		this.totEleitores = c.getTotEleitores();
 		this.brancos = 0;
 		this.nulos = 0;
-		this.totEleitores = 0;
 		this.validos = new HashMap<>();
-		this.idcirculo = 0;
 	}
 
-	public ResultadoCirculoPR(int brancos, int nulos, int totEleitores, HashMap<ListaPR, Integer> validos,
-			int idcirculo) {
+	public ResultadoCirculoPR(Circulo c, int totEleitores, int brancos, int nulos, HashMap<ListaPR, Integer> validos) {
+		this.circulo = c;
+		this.totEleitores = totEleitores;
 		this.brancos = brancos;
 		this.nulos = nulos;
-		this.totEleitores = totEleitores;
 		this.validos = validos;
-		this.idcirculo = idcirculo;
 	}
 
-	public int getIdcirculo() {
-		return this.idcirculo;
+	public int getTotEleitores() {
+		return totEleitores;
 	}
 
-	public void setIdcirculo(int idcirculo) {
-		this.idcirculo = idcirculo;
+	public void setTotEleitores(int totEleitores) {
+		this.totEleitores = totEleitores;
+	}
+
+	public Circulo getCirculo() {
+		return circulo;
+	}
+
+	public void setCirculo(Circulo circulo) {
+		this.circulo = circulo;
 	}
 
 	public int getBrancos() {
@@ -64,24 +71,16 @@ public class ResultadoCirculoPR {
 		this.nulos = nulos;
 	}
 
-	public int getTotEleitores() {
-		return totEleitores;
-	}
-
-	public void setTotEleitores(int totEleitores) {
-		this.totEleitores = totEleitores;
-	}
-
-	public HashMap<Integer, Integer> getValidos() {
+	public HashMap<ListaPR, Integer> getValidos() {
 		return validos;
 	}
 
-	public void setValidos(HashMap<Integer, Integer> validos) {
+	public void setValidos(HashMap<ListaPR, Integer> validos) {
 		this.validos = validos;
 	}
 
-	public void addVoto(int idLista) {
-		this.validos.put(idLista, this.validos.get(idLista) + 1);
+	public void addVoto(ListaPR l) {
+		this.validos.put(l, this.validos.get(l) + 1);
 	}
 
 	public void addVotoBranco() {
@@ -90,5 +89,24 @@ public class ResultadoCirculoPR {
 
 	public void addVotoNulo() {
 		this.nulos++;
+	}
+
+	public void addListas(Collection<ListaPR> listas) {
+		for (ListaPR lista : listas) {
+			if (!this.validos.containsKey(lista)) {
+				this.validos.put(lista, 0);
+			}
+		}
+	}
+
+	/*
+	 * public ListaPR maisVotada(){ int maxVotos=0; ListaPR maisVotada = null;
+	 * for(ListaPR lista : this.validos.keySet()){
+	 * if(this.validos.get(lista)>maxVotos){ maisVotada=lista;
+	 * maxVotos=this.validos.get(lista); } } return maisVotada; }
+	 */
+
+	public int votosLista(ListaPR lista) {
+		return this.validos.get(lista);
 	}
 }

@@ -6,9 +6,12 @@
 package Business;
 
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
+
+import Exception.*;
 
 /**
  *
@@ -31,7 +34,7 @@ public abstract class Eleicao {
 		this.data = data;
 		this.permitirVotar = false;
 		this.estado = CRIADA;
-		this.votantes = new HashSet<>();
+		this.votantes = new HashSet<>();		
 	}
 
 	public Eleicao(int idEleicao, Calendar data, int estado, boolean permitirVotar, Set<Integer> vot) {
@@ -101,9 +104,9 @@ public abstract class Eleicao {
 	
 	public abstract void iniciar();
 	public abstract void terminar();
-	public abstract void addLista(Listavel lista);
+	public abstract void addLista(Listavel lista) throws ExceptionListaExiste, ExceptionLimiteCandidatos, ExceptionMandanteInvalido;
 	public abstract void removeLista(Listavel lista);
-	public abstract void addVoto(Listavel lista);
+	public abstract void addVoto(Listavel lista, Circulo circulo);
 	public abstract void addVotoNulo(int idCirculo);
 	public abstract void addVotoBranco(int idCirculo);
 	public abstract Boletim getBoletim(int idCirculo);

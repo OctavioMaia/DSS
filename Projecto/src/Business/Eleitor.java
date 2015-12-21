@@ -72,8 +72,8 @@ public class Eleitor {
     	return "Eleitor " + nome + ", com o numero de identificacao " + nIdent + " e pertencente ao circulo " + circulo;
     }
     
-    public boolean autenticar(int id, String pin) throws{
-    	if(this.nIdent == id && this.pin == pin){
+    public boolean autenticar(int id, String pin){
+    	if(this.nIdent == id && this.pin.equals(pin)){
     		return true;
     	}
     	return false;
