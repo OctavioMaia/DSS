@@ -32,9 +32,9 @@ public class SGE {
 	private static final int CRIADA = -1;
 	private static final int ATIVA = 0;
 	private static final int TERMINADA = 1;
-	
 
-	
+
+
 	/**
 	 * ao criaar eleição passar no construtor todos os circulos
 	 */
@@ -224,11 +224,6 @@ public class SGE {
 		return eCriadas;
 	}
 
-	public void addVoto(Eleicao e, Listavel lista, Eleitor eleitor) {
-		e.addVoto(lista);
-		e.addVotante(eleitor);
-	}
-
 	public boolean login(int id, String pin) {
 		return this.eleitores.get(id).autenticar(id, pin);
 	}
@@ -283,19 +278,43 @@ public class SGE {
 		return e.getBoletim(eleitor.getCirculo());
 	}
 
-	public void addVoto(Eleicao e, Listavel lista) {
-		e.addVoto(lista);
+	public void addVoto(Eleicao e, Listavel lista, Eleitor eleitor) {
+		e.addVoto(lista,eleitor);
+		if(e.getClass().getName().equals("EleicaoAR")){
+			EleicaoAR eleicaoAR = (EleicaoAR)e;
+			this.eleicoesAR.put(eleicaoAR.getIdEleicao(),eleicaoAR);
+		}
+		else if (e.getClass().getName().equals("EleicaoPR")){
+			EleicaoPR eleicaoPR = (EleicaoPR)e;
+			this.eleicoesPR.put(eleicaoPR.getIdEleicao(), eleicaoPR);
+		}
 	}
 
-	public void addVotoNulo(Eleicao e, int idCirculo) {
-		e.addVotoNulo(idCirculo);
+	public void addVotoNulo(Eleicao e, Eleitor eleitor) {
+		e.addVotoNulo(eleitor);
+		if(e.getClass().getName().equals("EleicaoAR")){
+			EleicaoAR eleicaoAR = (EleicaoAR)e;
+			this.eleicoesAR.put(eleicaoAR.getIdEleicao(),eleicaoAR);
+		}
+		else if (e.getClass().getName().equals("EleicaoPR")){
+			EleicaoPR eleicaoPR = (EleicaoPR)e;
+			this.eleicoesPR.put(eleicaoPR.getIdEleicao(), eleicaoPR);
+		}
 	}
 
-	public void addVotoBranco(Eleicao e, int idCirculo){
-		e.addVotoBranco(idCirculo);
+	public void addVotoBranco(Eleicao e, Eleitor eleitor){
+		e.addVotoBranco(eleitor);
+		if(e.getClass().getName().equals("EleicaoAR")){
+			EleicaoAR eleicaoAR = (EleicaoAR)e;
+			this.eleicoesAR.put(eleicaoAR.getIdEleicao(),eleicaoAR);
+		}
+		else if (e.getClass().getName().equals("EleicaoPR")){
+			EleicaoPR eleicaoPR = (EleicaoPR)e;
+			this.eleicoesPR.put(eleicaoPR.getIdEleicao(), eleicaoPR);
+		}
 	}
-	
+
 	public Circulo getCirculoID(int idCirculo){
-		
+
 	}
 }
