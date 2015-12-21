@@ -29,7 +29,7 @@ public class Candidato {
 		this.dataNasc = dataNasc;
 		this.residencia = residencia;
 		this.naturalidade = naturalidade;
-		this.foto = foto;s
+		this.foto = foto;
 	}
 	
 	public String getNome() {
@@ -43,7 +43,7 @@ public class Candidato {
 	public String getProf() {
 		return prof;
 	}
-
+	
 	public Calendar getDataNasc() {
 		return dataNasc;
 	}

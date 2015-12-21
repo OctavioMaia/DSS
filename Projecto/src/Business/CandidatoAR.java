@@ -8,8 +8,8 @@ public class CandidatoAR extends Candidato {
 	private Partido partido;
 	private char tipo; 	// P:Primário; S:Secundário
 
-	public CandidatoAR(String nome, int bi, String prof, Calendar dataNasc, String residencia, String naturalidade,Partido partido, char tipo) {
-		super(nome, bi, prof, dataNasc, residencia, naturalidade);
+	public CandidatoAR(String nome, int bi, String prof, Calendar dataNasc, String residencia, String naturalidade,Partido partido, char tipo, String foto) {
+		super(nome, bi, prof, dataNasc, residencia, naturalidade,foto);
 		this.partido = partido;
 		this.tipo = tipo;
 	}
@@ -32,6 +32,6 @@ public class CandidatoAR extends Candidato {
 
 	@SuppressWarnings("deprecation")
 	public String toString() {
-		return "Candidato " + super.getNome() + ", com BI n�"+super.getBi() + ", nascido a " + super.getDataNasc().toGMTString() + ", pertencente ao partido " + partido;
+		return "Candidato " + super.getNome() + ", com BI nº"+super.getBi() + ", nascido a " + super.getDataNasc().getTime() + ", pertencente ao partido " + partido;
 	}
 }
