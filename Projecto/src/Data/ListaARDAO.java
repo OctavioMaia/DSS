@@ -18,8 +18,23 @@ import Business.Lista;
 import Business.Votavel;
 
 public class ListaARDAO implements Map<Integer,Lista>{
-
+	private int Eleicao;
+	private int circulo;
+	//Tabela das Listas
+	private static String TabName ="ListasAR";
+	private static String TabListID = "id";
+	private static String TabListSimb = "simbolo";
+	private static String TabListSig = "sigla";
+	private static String TabListNome = "nome";
+	private static String TabListIDCirc = "idCirculo";
+	private static String TabListIDElei = "idEleicao";
+	private static String TabListPart =  "idPartido";
+	private static String TabListCol = "idColigacao";
 	
+	public ListaARDAO(int eleicao, int circulo) {
+		this.Eleicao = eleicao;
+		this.circulo = circulo;
+	}
 	protected void clear_aux(Connection c)throws SQLException{
 		this.clear();
 		
