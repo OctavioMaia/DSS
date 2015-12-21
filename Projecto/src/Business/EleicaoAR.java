@@ -209,25 +209,28 @@ public class EleicaoAR extends Eleicao {
 	}
 	
 	@Override
-	public void addVoto(Listavel lista,Circulo circulo){
+	public void addVoto(Listavel lista,Eleitor eleitor){
 		Lista l = (Lista)lista;
-		ResultadoCirculoAR resCirculo = this.resultado.get(circulo.getId());
+		super.addVotante(eleitor);
+		ResultadoCirculoAR resCirculo = this.resultado.get(eleitor.getCirculo());
 		resCirculo.addVoto(l);
-    	this.resultado.put(circulo.getId(),resCirculo);
+    	this.resultado.put(eleitor.getCirculo(),resCirculo);
     }
 	
 	@Override
-	public void addVotoBranco(int idCirculo){
-		ResultadoCirculoAR resCirculo = this.resultado.get(idCirculo);
+	public void addVotoBranco(Eleitor eleitor){
+		super.addVotante(eleitor);
+		ResultadoCirculoAR resCirculo = this.resultado.get(eleitor.getCirculo());
 		resCirculo.addVotoBranco();
-    	this.resultado.put(idCirculo,resCirculo);
+    	this.resultado.put(eleitor.getCirculo(),resCirculo);
 	}
 	
 	@Override
-	public void addVotoNulo(int idCirculo){
-		ResultadoCirculoAR resCirculo = this.resultado.get(idCirculo);
+	public void addVotoNulo(Eleitor eleitor){
+		super.addVotante(eleitor);
+		ResultadoCirculoAR resCirculo = this.resultado.get(eleitor.getCirculo());
 		resCirculo.addVotoNulo();
-    	this.resultado.put(idCirculo,resCirculo);
+    	this.resultado.put(eleitor.getCirculo(),resCirculo);
 	}
 
 	@Override

@@ -106,9 +106,9 @@ public abstract class Eleicao {
 	public abstract void terminar();
 	public abstract void addLista(Listavel lista) throws ExceptionListaExiste, ExceptionLimiteCandidatos, ExceptionMandanteInvalido;
 	public abstract void removeLista(Listavel lista);
-	public abstract void addVoto(Listavel lista, Circulo circulo);
-	public abstract void addVotoNulo(int idCirculo);
-	public abstract void addVotoBranco(int idCirculo);
+	public abstract void addVoto(Listavel lista, Eleitor eleitor);
+	public abstract void addVotoNulo(Eleitor eleitor);
+	public abstract void addVotoBranco(Eleitor eleitor);
 	public abstract Boletim getBoletim(int idCirculo);
 	
 }
