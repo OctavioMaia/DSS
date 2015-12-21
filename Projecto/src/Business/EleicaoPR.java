@@ -18,8 +18,10 @@ import Data.ListaPRDAO;
 import Data.ResultadoCirculoPRDAO;
 import Exception.ExceptionCandidatoExiste;
 import Exception.ExceptionIniciarEleicao;
+import Exception.ExceptionLimiteCandidatos;
 import Exception.ExceptionListaExiste;
 import Exception.ExceptionListaNaoExiste;
+import Exception.ExceptionMandanteInvalido;
 import Exception.ExceptionTerminarEleicao;
 
 /**
@@ -37,7 +39,7 @@ public class EleicaoPR extends Eleicao {
 	public EleicaoPR(int idEleicao, Calendar data, Collection<Circulo> c) {
 		super(idEleicao, data);
 		this.volta2 = false;
-		this.data2 = null;
+		this.data2 = defData2(data);
 		this.voltaR1 = initResultadoCirculoPRDAO(idEleicao, 1, c);
 		this.voltaR2 = initResultadoCirculoPRDAO(idEleicao, 2, c);
 		this.listas = new ListaPRDAO(idEleicao);
@@ -122,49 +124,51 @@ public class EleicaoPR extends Eleicao {
 	}
 
 	@Override
-	public void addVoto(Listavel lista, Circulo circulo) {
+	public void addVoto(Listavel lista, Eleitor eleitor) {
 		ResultadoCirculoPR resPR;
 		ListaPR listpr = (ListaPR) lista;
 		if (volta2 == false) {
-			resPR = this.voltaR1.get(circulo.getId());
+			resPR = this.voltaR1.get(eleitor.getCirculo());
 			resPR.addVoto(listpr);
+			super.addVotante(eleitor);
 			this.voltaR1.put(resPR.getCirculo().getId(), resPR);
 		} else {
-			resPR = this.voltaR2.get(circulo.getId());
+			resPR = this.voltaR2.get(eleitor.getCirculo());
 			resPR.addVoto(listpr);
+			this.addVotante(eleitor);
 			this.voltaR2.put(resPR.getCirculo().getId(), resPR);
 		}
 	}
-	
-	public void public void addVotante(Eleitor e) {
-		
+
+	public void addVotante(Eleitor eleitor) {
+		this.votantes2.add(eleitor.getnIdent());
 	};
 
 	@Override
-	public void addVotoNulo(int idCirculo) {
+	public void addVotoNulo(Eleitor eleitor) {
 		ResultadoCirculoPR resPR;
 		if (volta2 == false) {
-			resPR = this.voltaR1.get(idCirculo);
+			resPR = this.voltaR1.get(eleitor.getCirculo());
 			resPR.addVotoNulo();
-			this.voltaR1.put(idCirculo, resPR);
+			this.voltaR1.put(eleitor.getCirculo(), resPR);
 		} else {
-			resPR = this.voltaR2.get(idCirculo);
+			resPR = this.voltaR2.get(eleitor.getCirculo());
 			resPR.addVotoNulo();
-			this.voltaR2.put(idCirculo, resPR);
+			this.voltaR2.put(eleitor.getCirculo(), resPR);
 		}
 	}
-	
+
 	@Override
-	public void addVotoBranco(int idCirculo) {
+	public void addVotoBranco(Eleitor eleitor) {
 		ResultadoCirculoPR resPR;
 		if (volta2 == false) {
-			resPR = this.voltaR1.get(idCirculo);
+			resPR = this.voltaR1.get(eleitor.getCirculo());
 			resPR.addVotoBranco();
-			this.voltaR1.put(idCirculo, resPR);
+			this.voltaR1.put(eleitor.getCirculo(), resPR);
 		} else {
-			resPR = this.voltaR2.get(idCirculo);
+			resPR = this.voltaR2.get(eleitor.getCirculo());
 			resPR.addVotoBranco();
-			this.voltaR2.put(idCirculo, resPR);
+			this.voltaR2.put(eleitor.getCirculo(), resPR);
 		}
 	}
 
@@ -229,37 +233,40 @@ public class EleicaoPR extends Eleicao {
 		for (ResultadoCirculoPR resC : this.voltaR1.values()) {
 			validos = resC.getValidos();
 			for (ListaPR lista : validos.keySet()) {
-				segVolta.put(lista, segVolta.get(lista) + validos.get(lista)); // linha a rever
+				segVolta.put(lista, segVolta.get(lista) + validos.get(lista)); // linha
+																				// a
+																				// rever
 			}
 		}
-		//ordenar as listas pelo numero de votos
+		// ordenar as listas pelo numero de votos
 		TreeSet<ListavelVotos> listasSeg = new TreeSet<>(new ComparatorListavelVotos());
-		for(ListaPR lista : segVolta.keySet()){
+		for (ListaPR lista : segVolta.keySet()) {
 			ListavelVotos lv = new ListavelVotos(lista, segVolta.get(lista));
 			listasSeg.add(lv);
 		}
 		return listasSeg;
 	}
-	
+
 	/*
-	 * preciso depois verificar se a ordem do comaprador está correta para isto dar as duas mais votadas
+	 * preciso depois verificar se a ordem do comaprador está correta para isto
+	 * dar as duas mais votadas
 	 */
-	private Set<ListaPR> disputaSegundaVolta(Set<ListavelVotos> listas){
-		int n =0;
+	private Set<ListaPR> disputaSegundaVolta(Set<ListavelVotos> listas) {
+		int n = 0;
 		Set<ListaPR> listasSeg = new HashSet<ListaPR>();
 		Iterator<ListavelVotos> itListas = listas.iterator();
-		while(itListas.hasNext() && n<2){
-			listasSeg.add((ListaPR)itListas.next().getLista());
+		while (itListas.hasNext() && n < 2) {
+			listasSeg.add((ListaPR) itListas.next().getLista());
 		}
 		return listasSeg;
 	}
-	
 
 	/**
 	 * Falta para quando inicio a eleiçao colocar as listas nos resultados
 	 * preciso de colocar nos resultados volta1 as listas se for para a volta 2
 	 * colocar nos resultados as duas listas anteriores gerarBoletins
-	 * @throws ExceptionTerminarEleicao 
+	 * 
+	 * @throws ExceptionTerminarEleicao
 	 */
 	@Override
 	public void iniciar() throws ExceptionIniciarEleicao {
@@ -273,22 +280,22 @@ public class EleicaoPR extends Eleicao {
 		} else {
 			if (super.estado(0) && this.volta2) { // iniciar segunda volta
 				Collection<ListaPR> list = this.disputaSegundaVolta(this.resultadosPrimeiraVolta());
-				if(list.size()==2){
+				if (list.size() == 2) {
 					this.geraBoletim(list);
 					for (ResultadoCirculoPR resC : this.voltaR2.values()) {
 						resC.addListas(list);
 						this.voltaR2.put(resC.getCirculo().getId(), resC);
 					}
 				}
-				
-			}else{
+
+			} else {
 				throw new ExceptionIniciarEleicao("Inpossivel iniar Elicão;");
 			}
 		}
 	}
 
 	@Override
-	public void terminar() {
+	public void terminar() throws ExceptionTerminarEleicao{
 		if (super.estado(0) && this.volta2 == false) { // terminar primeira
 														// volta
 			if(){//verificar se ouve maioria absoluta
@@ -304,14 +311,38 @@ public class EleicaoPR extends Eleicao {
 
 	// metodo para calcular se ouve vencedor com maioria absoluta
 
-	private void defData2() {
+	private Calendar defData2(Calendar data1) {
 		Calendar data2aux = new GregorianCalendar();
-		data2aux.set(super.getData().get(Calendar.YEAR), super.getData().get(Calendar.MONTH), super.getData().get(Calendar.DAY_OF_YEAR));;
+		data2aux.set(data1.get(Calendar.YEAR), data1.get(Calendar.MONTH), data1.get(Calendar.DAY_OF_YEAR));
+		;
 		data2aux.add(Calendar.DAY_OF_YEAR, 30);
-		while(data2aux.get(Calendar.DAY_OF_WEEK)!=Calendar.SUNDAY){
+		while (data2aux.get(Calendar.DAY_OF_WEEK) != Calendar.SUNDAY) {
 			data2aux.add(Calendar.DAY_OF_YEAR, 1);
 		}
-		this.data2 = data2aux;
+		return data2aux;
+	}
+
+	@Override
+	public void addLista(Listavel lista)
+			throws ExceptionListaExiste, ExceptionLimiteCandidatos, ExceptionMandanteInvalido {
+
+	}
+
+	public int numeroEleitres() {
+		int tot = 0;
+		for (ResultadoCirculoPR resC : this.voltaR1.values()) {
+			tot += resC.getTotEleitores();
+		}
+		return tot;
+	}
+	
+	private boolean verifacarMaioria(){
+		boolean ver = false;
+		Iterator<ListavelVotos> itLV = this.resultadosPrimeiraVolta().iterator();
+		if(itLV.hasNext() && itLV.next().getVotos()>(numeroEleitres()/2)){
+			ver = true;
+		}
+		return ver;
 	}
 
 }
