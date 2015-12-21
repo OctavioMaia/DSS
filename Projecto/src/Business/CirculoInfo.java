@@ -1,28 +1,25 @@
 package Business;
 
 import java.util.HashMap;
+import java.util.Set;
 
 import Data.ListaARDAO;
 import Exception.ExceptionLimiteCandidatos;
 import Exception.ExceptionListaExiste;
-import Exception.ExceptionMandanteInvalido;
 
 public class CirculoInfo {
 	private Circulo circulo;
-	private Boletim boletim;
 	private ListaARDAO listas;
 	private int mandatos;
 	
 	public CirculoInfo(int idEleicao, Circulo circulo){
 		this.circulo = circulo;
-		this.boletim = null;
 		this.listas = new ListaARDAO(idEleicao,circulo.getId());
 		this.mandatos = 0;
 	}
 	
 	public CirculoInfo(int idEleicao, Circulo circulo, int mandatos) {
 		this.circulo = circulo;
-		this.boletim = null;
 		this.listas = new ListaARDAO(idEleicao,circulo.getId());
 		this.mandatos = mandatos;
 	}
