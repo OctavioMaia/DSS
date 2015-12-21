@@ -14,9 +14,8 @@ import java.util.TreeSet;
 
 import Business.Circulo;
 import Business.Lista;
-import Business.ListaPR;
 import Business.ResultadoCirculoAR;
-import Business.ResultadoCirculoPR;
+
 
 public class ResultadoCirculoARDAO implements Map<Integer,ResultadoCirculoAR>{
 	private int idEleicao;
