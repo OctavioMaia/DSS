@@ -31,14 +31,8 @@ Coisas a considerar:
 
 # Cenas do JMS:
 
-<<<<<<< HEAD
-- [ ] Por Fazer
-  - [ ] CirculoDAO
-  - [ ] ColigaçãoDAO
-=======
 - [ ] Por Fazer/A fazer
   - [X] CirculoDAO
->>>>>>> refs/remotes/origin/master
   - [ ] EleiçãoARDAO
   - [ ] ListaARDAO
   - [X] ResultadoCirculoARDAO
@@ -46,7 +40,7 @@ Coisas a considerar:
 - [ ] Feitas/Testas
   - [X] AdminDAO
   - [ ] PartidosDAO
-  - [X] CirculoInfoDAO - Nao testado
+  - [X] CirculoInfoDAO
   - [X] Connector
   - [ ] EleiçãoPRDAO
   - [X] EleitoresDAO
