@@ -45,5 +45,5 @@ Coisas a considerar:
   - [X] EleitoresDAO
   - [ ] ListaPRDAO
   - [ ] ResultadoCirculoPRDAO
-  - [ ] CirculoInfoDAO
+  - [X] CirculoInfoDAO
   - [ ] ColigaçãoDAO
