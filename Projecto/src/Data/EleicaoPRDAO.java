@@ -389,14 +389,24 @@ public class EleicaoPRDAO implements Map<Integer,EleicaoPR>{
 			this.clear_aux(c);
 			c.commit();	
 		} catch (SQLException e) {
-			c.rollback();
+			try {
+				c.rollback();
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+				throw new RuntimeException(e1.getMessage());
+			}
 			e.printStackTrace();
 			throw new RuntimeException(e.getMessage());
 		}catch(Exception e){
 			e.printStackTrace();
-			throw new RuntimeException(e.getMessage())
+			throw new RuntimeException(e.getMessage());
 		}finally {
-			c.close();
+			try {
+				c.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+				throw new RuntimeException(e.getMessage());
+			}
 		}
 		
 	}
