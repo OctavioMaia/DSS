@@ -5,12 +5,10 @@
  */
 package Data;
 
-import Business.CandidatoAR;
+
 import Business.Partido;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collection;
-import java.util.GregorianCalendar;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
@@ -31,6 +29,8 @@ public class PartidosDAO implements Map<Integer,Partido>{
 	private static String TabPartNome = "nome";
 	private static String TabPartSimb = "simbolo";
 	private static String TabPartSigl = "sigla";
+	private static String TabPartRemov = "removido";
+	/*
 	//Tabela de CandidatosAR
 	private static String TabCandid = "CandidatosPR";
 	private static String TabCandidID = "bi";
@@ -41,7 +41,7 @@ public class PartidosDAO implements Map<Integer,Partido>{
 	private static String TabCandidNome = "nome";
 	private static String TabCandidTipo = "tipo";
 	private static String TabCandidPart = "idPartido";
-
+	*/
 	
     public PartidosDAO(){
     }
@@ -125,38 +125,7 @@ public class PartidosDAO implements Map<Integer,Partido>{
 	public boolean containsValue(Object value) {
 		return this.containsKey(((Partido)value).getId());
 	}
-
-/*	
-	private Collection<CandidatoAR> getCandLista(Integer key,Connection c) throws SQLException{
-		ArrayList<CandidatoAR> ret  = new ArrayList<>();
-		PreparedStatement ps  =c.prepareStatement("SELECT "+TabCandidID+" FROM "+TabCandid+ " WHERE " + TabCandidPart +"=?");
-		ps.setInt(1, key);
-		ResultSet rs = ps.executeQuery();
-		while(rs.next()){
-			CandidatoAR cn = this.getCandAR(rs.getInt(TabCandidID), c);
-			ret.add(cn);
-		}
-		return ret;
-	}
 	
-	private CandidatoAR getCandAR(Integer key,Connection c) throws SQLException{
-		CandidatoAR cad = null;
-		PreparedStatement ps = c.prepareStatement("SLEECT * FROM "+TabCandid+ " WHERE " + TabCandidID +"=?");
-		ResultSet rs = ps.executeQuery();
-		if(rs.next()){
-			String nome = rs.getString(TabCandidNome);
-			int bi = rs.getInt(TabCandidID);
-			String prof = rs.getString(TabCandidProf);
-			Calendar dataNasc = new GregorianCalendar();
-			dataNasc.setTimeInMillis(rs.getDate(TabCandidNasc).getTime());
-			String residencia = rs.getString(TabCandidResid);
-			String naturalidade = rs.getString(TabCandidNat);
-			String partido = rs.getString(TabCandidPart);
-			Character tipo = rs.getString(TabCandidTipo).charAt(0);
-			cad = new CandidatoAR(nome, bi, prof, dataNasc, residencia, naturalidade, partido, tipo);
-		}
-		return cad;
-	}*/
 	private Partido get_aux(Integer key,Connection c) throws SQLException{
 		Partido p =null;
 		PreparedStatement ps = c.prepareStatement("SELECT * FROM " + TabPartName + " WHERE " + TabPartID+ "=?");
@@ -165,7 +134,8 @@ public class PartidosDAO implements Map<Integer,Partido>{
 			String sigla = rs.getString(TabPartSigl);
 			String nome = rs.getString(TabPartNome);
 			String simbolo = rs.getString(TabPartSimb);
-			p = new Partido(key, sigla, nome, simbolo);
+			boolean eleim = rs.getBoolean(TabPartRemov);
+			p = new Partido(key, sigla, nome, simbolo,eleim);
 		}
 		rs.close();
 		ps.close();
@@ -197,32 +167,34 @@ public class PartidosDAO implements Map<Integer,Partido>{
 	}
 
 	
-	private Partido put_aux(Integer key,Partido value, Connection c) throws SQLException{
+	protected Partido put_aux(Integer key,Partido value, Connection c) throws SQLException{
 		Partido p = this.get_aux(key, c);
 		if(p!=null){//update
 			PreparedStatement ps = c.prepareStatement("UPDATE " + TabPartName+ 
-                    " SET "+TabPartNome+"=?,"+TabPartSimb+"=?,"+TabPartSigl+"=?," +
+                    " SET "+TabPartNome+"=?,"+TabPartSimb+"=?,"+TabPartSigl+"=?, " + TabPartRemov + "=?, "+
                     " WHERE " +TabPartID +"=?");
-			ps.setInt(1,key);
-			ps.setString(2,value.getNome());
-			ps.setString(3,value.getSimbolo());
-			ps.setString(4,value.getSigla());
+			ps.setInt(5,key);
+			ps.setString(1,value.getNome());
+			ps.setString(2,value.getSimbolo());
+			ps.setString(3,value.getSigla());
+			ps.setBoolean(4,value.isRemovido());
 			ps.execute();
 			ps.close();
 			
 		}else{//novo
 			PreparedStatement ps = c.prepareStatement("INSERT INTO " + TabPartName+ 
-                    " ("+TabPartID+","+TabPartNome+","+TabPartSimb+","+TabPartSigl+") " +
+                    " ("+TabPartID+","+TabPartNome+","+TabPartSimb+","+TabPartSigl+","+TabPartRemov+") " +
                     " value " +
                     " (?,?,?,?)");
 			ps.setInt(1,key);
 			ps.setString(2,value.getNome());
 			ps.setString(3,value.getSimbolo());
 			ps.setString(4,value.getSigla());
+			ps.setBoolean(5,value.isRemovido());
 			ps.execute();
 			ps.close();
 		}
-		return ret
+		return p;
 	}
 	
 	@Override
@@ -230,63 +202,81 @@ public class PartidosDAO implements Map<Integer,Partido>{
 		Connection conn=null;
 		Partido partido = this.remove(key);
     	try{
-    		conn = Connector.newConnection();
-    		PreparedStatement ps = conn.prepareStatement("insert into Partidos " +
-                    "(id,nome,simbolo,sigla) " +
-                    "value " +
-                    "(?,?,?,?)");
-    		ps.setString(2, value.getNome());
-            ps.setInt(1, key);
-            ps.setString(3, value.getSimbolo());
-            ps.setString(4, value.getSigla());
-            ps.execute();
-            ps.close();
+    		conn = Connector.newConnection(false);
+    		partido = this.put_aux(key, value, conn);
             conn.commit();
-    	}catch(Exception e){
+    	}catch(SQLException e){
     		try {
 				conn.rollback();
 			} catch (SQLException e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
+				throw new RuntimeException(e1.getMessage());
 			}
-    	}finally{
+    	}catch (Exception e){
+    		e.printStackTrace();
+			throw new RuntimeException(e.getMessage());
+    	}
+    	finally{
     		try {
 				conn.close();
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
+				throw new RuntimeException(e.getMessage());
 			}
     	}
     	return partido;
 	}
 
+	private Partido remove_aux(Integer key,Connection c)throws SQLException{
+		ColigacaoDAO cdao = new ColigacaoDAO();
+		Partido p = this.get_aux((Integer)key, c);
+		if(p!=null){
+			PreparedStatement ps = c.prepareStatement("UPDATE " + TabPartName+
+					"SET " + TabPartRemov +"=True");
+			ps.execute();
+			ps.close();
+			PreparedStatement ps1 = c.prepareStatement("SELECT idColigacao FROM Partido_pertence_Coligacao WHERE idPartido = ?");
+			ps1.setInt(1, key);
+			ResultSet rs = ps1.executeQuery();
+			while(rs.next()){
+				cdao.remove_aux(rs.getInt("idColigacao"), c);
+			}
+			p.setRemovido(true);
+			
+		}
+		return p;
+	}
+	
 	@Override
 	public Partido remove(Object key) {
 		Connection conn  = null;
     	Partido partido =null;
     	try{
-    		conn = Connector.newConnection();
-    	    partido  = this.get(key); 
-    	    PreparedStatement ps = conn.prepareStatement("DELETE FROM Partidos where id= ?");
-    	    ps.setInt(1,(Integer)key);
-    	    ps.execute();
+    		conn = Connector.newConnection(false);
+    	    partido  = this.remove_aux((Integer)key, conn);
     	    conn.commit();
-    	}catch(Exception e2){
+    	}catch(SQLException e){
     		try {
 				conn.rollback();
-			} catch (SQLException e1) {
-				// TODO Auto-generated catch block
+			} catch (SQLException e1){
 				e1.printStackTrace();
+				throw new RuntimeException(e1.getMessage());
 			}
-    	}finally{
+    		e.printStackTrace();
+			throw new RuntimeException(e.getMessage());
+    	}catch(Exception e ){
+    		e.printStackTrace();
+			throw new RuntimeException(e.getMessage());
+    	}
+    	finally{
     		try {
 				conn.close();
-			} catch (SQLException e2) {
-				// TODO Auto-generated catch block
-				e2.printStackTrace();
+			} catch (SQLException e) {
+				e.printStackTrace();
+				throw new RuntimeException(e.getMessage());
 			}
     	}
-       return partido;  
+       return partido;
 	}
 
 	@Override
@@ -295,62 +285,72 @@ public class PartidosDAO implements Map<Integer,Partido>{
 		
 	}
 
+	private void clear_aux(Connection c) throws SQLException{
+		Iterator<Integer> kyes = this.keySet_aux(c).iterator();
+		while(kyes.hasNext()){
+			this.remove_aux(kyes.next(),c);
+		}
+	}
+	
 	@Override
 	public void clear() {
 		Connection conn = null;
     	try{
-    		conn = Connector.newConnection();
-    		Statement s = conn.createStatement();
-    		s.executeUpdate("DELETE FROM Partidos");
-    		s.close();
+    		conn = Connector.newConnection(false);
+    		this.clear_aux(conn);
     		conn.commit();
-    	}catch(Exception e){
+    	}catch(SQLException e){
     		try {
 				conn.rollback();
 			} catch (SQLException e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
+				throw new RuntimeException(e1.getMessage());
 			}
-    		throw new RuntimeException(e.getMessage());
+    		e.printStackTrace();
+			throw new RuntimeException(e.getMessage());
+    	}catch(Exception e){
+    		e.printStackTrace();
+			throw new RuntimeException(e.getMessage());
     	}
+    	
     	finally {
     		try {
 				conn.close();
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
+				throw new RuntimeException(e.getMessage());
 			}
 		}
 		
 	}
 
+	private Set<Integer> keySet_aux(Connection c) throws SQLException{
+		Set<Integer> ret = new TreeSet<Integer>();
+		PreparedStatement ps = c.prepareStatement("SELECT " + TabPartID +" FROM " + TabPartName);
+		ResultSet rs  = ps.executeQuery();
+		while(rs.next()){
+			ret.add(rs.getInt(TabPartID));
+		}
+		return ret;
+	}
+	
 	@Override
 	public Set<Integer> keySet() {
 		Set<Integer> ret = new TreeSet<Integer>();
         Connection conn = null;
         try{
-        	conn=Connector.newConnection();
-        	Statement s = conn.createStatement();
-            String querie = " Select id FROM Partidos";
-            ResultSet rs = s.executeQuery(querie);
-            while(rs.next())
-               ret.add(rs.getInt("id"));
-            rs.close();
-            s.close();
-            conn.commit();
+        	conn=Connector.newConnection(true);
+        	ret = this.keySet_aux(conn);
         }catch(Exception e){
-    		try {
-				conn.rollback();
-			} catch (SQLException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
+			e.printStackTrace();
+			throw new RuntimeException(e.getMessage());
+
     	}finally{
     		try {
 				conn.close();
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
+				throw new RuntimeException(e.getMessage());
 			}
     	}
         return ret;
@@ -359,19 +359,30 @@ public class PartidosDAO implements Map<Integer,Partido>{
 	@Override
 	public Collection<Partido> values() {
 		ArrayList <Partido> ret  = new ArrayList<>();
-        Set<Integer> keys = this.keySet();
-        Iterator<Integer> i  = keys.iterator();
-        while (i.hasNext()){
-            ret.add(this.get((int) i.next()));
-        }
-        return ret;
+		Connection c = null;
+		try{
+			c = Connector.newConnection(true);
+	        Iterator<Integer> i  = this.keySet_aux(c).iterator();
+	        while (i.hasNext()){
+	            ret.add(this.get_aux(i.next(),c));
+	        }
+		}catch(Exception e){
+			e.printStackTrace();
+			throw new RuntimeException(e.getMessage());
+		}finally {
+			try {
+				c.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+				throw new RuntimeException(e.getMessage());
+			}
+		}
+		return ret;
 	}
 
 	@Override
 	public Set<java.util.Map.Entry<Integer, Partido>> entrySet() {
 		throw new RuntimeException("Funcao nao implementada");
 	}
-
-    
-    
+       
 }

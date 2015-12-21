@@ -31,19 +31,19 @@ Coisas a considerar:
 
 # Cenas do JMS:
 
-- [ ] Por Fazer
-  - [ ] AdminDAO
-  - [ ] CirculoDAO
-  - [ ] CirculoInfoDAO
-  - [ ] ColigaçãoDAO
+- [ ] Por Fazer/A fazer
+  - [X] CirculoDAO
   - [ ] EleiçãoARDAO
   - [ ] ListaARDAO
-  - [ ] PartidosDAO
-  - [ ] ResultadoCirculoARDAO
+  - [X] ResultadoCirculoARDAO
 
 - [ ] Feitas/Testas
+  - [X] AdminDAO
+  - [ ] PartidosDAO
   - [X] Connector
   - [ ] EleiçãoPRDAO
   - [X] EleitoresDAO
   - [ ] ListaPRDAO
   - [ ] ResultadoCirculoPRDAO
+  - [X] CirculoInfoDAO
+  - [ ] ColigaçãoDAO
