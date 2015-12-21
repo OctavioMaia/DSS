@@ -1,5 +1,3 @@
-/bin/Business
-/bin/Data
-/bin/Presentation
-*.bak
 *.class
+*.DS_Store
+*.bak
