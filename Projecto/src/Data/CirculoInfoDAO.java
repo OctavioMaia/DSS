@@ -6,14 +6,12 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
 import Business.CirculoInfo;
-import Business.Eleitor;
 import Business.Circulo;
 
 public class CirculoInfoDAO implements Map<Integer,CirculoInfo>{
@@ -23,8 +21,6 @@ public class CirculoInfoDAO implements Map<Integer,CirculoInfo>{
 	private static String Mandatos = "mandatos";
 	private static String Circulo = "idCirculo";
 	private static String Eleicao = "idEleicao";
-	//Tabela Eleicoes
-	private static String TabEleicoes = "EleicoesAR";
 	//Tabela Circulos
 	private static String TabCirculos = "Circulos";
 	private static String CirculoId = "idCirculo";
@@ -102,7 +98,7 @@ public class CirculoInfoDAO implements Map<Integer,CirculoInfo>{
         try{
         	conn=Connector.newConnection(true);
         	PreparedStatement psCirculo = conn.prepareStatement("Select * FROM "+TabCirculos+
-        			"WHERE "+CirculoId+" = ?");
+        			" WHERE "+CirculoId+" = ?");
         	psCirculo.setInt(1,(Integer)key);
         	ResultSet rsCirculo = psCirculo.executeQuery();
         	if(rsCirculo.next()){
@@ -147,7 +143,7 @@ public class CirculoInfoDAO implements Map<Integer,CirculoInfo>{
         	conn=Connector.newConnection(true);
         	ret = new TreeSet<Integer>();
         	PreparedStatement ps  = conn.prepareStatement("SELECT " +Circulo + " FROM " + Tabname
-        			+ "WHERE "+Eleicao+" = "+this.idEleicao);
+        			+ " WHERE "+Eleicao+" = "+this.idEleicao);
         	ResultSet rs = ps.executeQuery();
         	while(rs.next()){
         		int num = rs.getInt(Circulo);
@@ -176,8 +172,8 @@ public class CirculoInfoDAO implements Map<Integer,CirculoInfo>{
     		cinfo = this.get(key);
         	if(cinfo==null){//novo registo
         		PreparedStatement ps = conn.prepareStatement("INSERT INTO "+ Tabname +
-                        "("+Eleicao+","+Circulo+","+Mandatos+")" +
-                        "value " +
+                        " ("+Eleicao+","+Circulo+","+Mandatos+") " +
+                        "values " +
                         "(?,?,?)");
         		ps.setInt(1, this.idEleicao);
         		ps.setInt(2, key);
