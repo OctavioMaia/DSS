@@ -69,7 +69,7 @@ public class ResultadoCirculoAR {
 		this.circulo = circulo;
 	}
 
-	public HashMap<Lista, Integer> getValidos() {
+	public Map<Lista, Integer> getValidos() {
 		return validos;
 	}
 
@@ -77,7 +77,7 @@ public class ResultadoCirculoAR {
 		this.validos = validos;
 	}
 
-	public HashMap<Lista, Integer> getMandatos() {
+	public Map<Lista, Integer> getMandatos() {
 		return mandatos;
 	}
 
