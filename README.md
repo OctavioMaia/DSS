@@ -33,7 +33,6 @@ Coisas a considerar:
 
 - [ ] Por Fazer
   - [ ] CirculoDAO
-  - [ ] CirculoInfoDAO
   - [ ] ColigaçãoDAO
   - [ ] EleiçãoARDAO
   - [ ] ListaARDAO
@@ -42,6 +41,7 @@ Coisas a considerar:
 - [ ] Feitas/Testas
   - [ ] AdminDAO
   - [ ] PartidosDAO
+  - [X] CirculoInfoDAO - Nao testado
   - [X] Connector
   - [ ] EleiçãoPRDAO
   - [X] EleitoresDAO
