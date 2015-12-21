@@ -12,12 +12,12 @@ Coisas a considerar:
     - [x] Butão sair
     - [x] Parse numero identificacao
     - [x] Parse password
-  - [ ] GerirPR
+  - [x] GerirPR
     - [x] Data Inicio + parse
     - [x] Data nascimento + parse
     - [x] Nome, naturalidade,residencia,profissao,bi, foto + parse
     - [x] Apagar informacoes
-    - [ ] Adicionar ao SGE (falta metodos no SGE)
+    - [x] Adicionar ao SGE 
   - [ ] MainEleitor
     - [x] Nome eleitor (falta metodo no sge)
     - [x] Tipo eleicao
@@ -26,24 +26,39 @@ Coisas a considerar:
     - [ ] Historico eleicoes
     - [ ] Ver resultados
   - [ ] ResultadosAR
+    - [x] Resultados globais
+      - [x] Calculo votos brancos nulos e abstencao 
+      - [x] Calculo percentagens votos brancos nulos e abstencao
+    - [x] Resultados circulo
+      - [x] Calculo votos brancos nulos e abstencao 
+      - [x] Calculo percentagens votos brancos nulos e abstencao
+    - [ ] Implementar selecao de colunas nas tabelas pra mostrar informacao
   - [ ] ResultadosPR
+    - [ ] Resultados globais
+      - [ ] Calculo votos brancos nulos e abstencao 
+      - [ ] Calculo percentagens votos brancos nulos e abstencao
+    - [ ] Resultados circulo
+      - [ ] Calculo votos brancos nulos e abstencao 
+      - [ ] Calculo percentagens votos brancos nulos e abstencao
+    - [ ] Implementar selecao de colunas nas tabelas pra mostrar informacao
   - [ ] Votar
 
 # Cenas do JMS:
 
-- [ ] Por Fazer
-  - [ ] AdminDAO
-  - [ ] CirculoDAO
-  - [ ] CirculoInfoDAO
-  - [ ] ColigaçãoDAO
+- [ ] Por Fazer/A fazer
   - [ ] EleiçãoARDAO
   - [ ] ListaARDAO
-  - [ ] PartidosDAO
-  - [ ] ResultadoCirculoARDAO
+  - [X] ResultadoCirculoARDAO
 
 - [ ] Feitas/Testas
+  - [X] AdminDAO
+  - [ ] PartidosDAO
+  - [X] CirculoInfoDAO
   - [X] Connector
   - [ ] EleiçãoPRDAO
   - [X] EleitoresDAO
   - [ ] ListaPRDAO
   - [ ] ResultadoCirculoPRDAO
+  - [X] CirculoInfoDAO
+  - [ ] ColigaçãoDAO
+  - [X] CirculoDAO

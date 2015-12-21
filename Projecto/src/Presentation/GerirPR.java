@@ -11,6 +11,9 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 
 import javax.swing.*;
+
+import Business.Candidato;
+import Business.EleicaoPR;
 import Business.SGE;
 
 import com.jgoodies.forms.factories.*;
@@ -21,8 +24,14 @@ import com.toedter.calendar.*;
  */
 public class GerirPR {
 	
-	public GerirPR(SGE sge) {
-		initComponents(sge);
+	private GregorianCalendar dataInicio,dataNasc;
+	private SGE sge;
+	private EleicaoPR eleicao;
+	
+	public GerirPR(SGE s,EleicaoPR e) {
+		sge = s;
+		eleicao = e;
+		initComponents(sge,e);
 		GerirPR.setVisible(true);
 	}
 
@@ -47,10 +56,14 @@ public class GerirPR {
 		String naturalidade = this.naturalidade.getText();
 		String residencia = this.residencia.getText();
 		String profissao = this.profissao.getText();
-		String bi = this.bi.getText();
+		int bi = Integer.parseInt(this.bi.getText());
+		String foto = this.pathImagem.getText();
+		GregorianCalendar dataN = this.dataNasc;
 		
 		try{
-			sge.adicionarCandidatoPR(nome,naturalidade,residencia,profissao,bi);
+			Candidato c = new Candidato(nome, bi, profissao, dataN, residencia, naturalidade, foto);
+			
+			sge.addCandidatoPR(eleicao,c);
 			nomeCandidato.setText("");
 			this.naturalidade.setText("");
 			this.residencia.setText("");
@@ -58,7 +71,7 @@ public class GerirPR {
 			this.bi.setText("");
 			this.dataNascimento.setText("dd/mm/aa");
 			this.pathImagem.setText("");
-		}catch(){
+		}catch(Exception ex){
 			//TODO handle excecao
 		}
 	}
@@ -86,7 +99,7 @@ public class GerirPR {
 		int ano = cal.get(Calendar.YEAR);
 		dataInicioEleicao.setText(dia+"/"+mes+"/"+ano);
 		
-		GregorianCalendar dataInicio = new GregorianCalendar(ano, mes, dia);
+		dataInicio = new GregorianCalendar(ano, mes, dia);
 		//TODO implementar dataInicio
 		
 		dialogoCalendario.setVisible(false);
@@ -100,8 +113,8 @@ public class GerirPR {
 		int ano = cal.get(Calendar.YEAR);
 		dataNascimento.setText(dia+"/"+mes+"/"+ano);
 		
-		GregorianCalendar dataNascimento = new GregorianCalendar(ano, mes, dia);
-		//TODO implementar dataInicio
+		dataNasc = new GregorianCalendar(ano, mes, dia);
+		//TODO implementar dataNascimento
 		
 		dialogoCalendario.setVisible(false);
 		dialogoCalendario2.setVisible(false);
@@ -122,7 +135,7 @@ public class GerirPR {
 		this.pathImagem.setText("");
 	}
 	
-	private void initComponents(SGE sge) {
+	private void initComponents(SGE sge,EleicaoPR eleicao) {
 		// JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
 		// Generated using JFormDesigner Evaluation license - Octavio Maia
 		DefaultComponentFactory compFactory = DefaultComponentFactory.getInstance();
