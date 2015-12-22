@@ -56,7 +56,7 @@ Coisas a considerar:
 
 - [ ] Feitas/Testas
   - [X] AdminDAO
-  - [ ] PartidosDAO
+  - [X] PartidosDAO
   - [X] CirculoInfoDAO
   - [X] Connector
   - [ ] EleiçãoPRDAO
