@@ -19,7 +19,7 @@ public class Boletim {
 	}
 	
 	public void addLista(Listavel l){
-		if(l.getClass().getName()=="Lista"){
+		if(l.getClass().getSimpleName()=="Lista"){
 			Lista ar = (Lista) l;
 			listas.add(ar.getOrdem(), ar);
 		}else{

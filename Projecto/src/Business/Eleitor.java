@@ -79,5 +79,10 @@ public class Eleitor {
     	return false;
     }
     
+    public String[] toTable(){
+    	String[] eleitor = {this.nome, Integer.toString(this.nIdent)};
+    	return eleitor;
+    }
+    
     
 }

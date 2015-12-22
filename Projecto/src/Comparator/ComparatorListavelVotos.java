@@ -1,16 +1,17 @@
-package Business;
+package Comparator;
 
 import java.util.Comparator;
+
+import Business.ListavelVotos;
 
 public class ComparatorListavelVotos implements Comparator<ListavelVotos> {
 
 	public int compare(ListavelVotos lv1, ListavelVotos lv2) {
 		if (lv1.getVotos() > lv2.getVotos())
 			return 1;
-		if (lv1.getVotos() < lv2.getVotos())
+		if (lv1.getVotos() < lv2.getVotos()) {
 			return -1;
-		// ver melhor isto que nao sei qual o outro factor por o qual vou
-		// comparar para nao eleiminar uma lista
-		return 0;
+		}
+		return lv1.toString().compareTo(lv2.toString());
 	}
 }

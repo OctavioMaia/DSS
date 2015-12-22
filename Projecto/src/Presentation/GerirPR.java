@@ -11,6 +11,7 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 
 import javax.swing.*;
+import javax.swing.table.*;
 
 import Business.Candidato;
 import Business.EleicaoPR;
@@ -134,6 +135,10 @@ public class GerirPR {
 		this.dataNascimento.setText("dd/mm/aa");
 		this.pathImagem.setText("");
 	}
+
+	private void buttonEliminarCandidatoActionPerformed(ActionEvent e) {
+		//remover candidato
+	}
 	
 	private void initComponents(SGE sge,EleicaoPR eleicao) {
 		// JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
@@ -164,6 +169,11 @@ public class GerirPR {
 		bi = new JTextField();
 		label8 = new JLabel();
 		separator2 = new JSeparator();
+		scrollPane1 = new JScrollPane();
+		tableCandidatos = new JTable();
+		labelFoto = new JLabel();
+		separator3 = new JSeparator();
+		buttonEliminarCandidato = new JButton();
 		dialog1 = new JDialog();
 		fileChooser1 = new JFileChooser();
 		dialogoCalendario = new JDialog();
@@ -237,7 +247,7 @@ public class GerirPR {
 			buttonSair.setFont(new Font("Arial", Font.PLAIN, 14));
 			buttonSair.addActionListener(e -> buttonSairActionPerformed(e));
 			GerirPRContentPane.add(buttonSair);
-			buttonSair.setBounds(435, 350, 95, 25);
+			buttonSair.setBounds(435, 590, 95, 25);
 
 			//---- buttonData ----
 			buttonData.setText("Alterar");
@@ -322,6 +332,58 @@ public class GerirPR {
 			GerirPRContentPane.add(separator2);
 			separator2.setBounds(15, 340, 510, 5);
 
+			//======== scrollPane1 ========
+			{
+
+				//---- tableCandidatos ----
+				tableCandidatos.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+				tableCandidatos.setModel(new DefaultTableModel(
+					new Object[][] {
+					},
+					new String[] {
+						"Nome", "B.I. / C.C.", null
+					}
+				) {
+					Class<?>[] columnTypes = new Class<?>[] {
+						String.class, String.class, String.class
+					};
+					boolean[] columnEditable = new boolean[] {
+						true, true, false
+					};
+					@Override
+					public Class<?> getColumnClass(int columnIndex) {
+						return columnTypes[columnIndex];
+					}
+					@Override
+					public boolean isCellEditable(int rowIndex, int columnIndex) {
+						return columnEditable[columnIndex];
+					}
+				});
+				{
+					TableColumnModel cm = tableCandidatos.getColumnModel();
+					cm.getColumn(2).setResizable(false);
+				}
+				tableCandidatos.getColumnModel().getColumn(2).setPreferredWidth(0);
+				tableCandidatos.getColumnModel().getColumn(2).setMinWidth(0);
+				tableCandidatos.getColumnModel().getColumn(2).setWidth(0);
+				tableCandidatos.getColumnModel().getColumn(2).setMaxWidth(0);
+				scrollPane1.setViewportView(tableCandidatos);
+			}
+			GerirPRContentPane.add(scrollPane1);
+			scrollPane1.setBounds(15, 350, 335, 220);
+			GerirPRContentPane.add(labelFoto);
+			labelFoto.setBounds(375, 370, 150, 150);
+			GerirPRContentPane.add(separator3);
+			separator3.setBounds(10, 580, 520, 5);
+
+			//---- buttonEliminarCandidato ----
+			buttonEliminarCandidato.setText("Eliminar candidato");
+			buttonEliminarCandidato.setEnabled(false);
+			buttonEliminarCandidato.setFont(new Font("Arial", Font.PLAIN, 14));
+			buttonEliminarCandidato.addActionListener(e -> buttonEliminarCandidatoActionPerformed(e));
+			GerirPRContentPane.add(buttonEliminarCandidato);
+			buttonEliminarCandidato.setBounds(375, 540, 154, buttonEliminarCandidato.getPreferredSize().height);
+
 			{ // compute preferred size
 				Dimension preferredSize = new Dimension();
 				for(int i = 0; i < GerirPRContentPane.getComponentCount(); i++) {
@@ -335,7 +397,7 @@ public class GerirPR {
 				GerirPRContentPane.setMinimumSize(preferredSize);
 				GerirPRContentPane.setPreferredSize(preferredSize);
 			}
-			GerirPR.setSize(560, 430);
+			GerirPR.setSize(560, 660);
 			GerirPR.setLocationRelativeTo(null);
 		}
 
@@ -457,6 +519,11 @@ public class GerirPR {
 	private JTextField bi;
 	private JLabel label8;
 	private JSeparator separator2;
+	private JScrollPane scrollPane1;
+	private JTable tableCandidatos;
+	private JLabel labelFoto;
+	private JSeparator separator3;
+	private JButton buttonEliminarCandidato;
 	private JDialog dialog1;
 	private JFileChooser fileChooser1;
 	private JDialog dialogoCalendario;

@@ -51,14 +51,14 @@ Coisas a considerar:
 # Cenas dos DAO's:
 
 - [ ] Por Fazer/A fazer
-  - [ ] EleiçãoARDAO
   - [ ] ListaARDAO
 
 - [ ] Feitas/Testas
   - [X] AdminDAO
-  - [ ] PartidosDAO
+  - [X] PartidosDAO
   - [X] CirculoInfoDAO
   - [X] Connector
+  - [ ] EleiçãoARDAO
   - [ ] EleiçãoPRDAO
   - [X] EleitoresDAO
   - [ ] ListaPRDAO

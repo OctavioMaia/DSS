@@ -38,7 +38,10 @@ public class CirculoInfoDAO implements Map<Integer,CirculoInfo>{
     		conn = Connector.newConnection(false);
     		PreparedStatement psClear = conn.prepareStatement("DELETE FROM " +Tabname + " WHERE "+Eleicao+" = "+this.idEleicao );
         	psClear.executeUpdate();
-        	psClear.close();    		
+        	psClear.close();
+        	for(Integer circulo: this.keySet()){
+        		new ListaARDAO(this.idEleicao,circulo).clear();
+        	}
     		conn.commit();
     	}catch(SQLException e){
     		try {
@@ -222,6 +225,7 @@ public class CirculoInfoDAO implements Map<Integer,CirculoInfo>{
         		ps.setInt(1, (int)key);
         		ps.executeUpdate();
         		ps.close();
+        		new ListaARDAO(this.idEleicao,(Integer)key).clear();
         	}
         	conn.commit();
     	}catch(SQLException ex){
