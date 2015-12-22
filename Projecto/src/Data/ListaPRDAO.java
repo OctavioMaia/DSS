@@ -175,7 +175,7 @@ public class ListaPRDAO implements Map<Integer,ListaPR> {
 	
 	@Override
 	public boolean containsValue(Object value) {
-		return this.containsKey(((Lista)value).getID());
+		return this.containsKey(((ListaPR)value).getIdEleicao());
 	}
 	
 	private boolean containsCand(Integer key, Connection c) throws SQLException{

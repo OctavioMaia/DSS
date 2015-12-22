@@ -17,15 +17,17 @@ public class testesJMS {
 	
 	public static void main(String[] args) {
 		ListaPRDAO lpdao = new ListaPRDAO(1);
-		lpdao.clear();
-		Candidato c = new Candidato("NUNO PANELEIRO", 12345679, "Come CONAS", new GregorianCalendar(1969,0,2), "Braga", "Lisboa", "A tua prima");
+		//lpdao.clear();
+		Candidato c = new Candidato("NUNO PANELEIRO", 12345679, "Come CONAS VELHAS", new GregorianCalendar(1969,0,2), "Braga", "Lisboa", "A tua prima");
 		ListaPR lp = new ListaPR(1, 1, true, 1, 2, c);
 		ListaPR lp2 = lpdao.put(1, lp);
+		lp2 = lpdao.put(1, lp);
 		if(lp2!=null){
 			System.out.println(lp2.toString());
 		}else{
 			System.out.println("novo");
 		}
+		System.out.println("Exiete a lista:" + lpdao.containsValue(lp));
 		System.out.println("FIM");
 		System.out.println("REM:" + lpdao.remove(1));
 		System.out.println("Size:" + lpdao.size());
