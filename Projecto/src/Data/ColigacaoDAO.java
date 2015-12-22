@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
@@ -117,18 +118,24 @@ public class ColigacaoDAO implements Map<Integer, Coligacao> {
 		Coligacao ret =this.get_aux(key,c);
 		if(ret!=null){
 			PreparedStatement ps = c.prepareStatement("UPDATE "+ TabColName + 
-					" SET " + TabColRem + "=true,"
-					+ "WHERE " + TabColID + "=?");
+					" SET " + TabColRem + "=true"
+					+ " WHERE " + TabColID + "=?");
 			ps.setInt(1, key);
 			ps.execute();
 			ps.close();
 			ret.setRemovido(true);
+			PreparedStatement ps1 = c.prepareStatement("DELETE FROM "+ TabColPartName
+					+" WHERE "+TabColPartColId+"=?");
+			ps1.setInt(1, key);
+			ps1.executeUpdate();
+			ps1.close();
 		}
+		
 		return ret;
 	}
 	
 	
-	private Coligacao get_aux(Integer key,Connection c) throws SQLException{
+	protected Coligacao get_aux(Integer key,Connection c) throws SQLException{
 		Coligacao col = null;
 		PreparedStatement ps  = c.prepareStatement("SELECT * FROM " + TabColName +" WHERE " + TabColID + "=?");
 		ps.setInt(1, key);
@@ -141,8 +148,9 @@ public class ColigacaoDAO implements Map<Integer, Coligacao> {
 			String simbolo=rs.getString(TabColSimb);
 			boolean removido=rs.getBoolean(TabColRem);
 			//ir buscat os paridos 
-			Set<Partido>  partidos = new TreeSet<>();
+			Set<Partido>  partidos = new HashSet<>();
 			PreparedStatement ps1 = c.prepareStatement("SELECT " + TabColPartPartId + " FROM " + TabColPartName +" WHERE " + TabColPartColId + "=?");
+			ps1.setInt(1,key);
 			ResultSet rs1 = ps1.executeQuery();
 			while(rs1.next()){
 				partidos.add(pdao.get(rs1.getInt(TabColPartPartId)));
