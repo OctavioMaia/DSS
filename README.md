@@ -65,7 +65,7 @@ Coisas a considerar:
   - [X] CirculoInfoDAO
   - [X] Connector
   - [X] EleiçãoARDAO
-  - [ ] EleiçãoPRDAO
+  - [X] EleiçãoPRDAO
   - [X] EleitoresDAO
   - [ ] ListaPRDAO
   - [ ] ResultadoCirculoPRDAO
