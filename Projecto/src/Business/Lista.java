@@ -152,4 +152,10 @@ public class Lista implements Listavel{
         return this.circulo.equals(lista.getCirculo()) 
         		&& this.nome.equals(lista.getNome());
 	}
+
+	@Override
+	public String[] toTable() {
+		String[] lista = {this.nome, Integer.toString(this.nIdent)};
+    	return lista;
+	}
 }

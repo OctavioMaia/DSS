@@ -101,4 +101,9 @@ public class Candidato {
 		Candidato c = (Candidato) obj;
 		return this.bi == c.getBi();
 	}
+
+	public String[] toTable(){
+		String[] lista = {this.nome, Integer.toString(this.bi)};
+    	return lista;
+	}
 }
