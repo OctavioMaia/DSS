@@ -228,19 +228,20 @@ public class EleicaoPRDAO implements Map<Integer,EleicaoPR>{
 		if(ret==null){//nao existe na BD
 			//Insere na Eleicoes
 			PreparedStatement psElei = c.prepareStatement("INSERT INTO " + Tabname
-					+ " VALUES"
-					+ "("+TabId+","+Estado+","+Data+","+PVot+")"
+					+ " ("+TabId+","+Estado+","+Data+","+PVot+")"
+					+ " VALUES "
 					+ "(?,?,?,?)");
 			psElei.setInt(1, key);
 			psElei.setInt(2, value.getEstado());
 			psElei.setDate(3, new java.sql.Date(value.getData().getTimeInMillis()));
 			psElei.setBoolean(4, value.isPermitirVotar());
+			System.out.println(psElei.toString());
 			psElei.execute();
 			psElei.close();
 			//Insere na EleicoesPR
 			PreparedStatement pseicaoPR = c.prepareStatement("INSERT INTO " +TabnamePR
+					+ "("+TabId+","+Volta2+","+Data2+")"
 					+ " VALUES "
-					+ "("+TabId+","+Volta2+","+Volta2+")"
 					+ "(?,?,?)");
 			pseicaoPR.setInt(1, key);
 			pseicaoPR.setBoolean(2, value.isVolta2());
@@ -262,12 +263,12 @@ public class EleicaoPRDAO implements Map<Integer,EleicaoPR>{
 			eleicUpdate.close();
 			//Update EleicaoPR
 			PreparedStatement eleicUpdatePR = c.prepareStatement("UPDATE " + TabnamePR
-					+ " VALUES"
-					+ " "+Volta2+" = ? ,"+Data2+" = ?)"
+					+ " SET "
+					+ " "+Volta2+" = ? ,"+Data2+" = ?"
 					+ " WHERE "+TabId+"= ?");
 			eleicUpdatePR.setInt(3, key);
-			eleicUpdatePR.setBoolean(2, value.isVolta2());
-			eleicUpdatePR.setDate(1,new java.sql.Date(value.getData2().getTimeInMillis()));
+			eleicUpdatePR.setBoolean(1, value.isVolta2());
+			eleicUpdatePR.setDate(2,new java.sql.Date(value.getData2().getTimeInMillis()));
 			eleicUpdatePR.execute();
 			eleicUpdatePR.close();
 			//inserir eleitores delete a true
