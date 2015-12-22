@@ -135,7 +135,7 @@ public class ColigacaoDAO implements Map<Integer, Coligacao> {
 	}
 	
 	
-	private Coligacao get_aux(Integer key,Connection c) throws SQLException{
+	protected Coligacao get_aux(Integer key,Connection c) throws SQLException{
 		Coligacao col = null;
 		PreparedStatement ps  = c.prepareStatement("SELECT * FROM " + TabColName +" WHERE " + TabColID + "=?");
 		ps.setInt(1, key);
