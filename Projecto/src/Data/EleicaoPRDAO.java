@@ -233,7 +233,7 @@ public class EleicaoPRDAO implements Map<Integer,EleicaoPR>{
 					+ "(?,?,?,?)");
 			psElei.setInt(1, key);
 			psElei.setInt(2, value.getEstado());
-			psElei.setDate(3, new java.sql.Date(value.getData().getTimeInMillis())); //atencao aqui
+			psElei.setDate(3, new java.sql.Date(value.getData().getTimeInMillis()));
 			psElei.setBoolean(4, value.isPermitirVotar());
 			psElei.execute();
 			psElei.close();
