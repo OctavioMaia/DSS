@@ -5,17 +5,19 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.GregorianCalendar;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
-import Business.Candidato;
+import Business.CandidatoAR;
+import Business.Circulo;
+import Business.Coligacao;
 import Business.Lista;
-import Business.ResultadoCirculoAR;
+import Business.Partido;
 import Business.Votavel;
 
 public class ListaARDAO implements Map<Integer,Lista>{
@@ -31,6 +33,7 @@ public class ListaARDAO implements Map<Integer,Lista>{
 	private static String TabListIDElei = "idEleicao";
 	private static String TabListPart =  "idPartido";
 	private static String TabListCol = "idColigacao";
+	private static String TabListOrd = "ordem";
 	//Tabela de CandidatosAR
 	private static String TabCandid = "CandidatosPR";
 	private static String TabCandidID = "bi";
@@ -39,15 +42,20 @@ public class ListaARDAO implements Map<Integer,Lista>{
 	private static String TabCandidResid = "residencia";
 	private static String TabCandidNat = "naturalidade";
 	private static String TabCandidNome = "nome";
-	private static String TabCandidTipo = "tipo";
 	private static String TabCandidPart = "idPartido";
+	//TabelaCandidatosLista
+	private static String TabCanListName = "CandidatoAR_has_ListasAR";
+	private static String TabCanListIDCand = "biCandidatoAR";
+	private static String TabCanListTipo = "tipo";
+	private static String TabCanListOrd = "Numordem";
+	private static String TabCanListIDList  = "idLista";
+	private static String TabCanListIDElei = "idEleicao";
+	private static String TabCanListIDCirc = "idCirculo";
 
 	
 	
 		
-	protected Lista get_aux(Integer key,Connection c) throws SQLException{
-		return this.get(key);
-	}
+	
 	public ListaARDAO(int eleicao, int circulo) {
 		this.Eleicao = eleicao;
 		this.circulo = circulo;
@@ -178,41 +186,124 @@ public class ListaARDAO implements Map<Integer,Lista>{
 		throw new RuntimeException("Nao implementado");
 	}
 
+	
+	private boolean existCand(Integer candBi, Connection c) throws SQLException{
+		boolean ret = false;
+		PreparedStatement ps = c.prepareStatement("SELECT * FROM " +  TabCandid + 
+				" WHERE " + TabCandidID + "=?");
+		ps.setInt(1,candBi);
+		ResultSet rs = ps.executeQuery();
+		if(rs.next()){
+			ret=true;
+		}
+		rs.close();
+		ps.close();
+		return ret;
+	}
+	
+	private CandidatoAR getCand(Integer candBi,char tipo,int ordem,Connection c)throws SQLException{
+		CandidatoAR ret = null;
+		PreparedStatement ps = c.prepareStatement("SELECT * FROM " +  TabCandid + 
+				" WHERE " + TabCandidID + "=?");
+		if(this.existCand(candBi,c)){
+			ps.setInt(1,candBi);
+			ResultSet rs = ps.executeQuery();
+			if(rs.next()){
+				PartidosDAO p = new PartidosDAO();
+				String nome = rs.getString(TabCandidNome);
+				int bi = rs.getInt(TabCandidID);
+				String prof = rs.getString(TabCandidProf);
+				GregorianCalendar dataNasc = new GregorianCalendar();
+				dataNasc.setTimeInMillis(rs.getDate(TabCandidNasc).getTime());
+				String residencia = rs.getString(TabCandidResid);
+				String naturalidade = rs.getString(TabCandidNat);
+				int partId = rs.getInt(TabCandidPart);
+				Partido partido = p.get_aux(partId,c);
+				ret = new CandidatoAR(nome, bi, prof, dataNasc, residencia, naturalidade, partido, tipo, ordem);
+			}
+			rs.close();
+		}
+		
+		ps.close();
+		return ret;
+	}
+	
+	protected Lista get_aux(Integer key,Connection c) throws SQLException{
+		Lista l =null;
+		//Ids de todos os candidadtos daquela lista
+		PreparedStatement ps = c.prepareStatement("SELECT * FROM " + TabCanListName +
+				" WHERE "+ TabCanListIDCirc + "=? AND " + TabCanListIDElei+"=? AND " 
+				+ TabCanListIDList +"=?" );
+		ps.setInt(1, this.circulo);
+		ps.setInt(2, this.Eleicao);
+		ps.setInt(3, key);
+		ResultSet rs = ps.executeQuery();
+		ArrayList<CandidatoAR> cands  =new ArrayList<>();
+		while(rs.next()){
+			int idCand  =rs.getInt(TabCanListIDCand);
+			int nOrd = rs.getInt(TabCanListOrd);
+			char tip = rs.getString(TabCanListTipo).charAt(0);
+			cands.add(this.getCand(idCand, tip, nOrd, c));	
+		}
+		rs.close();
+		ps.close();
+		//ja tem os candiadatos todos
+		//Irbuscar a lista
+		PreparedStatement psL = c.prepareStatement("SELECT * FROM " + TabName 
+				+ " WHERE " + TabListID+ "=?");
+		psL.setInt(1, key);
+		ResultSet rsL = psL.executeQuery();
+		if(rsL.next()){
+			Votavel mandante = null;
+			CirculoDAO cdao = new CirculoDAO();
+			Circulo ci  = cdao.get_aux(this.circulo, c);
+			String sigla = rs.getString(TabListSig);
+			String nome = rs.getString(TabListNome);
+			String simbolo = rs.getString(TabListSimb);
+			// irbuscar o votavel
+			//Ver aqui por causa de um deles ser NULL
+			//Pde dar muita merada
+			Object partido = rs.getObject(TabListPart);
+			Object coligacao = rs.getObject(TabListCol);
+			Object mandanteid =partido;
+			int ordem = rs.getInt(TabListOrd);
+			if(mandanteid==null){
+				mandanteid =coligacao;
+				ColigacaoDAO coldao = new ColigacaoDAO();
+				mandante  = coldao.get_aux((Integer)mandanteid,c);
+			}else{
+				PartidosDAO pdao = new PartidosDAO();
+				mandante = pdao.get_aux((Integer)mandanteid, c);
+				
+			}
+			
+			l = new Lista(key, ci, ordem, sigla, nome, simbolo, mandante, cands);
+			
+		}
+		rsL.close();
+		psL.close();
+		return l;
+	}
+	
 	@Override
 	public Lista get(Object key) {
 		Lista l  = null;
-        Connection conn = null;
-        ArrayList<Candidato> r = new ArrayList<>();
-        try{
-        	conn=Connector.newConnection();
-        	PreparedStatement ps = conn.prepareStatement("Select * FROM CandidatosAR WHERE bi IN (SELECT CandidatoAR_bi FROM CandidatoAR_has_ListasAR) WHERE ListasAR_id IN (Select id FROM ListaAR WHERE id = ? ) ");
-        	ps.setInt(1, (Integer)key);
-        	ResultSet rs = ps.executeQuery();
-            while(rs.next()){
-            	/*Est� mal esta merda*/
-            	
-            	r.add(new Candidato(rs.getString("nome"), rs.getInt("bi"), rs.getString("prof"), rs.getDate("dataNasc"), rs.getString("residencia"), rs.getString("naturalidade")));
-            }
-            l = new Lista(rs.getInt("id"),rs.getString("sigla"),rs.getString("nome"),rs.getString("simbolo"),(Votavel) rs.getObject("mandante"), r);
-            rs.close();
-            ps.close();
-            conn.commit();
-        }catch(Exception e){
-    		try {
-				conn.rollback();
-			} catch (SQLException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-    	}finally{
-    		try {
-				conn.close();
+		Connection c=null;
+		try{
+			c = Connector.newConnection(true);
+			l = this.get_aux((Integer)key, c);
+		}catch(Exception e){
+			e.printStackTrace();
+			throw new RuntimeException(e.getMessage());
+		}finally{
+			try {
+			c.close();
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
+				throw new RuntimeException(e.getMessage());
 			}
-    	}
-        return l;
+		}
+		return l;
 	}
 
 	private Set<Integer> keySet_aux(Connection c) throws SQLException{
@@ -250,59 +341,185 @@ public class ListaARDAO implements Map<Integer,Lista>{
 		return ret;
 	}
 
+	
+	private boolean listaHasCand(Integer Cand, Integer Lista, Connection c) throws SQLException{
+		boolean ret =false;
+		PreparedStatement ps = c.prepareStatement("SELECT * FROM " + TabCanListName +
+				" WHERE " + TabCanListIDCand+ "=? AND " + TabCanListIDList + "=? AND "+  TabCanListIDElei
+				+ " =? AND "+TabCanListIDCirc +"=?");
+		ps.setInt(1, Cand);
+		ps.setInt(2, Lista);
+		ps.setInt(3, this.Eleicao);
+		ps.setInt(4, this.circulo);
+		ResultSet rs =ps.executeQuery();
+		if(rs.next()){
+			ret=true;
+		}
+		rs.close();
+		ps.close();
+		return ret;
+	}
+
+	
+	private void putCand(CandidatoAR ca, Integer listaId, Connection c) throws SQLException{
+		if(!this.existCand(ca.getBi(), c)){
+			PreparedStatement ps = c.prepareStatement("UPDATE " + TabCandid+
+					" SET "+TabCandidProf+"=?,"+TabCandidNasc+"=?,"+TabCandidResid+"=?,"+TabCandidNat+"=?,"
+					+TabCandidNome+"=?,"+TabCandidPart+"=? "
+					+" WHERE " +TabCandidID+"=?" );
+			ps.setString(1, ca.getProf());
+			ps.setDate(2, new Date(ca.getDataNasc().getTimeInMillis()));
+			ps.setString(3, ca.getResidencia());
+			ps.setString(4,ca.getNaturalidade());
+			ps.setString(5, ca.getNome());
+			ps.setInt(6, ca.getPartido().getId());
+			ps.setInt(7, ca.getBi());	
+			ps.execute();
+			ps.close();
+		}else{
+			PreparedStatement ps = c.prepareStatement("INSERT INTO " + TabCandid+
+					" ("+TabCandidProf+","+TabCandidNasc+","+TabCandidResid+","+TabCandidNat+","
+					+TabCandidNome+","+TabCandidPart+","+TabCandidID+")"
+					+ " VALUES "
+					+ "(?,?,?,?,?,?,?)" );
+			ps.setString(1, ca.getProf());
+			ps.setDate(2, new Date(ca.getDataNasc().getTimeInMillis()));
+			ps.setString(3, ca.getResidencia());
+			ps.setString(4,ca.getNaturalidade());
+			ps.setString(5, ca.getNome());
+			ps.setInt(6, ca.getPartido().getId());
+			ps.setInt(7, ca.getBi());	
+			ps.execute();
+			ps.close();
+		}
+		//Candidatos inseridos
+		//Inserir na tabela de ligaçao
+		if(this.listaHasCand(ca.getBi(),listaId,c)){//Upadet
+			PreparedStatement ps = c.prepareStatement("UPDATE " + TabCanListName
+					+" SET "+TabCanListTipo+"=?,"+TabCanListOrd+"=?"
+					+" WHERE " + TabCanListIDCand + "=? AND "+TabCanListIDList+"=? AND "
+					+ TabCanListIDCirc + "=? AND " + TabCanListIDElei + "=?" );
+			String s ="";
+			s = s+ca.getTipo();
+			ps.setString(1, s);
+			ps.setInt(2, ca.getOrdem());
+			ps.setInt(3, ca.getBi());
+			ps.setInt(4, listaId);
+			ps.setInt(5, this.circulo);
+			ps.setInt(6, this.Eleicao);
+			ps.execute();
+			ps.close();
+		}else{//Inserir
+			PreparedStatement ps = c.prepareStatement("INSERT INTO " + TabCanListName
+					+"("+TabCanListTipo+","+TabCanListOrd+"," + TabCanListIDCand + ","+TabCanListIDList+
+					","+ TabCanListIDCirc + "," + TabCanListIDElei + ")"
+					+ " VALUES "
+					+ "(?,?,?,?,?,?)" );
+			String s ="";
+			s = s+ca.getTipo();
+			ps.setString(1, s);
+			ps.setInt(2, ca.getOrdem());
+			ps.setInt(3, ca.getBi());
+			ps.setInt(4, listaId);
+			ps.setInt(5, this.circulo);
+			ps.setInt(6, this.Eleicao);
+			ps.execute();
+			ps.close();
+		}
+		
+	}
+
+	private void insereCands(ArrayList<CandidatoAR> cands, Integer listaId,Connection c) throws SQLException{
+		for (CandidatoAR candidatoAR : cands) {
+			this.putCand(candidatoAR,listaId,c);
+		}
+	}
+	
+	protected Lista put_aux(Integer key,Lista value, Connection c) throws SQLException{
+		Lista l = this.get_aux(key, c);
+		ArrayList<CandidatoAR> cands = value.getCandidatos();
+		if(l==null){//nova inserir
+			PreparedStatement ps = c.prepareStatement("INSERT INTO " + TabName +
+					"("+TabListID+","+TabListSimb+","+TabListSig+","+TabListNome+","+
+					TabListIDCirc+","+TabListIDElei+","+TabListOrd+","+TabListPart+","+TabListCol+")"+
+					" VALUES "
+					+ "(?,?,?,?,?,?,?,?,?)");
+			ps.setInt(1,key);
+			ps.setString(2,value.getSimbolo());
+			ps.setString(3,value.getSigla());
+			ps.setString(4,value.getNome());
+			ps.setInt(5,this.circulo);
+			ps.setInt(6,this.Eleicao);
+			ps.setInt(7,value.getOrdem());
+			Votavel v = value.getMandante();
+			Integer idPartido = null;
+			Integer idColig = null;
+			if(v instanceof Partido){
+				idPartido = ((Partido)v).getId();
+			}else{
+				idColig = ((Coligacao)v).getId();
+			}
+			ps.setInt(8,idPartido);
+			ps.setInt(9,idColig);
+			ps.executeQuery();
+			ps.close();
+		}else{
+			PreparedStatement ps = c.prepareStatement("UPDATE " + TabName +
+					"SET "+TabListSimb+"=?,"+TabListSig+"=?,"+TabListNome+"=?,"+TabListOrd+"=?,"+
+					TabListPart+"=?,"+TabListCol+"=?"+
+					" WHERE "+ TabListID + "=? AND" + TabListIDCirc + "=? AND " + TabListIDElei +"=?"); 
+
+			ps.setInt(7,key);
+			ps.setString(1,value.getSimbolo());
+			ps.setString(2,value.getSigla());
+			ps.setString(3,value.getNome());
+			ps.setInt(8,this.circulo);
+			ps.setInt(9,this.Eleicao);
+			ps.setInt(4,value.getOrdem());
+			Votavel v = value.getMandante();
+			Integer idPartido = null;
+			Integer idColig = null;
+			if(v instanceof Partido){
+				idPartido = ((Partido)v).getId();
+			}else{
+				idColig = ((Coligacao)v).getId();
+			}
+			ps.setInt(5,idPartido);
+			ps.setInt(6,idColig);
+			ps.executeQuery();
+			ps.close();
+		}
+		this.insereCands(cands,key,c);
+		return l;
+	}
+	
 	@Override
 	public Lista put(Integer key, Lista value) {
-		Connection conn=null;
-		Lista l = this.remove(key);
-		ArrayList<Candidato> r=null;
-    	try{
-    		conn = Connector.newConnection();
-    		PreparedStatement ps1 = conn.prepareStatement("INSERT INTO ListasAR (id,ordem,sigla,nome,simbolo) value (?,?,?,?,?)");
-            ps1.setInt(1, key);
-            ps1.setInt(2, value.getOrdem());
-            ps1.setString(3, value.getSigla());
-            ps1.setString(4, value.getNome());
-            ps1.setString(5, value.getSimbolo());
-            ps1.execute();
-            ps1.close();
-            
-            r = value.getCandidatos();
-            Iterator<Candidato> i  = r.iterator();
-            PreparedStatement ps2 = conn.prepareStatement("INSERT INTO CandidatoAR_has_ListasAR (CandidatoAR_bi,ListasAR_id) value (?,?)");
-            ps2.setInt(2, key);
-            PreparedStatement ps3 = conn.prepareStatement("INSERT INTO CandidatosAR (bi,dataNasc,naturalidade,residencia,prof) value (?,?,?,?,?)");
-            
-            while(i.hasNext()){
-            	Candidato c = i.next();
-	            ps3.setInt(1, c.getBi());
-	            ps3.setDate(2, (Date) c.getDataNasc());
-	            ps3.setString(3, c.getNaturalidade());
-	            ps3.setString(4, c.getResidencia());
-	            ps3.setString(5, c.getProf());
-	            ps3.execute();
-	            ps2.setInt(1, c.getBi());
-	            ps2.execute();
-            }
-            
-            ps2.close();
-            ps3.close();
-            conn.commit();
-    	}catch(Exception e){
-    		try {
-				conn.rollback();
+		Lista ret = null;
+		Connection c = null;
+		try{
+			c=Connector.newConnection(false);
+			ret = this.put_aux(key, value, c);
+			c.commit();
+		}catch(SQLException e){
+			try {
+				c.rollback();
 			} catch (SQLException e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
-			}
-    	}finally{
-    		try {
-				conn.close();
+				throw new RuntimeException(e1.getMessage());
+			}	
+		}catch (Exception e) {
+			e.printStackTrace();
+			throw new RuntimeException(e.getMessage());
+		}finally{
+			try {
+				c.close();
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
+				throw new RuntimeException(e.getMessage());
 			}
-    	}
-    	return l;
+		}
+		return ret;
 	}
 
 	@Override
@@ -311,41 +528,61 @@ public class ListaARDAO implements Map<Integer,Lista>{
 		
 	}
 
-	protected Lista remove_aux(Integer key, Connection c) throws SQLException{
-		return null;
-		// TODO
-	}
 	
+
+	
+	protected Lista remove_aux(Integer key, Connection c) throws SQLException{
+		Lista l = this.get_aux(key, c);
+		if(l!=null){//existe é para remover
+			//Rmove Ligacoes de Candidatos e Listas
+			PreparedStatement ps = c.prepareStatement("DELETE FROM " + TabCanListName
+					+ " WHERE " + TabCanListIDList + " =? AND "+ TabCanListIDElei + "=? AND" 
+					+ TabCanListIDCirc +"=?" );
+			ps.setInt(1, key);
+			ps.setInt(2, this.Eleicao);
+			ps.setInt(3, this.circulo);
+			ps.execute();
+			ps.close();
+			//REMOVER A lista
+			PreparedStatement ps2 = c.prepareStatement("DELETE FROM " + TabName
+					+ " WHERE " + TabListID + " =? AND "+ TabListIDElei + "=? AND" 
+					+ TabListIDCirc +"=?" );
+			ps2.setInt(1, key);
+			ps2.setInt(2, this.Eleicao);
+			ps2.setInt(3, this.circulo);
+			ps2.execute();
+			ps2.close();
+			
+		}
+		return l;
+	}
 	@Override
 	public Lista remove(Object key) {
-		Connection conn = null;
-    	Lista l = null;
-    	try{
-    		conn = Connector.newConnection();
-    	    l  = this.get(key); 
-    	    PreparedStatement ps1 = conn.prepareStatement("DELETE FROM CandidatoAR_has_ListasAR WHERE ListasAR_id = ?");
-    	    PreparedStatement ps2 = conn.prepareStatement("DELETE FROM ListasAR WHERE id = ?");
-    	    ps1.setInt(1,(Integer)key);
-    	    ps1.execute();
-    	    ps2.setInt(1,(Integer)key);
-    	    ps2.execute();
-    	    conn.commit();
-    	}catch(Exception e2){
-    		try {
-				conn.rollback();
+		Lista ret = null;
+		Connection c = null;
+		try{
+			c=Connector.newConnection(false);
+			ret = this.remove_aux((Integer)key, c);
+			c.commit();
+		}catch(SQLException e){
+			try {
+				c.rollback();
 			} catch (SQLException e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
+				throw new RuntimeException(e1.getMessage());
 			}
-    	}finally{
-    		try {
-				conn.close();
-			} catch (SQLException e2) {
-				// TODO Auto-generated catch block
-				e2.printStackTrace();
+		}catch(Exception e){
+			e.printStackTrace();
+			throw new RuntimeException(e.getMessage());
+		}finally{
+			try {
+				c.close();
+			}catch (SQLException e) {
+				e.printStackTrace();
+				throw new RuntimeException(e.getMessage());
 			}
-    	}
-       return l;
+		}
+		return ret;
 	}
 
 	private Collection<Lista> values_aux(Connection c) throws SQLException{

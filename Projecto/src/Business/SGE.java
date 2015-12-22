@@ -124,7 +124,7 @@ public class SGE {
 			while ((line = br.readLine()) != null) {
 				if (line.contains(flin)) {
 					csvSplit = line.split("=")[1];
-					System.out.println(csvSplit);
+					//System.out.println(csvSplit);
 				} else {
 					String[] eleitores = line.split(csvSplit);
 					int nCiruclo = Integer.parseInt(eleitores[1]);
@@ -184,7 +184,7 @@ public class SGE {
 		if (this.ativa != -1) {
 			throw new ExceptionEleicaoAtiva("Já existe uma eleição ativa");
 		} else {
-			if (getClass().getName() == "EleicaoPR") {
+			if (getClass().getSimpleName() == "EleicaoPR") {
 				el = this.eleicoesPR.get(e.getIdEleicao());
 				el.iniciar();
 				this.eleicoesPR.put(el.getIdEleicao(), (EleicaoPR) el);
@@ -201,7 +201,7 @@ public class SGE {
 		if (this.ativa == -1) {
 			throw new ExceptionEleicaoAtiva("Não existe eleição ativa");
 		} else {
-			if (getClass().getName() == "EleicaoPR") {
+			if (getClass().getSimpleName() == "EleicaoPR") {
 				el = this.eleicoesPR.get(e.getIdEleicao());
 				el.terminar();
 				this.eleicoesPR.put(el.getIdEleicao(), (EleicaoPR) el);
@@ -332,10 +332,10 @@ public class SGE {
 
 	public void addVoto(Eleicao e, Listavel lista, Eleitor eleitor) {
 		e.addVoto(lista, eleitor);
-		if (e.getClass().getName().equals("EleicaoAR")) {
+		if (e.getClass().getSimpleName().equals("EleicaoAR")) {
 			EleicaoAR eleicaoAR = (EleicaoAR) e;
 			this.eleicoesAR.put(eleicaoAR.getIdEleicao(), eleicaoAR);
-		} else if (e.getClass().getName().equals("EleicaoPR")) {
+		} else if (e.getClass().getSimpleName().equals("EleicaoPR")) {
 			EleicaoPR eleicaoPR = (EleicaoPR) e;
 			this.eleicoesPR.put(eleicaoPR.getIdEleicao(), eleicaoPR);
 		}
@@ -343,10 +343,10 @@ public class SGE {
 
 	public void addVotoNulo(Eleicao e, Eleitor eleitor) {
 		e.addVotoNulo(eleitor);
-		if (e.getClass().getName().equals("EleicaoAR")) {
+		if (e.getClass().getSimpleName().equals("EleicaoAR")) {
 			EleicaoAR eleicaoAR = (EleicaoAR) e;
 			this.eleicoesAR.put(eleicaoAR.getIdEleicao(), eleicaoAR);
-		} else if (e.getClass().getName().equals("EleicaoPR")) {
+		} else if (e.getClass().getSimpleName().equals("EleicaoPR")) {
 			EleicaoPR eleicaoPR = (EleicaoPR) e;
 			this.eleicoesPR.put(eleicaoPR.getIdEleicao(), eleicaoPR);
 		}
@@ -354,10 +354,10 @@ public class SGE {
 
 	public void addVotoBranco(Eleicao e, Eleitor eleitor) {
 		e.addVotoBranco(eleitor);
-		if (e.getClass().getName().equals("EleicaoAR")) {
+		if (e.getClass().getSimpleName().equals("EleicaoAR")) {
 			EleicaoAR eleicaoAR = (EleicaoAR) e;
 			this.eleicoesAR.put(eleicaoAR.getIdEleicao(), eleicaoAR);
-		} else if (e.getClass().getName().equals("EleicaoPR")) {
+		} else if (e.getClass().getSimpleName().equals("EleicaoPR")) {
 			EleicaoPR eleicaoPR = (EleicaoPR) e;
 			this.eleicoesPR.put(eleicaoPR.getIdEleicao(), eleicaoPR);
 		}

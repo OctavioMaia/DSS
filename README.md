@@ -50,20 +50,18 @@ Coisas a considerar:
 
 # Cenas dos DAO's:
 
-- [ ] Por Fazer/A fazer
-  - [ ] EleiçãoARDAO
-  - [ ] ListaARDAO
-
 - [ ] Feitas/Testas
   - [X] AdminDAO
-  - [ ] PartidosDAO
+  - [X] PartidosDAO
   - [X] CirculoInfoDAO
   - [X] Connector
+  - [X] EleiçãoARDAO
   - [ ] EleiçãoPRDAO
   - [X] EleitoresDAO
   - [ ] ListaPRDAO
   - [ ] ResultadoCirculoPRDAO
   - [X] CirculoInfoDAO
-  - [ ] ColigaçãoDAO
+  - [X] ColigaçãoDAO
   - [X] CirculoDAO
   - [ ] ResultadoCirculoARDAO
+  - [ ] ListaARDAO

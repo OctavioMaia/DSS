@@ -115,8 +115,8 @@ new FormModel {
 						} )
 					}, new java.util.Vector {
 						add( "Data de início" )
-						add( "Data de fim" )
 						add( "Tipo de Eleição" )
+						add( "id" )
 					}, new java.util.Vector {
 						add( class java.lang.String )
 						add( null )
@@ -131,6 +131,9 @@ new FormModel {
 						add( null )
 					} )
 					"font": new java.awt.Font( "Arial", 0, 12 )
+					auxiliary() {
+						"JavaCodeGenerator.postInitCode": "tableEleicoes.getColumnModel().getColumn(2).setPreferredWidth(0);\ntableEleicoes.getColumnModel().getColumn(2).setMinWidth(0);\ntableEleicoes.getColumnModel().getColumn(2).setWidth(0);\ntableEleicoes.getColumnModel().getColumn(2).setMaxWidth(0);"
+					}
 					addEvent( new FormEvent( "java.awt.event.MouseListener", "mouseClicked", "scrollPane1MouseClicked", true ) )
 				} )
 			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {

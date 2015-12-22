@@ -18,10 +18,12 @@ import Business.SGE;
  */
 public class ResultadosAR {
 	
-	EleicaoAR eleicao;
+	private EleicaoAR eleicao;
+	private SGE sge;
 	
-	public ResultadosAR(SGE sge, int id) {
-		//eleicao = sge.getEleicaoAR(id);
+	public ResultadosAR(SGE s, int id){
+		//sge = s;
+		//eleicao = (EleicaoAR) sge.getEleicao(id);
 		initComponents(eleicao);
 		ResultadosAR.setVisible(true);
 	}

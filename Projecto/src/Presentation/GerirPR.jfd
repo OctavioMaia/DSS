@@ -95,7 +95,7 @@ new FormModel {
 				"width": 95
 				"height": 25
 				"x": 435
-				"y": 350
+				"y": 590
 			} )
 			add( new FormComponent( "javax.swing.JButton" ) {
 				name: "buttonData"
@@ -244,9 +244,68 @@ new FormModel {
 				"height": 5
 				"width": 510
 			} )
+			add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
+				name: "scrollPane1"
+				add( new FormComponent( "javax.swing.JTable" ) {
+					name: "tableCandidatos"
+					"selectionMode": 0
+					"model": new com.jformdesigner.model.SwingTableModel( new java.util.Vector, new java.util.Vector {
+						add( "Nome" )
+						add( "B.I. / C.C." )
+						add( null )
+					}, new java.util.Vector {
+						add( class java.lang.String )
+						add( class java.lang.String )
+						add( class java.lang.String )
+					}, new java.util.Vector {
+						add( null )
+						add( null )
+						add( false )
+					}, new java.util.Vector {
+						add( null )
+						add( null )
+						add( new com.jformdesigner.model.SwingTableColumn( null, 0, 0, 0, false ) )
+					} )
+					auxiliary() {
+						"JavaCodeGenerator.postInitCode": "tableCandidatos.getColumnModel().getColumn(2).setPreferredWidth(0);\ntableCandidatos.getColumnModel().getColumn(2).setMinWidth(0);\ntableCandidatos.getColumnModel().getColumn(2).setWidth(0);\ntableCandidatos.getColumnModel().getColumn(2).setMaxWidth(0);"
+					}
+				} )
+			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
+				"x": 15
+				"y": 350
+				"width": 335
+				"height": 220
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "labelFoto"
+			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
+				"x": 375
+				"y": 370
+				"width": 150
+				"height": 150
+			} )
+			add( new FormComponent( "javax.swing.JSeparator" ) {
+				name: "separator3"
+			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
+				"width": 520
+				"height": 5
+				"x": 10
+				"y": 580
+			} )
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "buttonEliminarCandidato"
+				"text": "Eliminar candidato"
+				"enabled": false
+				"font": new java.awt.Font( "Arial", 0, 14 )
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "buttonEliminarCandidatoActionPerformed", true ) )
+			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
+				"x": 375
+				"y": 540
+				"width": 154
+			} )
 		}, new FormLayoutConstraints( null ) {
 			"location": new java.awt.Point( 5, 5 )
-			"size": new java.awt.Dimension( 560, 430 )
+			"size": new java.awt.Dimension( 560, 660 )
 		} )
 		add( new FormWindow( "javax.swing.JDialog", new FormLayoutManager( class com.jformdesigner.runtime.NullLayout ) ) {
 			name: "dialog1"
