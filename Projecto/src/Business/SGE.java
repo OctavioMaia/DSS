@@ -321,7 +321,15 @@ public class SGE {
 	}
 
 	public Boletim getBoletim(Eleicao e, Eleitor eleitor) {
-		return e.getBoletim(eleitor.getCirculo());
+		Boletim b;
+		if (e.getClass().getSimpleName().equals("EleicaoPR")) {
+			EleicaoPR pr = (EleicaoPR) e;
+			b = pr.getBoletim();
+		} else {
+			EleicaoAR ar = (EleicaoAR) e;
+			b = ar.getBoletim(eleitor.getCirculo());
+		}
+		return b;
 	}
 
 	public void addVoto(Eleicao e, Listavel lista, Eleitor eleitor) {
@@ -385,10 +393,32 @@ public class SGE {
 		return max + 1;
 	}
 
-	public void addCandidatoPR(EleicaoPR eleicao, Candidato cand) throws ExceptionListaExiste, ExceptionLimiteCandidatos, ExceptionMandanteInvalido, ExceptionEleicaoEstado{
+	public void addCandidatoPR(EleicaoPR eleicao, Candidato cand)
+			throws ExceptionListaExiste, ExceptionLimiteCandidatos, ExceptionMandanteInvalido, ExceptionEleicaoEstado {
 		EleicaoPR pr = this.eleicoesPR.get(eleicao.getIdEleicao());
-		ListaPR lista = new ListaPR(0,0, cand);
+		ListaPR lista = new ListaPR(0, 0, cand);
 		pr.addLista(lista);
 		this.eleicoesPR.put(pr.getIdEleicao(), pr);
+	}
+	
+	public Eleicao getEleicao(int idEleicao){
+		Eleicao el;
+		if((el = this.eleicoesPR.get(idEleicao))==null){
+			el = this.eleicoesAR.get(idEleicao);
+		}
+		return el;
+	}
+	
+	public ResultadoCirculoPR getResultadoCirculoPR(EleicaoPR e , int volta, int circulo){
+		return e.getResultadoCirculo(volta, circulo);
+	}
+	public ResultadoCirculoAR getResultadoCirculoAR(EleicaoAR e, int circulo){
+		return e.getResultadoCirculo(circulo);
+	}
+	public  ResultadoGlobalPR getResultadoGlobalPR(EleicaoPR e , int volta){
+		return e.getResultadoGlobal(volta);
+	}
+	public ResultadoGlobalAR getResultadoGlobalAR(EleicaoAR e){
+		return e.getResultadoGlobal();
 	}
 }

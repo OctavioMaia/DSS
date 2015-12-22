@@ -149,7 +149,7 @@ public class EleicaoPR extends Eleicao {
 	 * Metodo que vai criar um objecto boletim com todas as listas que vao
 	 * participar na eleiçao
 	 */
-	public Boletim getBoletim(int idCirculo) {
+	public Boletim getBoletim() {
 		Boletim b = null;
 		if (this.estado(0)) {
 			if (!volta2) {
@@ -182,8 +182,8 @@ public class EleicaoPR extends Eleicao {
 		int rand;
 		for (ListaPR listaPR : listas) {
 			rand = r.nextInt(nListas - 1);
-			while(nums.contains(rand)){
-				rand = r.nextInt(nListas-1);
+			while (nums.contains(rand)) {
+				rand = r.nextInt(nListas - 1);
 			}
 			if (!this.volta2) {
 				listaPR.setOrdem1(rand);
@@ -200,15 +200,20 @@ public class EleicaoPR extends Eleicao {
 	 * 
 	 * @return
 	 */
-	public Set<ListavelVotos> resultadosPrimeiraVolta() {
+	public Set<ListavelVotos> resultadosVolta(int volta) {
 		HashMap<ListaPR, Integer> validos;
 		HashMap<ListaPR, Integer> segVolta = new HashMap<>();
-		for (ResultadoCirculoPR resC : this.voltaR1.values()) {
+		Collection<ResultadoCirculoPR> reslt;
+		if(volta==1){
+			reslt = this.voltaR1.values();
+		}else{
+			reslt = this.voltaR2.values();
+		}
+		for (ResultadoCirculoPR resC : reslt) {
 			validos = resC.getValidos();
 			for (ListaPR lista : validos.keySet()) {
-				segVolta.put(lista, segVolta.get(lista) + validos.get(lista)); // linha
-																				// a
-																				// rever
+				segVolta.put(lista, segVolta.get(lista) + validos.get(lista));
+				// linha a rever
 			}
 		}
 		// ordenar as listas pelo numero de votos
@@ -252,7 +257,7 @@ public class EleicaoPR extends Eleicao {
 			}
 		} else {
 			if (super.estado(0) && this.volta2) { // iniciar segunda volta
-				Collection<ListaPR> list = this.disputaSegundaVolta(this.resultadosPrimeiraVolta());
+				Collection<ListaPR> list = this.disputaSegundaVolta(this.resultadosVolta(1));
 				if (list.size() == 2) {
 					this.geraBoletim(list);
 					for (ResultadoCirculoPR resC : this.voltaR2.values()) {
@@ -286,8 +291,6 @@ public class EleicaoPR extends Eleicao {
 			}
 		}
 	}
-
-	// metodo para calcular se ouve vencedor com maioria absoluta
 
 	private Calendar defData2(Calendar data1) {
 		Calendar data2aux = new GregorianCalendar();
@@ -335,7 +338,7 @@ public class EleicaoPR extends Eleicao {
 
 	private boolean verifacarMaioria() {
 		boolean ver = false;
-		Iterator<ListavelVotos> itLV = this.resultadosPrimeiraVolta().iterator();
+		Iterator<ListavelVotos> itLV = this.resultadosVolta(1).iterator();
 		if (itLV.hasNext() && itLV.next().getVotos() > (super.numeroVotos() / 2)) {
 			ver = true;
 		}
@@ -355,11 +358,66 @@ public class EleicaoPR extends Eleicao {
 		}
 	}
 
-	public int chaveListaPR(){
+	private int chaveListaPR() {
 		int max = 0;
 		if (this.listas.size() > 0) {
 			max = Collections.max(this.listas.keySet());
 		}
 		return max + 1;
+	}
+
+	protected ResultadoCirculoPR getResultadoCirculo(int volta, int idCirculo) {
+		ResultadoCirculoPR res = null;
+		if (volta == 1) {
+			res = this.voltaR1.get(idCirculo);
+		} else {
+			if (volta2) {
+				res = this.voltaR2.get(idCirculo);
+			}
+		}
+		return res;
+	}
+
+	protected ResultadoGlobalPR getResultadoGlobal(int volta) {
+		ResultadoGlobalPR res = null;
+		;
+		if (volta == 1) {
+			res = new ResultadoGlobalPR(numeroEleitores(), getVotosBrancos(volta), getVotosNulos(volta),
+					resultadosVolta(1));
+		} else {
+			if (volta2) {
+				res = new ResultadoGlobalPR(numeroEleitores(), getVotosBrancos(volta), getVotosNulos(volta),
+						resultadosVolta(2));
+			}
+		}
+		return res;
+	}
+
+	private int getVotosBrancos(int volta) {
+		int brancos = 0;
+		Collection<ResultadoCirculoPR> c;
+		if (volta == 1) {
+			c = this.voltaR1.values();
+		} else {
+			c = this.voltaR2.values();
+		}
+		for (ResultadoCirculoPR resC : c) {
+			brancos += resC.getNulos();
+		}
+		return brancos;
+	}
+
+	private int getVotosNulos(int volta) {
+		int nulos = 0;
+		Collection<ResultadoCirculoPR> c;
+		if (volta == 1) {
+			c = this.voltaR1.values();
+		} else {
+			c = this.voltaR2.values();
+		}
+		for (ResultadoCirculoPR resC : c) {
+			nulos += resC.getNulos();
+		}
+		return nulos;
 	}
 }
