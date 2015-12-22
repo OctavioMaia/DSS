@@ -161,7 +161,7 @@ public class EleicaoAR extends Eleicao {
 		this.atribuirMandatosListas();
 	}
 	
-	public void addCandidato(Lista lista,CandidatoAR candidato) throws ExceptionLimiteCandidatos{
+	public void addCandidato(Lista lista,CandidatoAR candidato) throws ExceptionLimiteCandidatos, ExceptionMandanteInvalido{
 		CirculoInfo cinfo = this.circulos.get(lista.getCirculo().getId());
 		cinfo.addCandidatoLista(lista,candidato);
 	}
