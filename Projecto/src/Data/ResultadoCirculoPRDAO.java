@@ -370,7 +370,7 @@ public class ResultadoCirculoPRDAO implements Map<Integer,ResultadoCirculoPR>{
 		PreparedStatement ps2 = c.prepareStatement("DELETE FROM "+TabLista+" WHERE "+Eleicao+" = ? AND "+VoltaL+" = ?");
 		ps2.setInt(1, this.idEleicao);
 		ps2.setInt(2, this.volta);
-		ps2.executeQuery();
+		ps2.executeUpdate();
 		ps2.close();
 	}
 	
