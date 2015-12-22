@@ -3,30 +3,22 @@ package Business;
 import java.util.HashSet;
 import java.util.Set;
 
-public class Coligacao implements Votavel{
-	
+public class Coligacao implements Votavel {
+
 	private int id;
 	private String sigla;
 	private String nome;
 	private String simbolo;
 	private Set<Partido> partidos;
 	private boolean removido;
-	
+
 	public Coligacao(int id, String sigla, String nome, String simbolo, Set<Partido> partidos) {
 		this.id = id;
 		this.sigla = sigla;
 		this.nome = nome;
 		this.simbolo = simbolo;
 		this.partidos = partidos;
-		this.removido=false;
-	}
-
-	public boolean isRemovido() {
-		return removido;
-	}
-
-	public void setRemovido(boolean removido) {
-		this.removido = removido;
+		this.removido = false;
 	}
 
 	public Coligacao(int id, String sigla, String nome, String simbolo, Set<Partido> partidos, boolean removido) {
@@ -39,6 +31,14 @@ public class Coligacao implements Votavel{
 		this.removido = removido;
 	}
 
+	public boolean isRemovido() {
+		return removido;
+	}
+
+	public void setRemovido(boolean removido) {
+		this.removido = removido;
+	}
+	
 	public int getId() {
 		return id;
 	}
@@ -78,11 +78,18 @@ public class Coligacao implements Votavel{
 	public void setPartidos(HashSet<Partido> partidos) {
 		this.partidos = partidos;
 	}
-	
+
 	public boolean equals(Object obj) {
-		if(this.getClass() != obj.getClass()) return false; 
+		if (this.getClass() != obj.getClass())
+			return false;
 		Coligacao col = (Coligacao) obj;
-		return this.nome==col.getNome() && this.sigla==col.getSigla() && this.simbolo==col.getSimbolo();
+		return this.nome == col.getNome() && this.sigla == col.getSigla() && this.simbolo == col.getSimbolo();
+	}
+
+	@Override
+	public String[] toTable() {
+		String[] partido = { this.sigla, this.nome, Integer.toString(this.id)};
+		return partido;
 	}
 
 }
