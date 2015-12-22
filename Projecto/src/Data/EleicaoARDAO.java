@@ -14,10 +14,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
-import Business.Circulo;
-import Business.CirculoInfo;
 import Business.EleicaoAR;
-import Business.EleicaoPR;
 
 public class EleicaoARDAO implements Map<Integer,EleicaoAR>{
 	//Tabela Eleições AR

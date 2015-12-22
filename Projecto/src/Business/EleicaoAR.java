@@ -4,9 +4,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Random;
@@ -291,4 +289,12 @@ public class EleicaoAR extends Eleicao {
 		}
 	}
 	
+	public CandidatoAR getCandidato(int bi) {
+		CandidatoAR candidato = null;
+		for(CirculoInfo cinfo: this.circulos.values()){
+			candidato = cinfo.getCandidato(bi);
+			if(candidato != null) return candidato;
+		}
+		return candidato;
+	}
 }
