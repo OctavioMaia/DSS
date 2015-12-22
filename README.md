@@ -72,5 +72,5 @@ Coisas a considerar:
   - [X] CirculoInfoDAO
   - [X] ColigaçãoDAO
   - [X] CirculoDAO
-  - [ ] ResultadoCirculoARDAO
+  - [/] ResultadoCirculoARDAO -> Falta testar com listas
   - [ ] ListaARDAO
