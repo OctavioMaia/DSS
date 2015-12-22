@@ -3,6 +3,10 @@
  */
 package teste;
 
+import java.util.Collection;
+import java.util.GregorianCalendar;
+import java.util.Iterator;
+
 import Business.*;
 import Data.*;
 
@@ -12,18 +16,10 @@ import Data.*;
  */
 public class cenasPinto {
 	public static void main(String[] args) {
-		EleicaoARDAO eleicao = new EleicaoARDAO();
-		CirculoDAO circulos = new CirculoDAO();
-		for (int i=1;i<23;i++){
-			Circulo c = new Circulo(i,"circulo "+i,0);
-			Circulo s = circulos.put(i, c);
-			if(s!=null){
-				System.out.println(s.toString());
-			}else{
-				System.out.println("novo");
-			}
-		}
-		System.out.println("Fim");
-		System.out.println(circulos.size());
+		EleicaoARDAO eleicaoDAO = new EleicaoARDAO();
+		/*EleicaoAR eleicao = new EleicaoAR(1,new GregorianCalendar(2015,12,22),
+				new CirculoDAO().values(),230);
+		eleicaoDAO.put(eleicao.getIdEleicao(), eleicao);*/
+		eleicaoDAO.get(1);
 	}
 }

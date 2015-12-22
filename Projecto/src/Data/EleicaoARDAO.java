@@ -76,7 +76,7 @@ public class EleicaoARDAO implements Map<Integer,EleicaoAR>{
         try{
         	conn = Connector.newConnection(true);
         	PreparedStatement ps = conn.prepareStatement("SELECT  EXISTS (SELECT * FROM "+ Tabname +
-        			" WHERE "+Eleicao+" = ?");
+        			" WHERE "+Eleicao+" = ?)");
         	ps.setInt(1,(Integer)key);
         	ResultSet rs = ps.executeQuery();
         	if(rs.next()){
