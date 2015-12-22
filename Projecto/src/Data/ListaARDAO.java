@@ -15,6 +15,7 @@ import java.util.TreeSet;
 
 import Business.Candidato;
 import Business.Lista;
+import Business.ResultadoCirculoAR;
 import Business.Votavel;
 
 public class ListaARDAO implements Map<Integer,Lista>{
@@ -30,10 +31,20 @@ public class ListaARDAO implements Map<Integer,Lista>{
 	private static String TabListIDElei = "idEleicao";
 	private static String TabListPart =  "idPartido";
 	private static String TabListCol = "idColigacao";
+	//Tabela de CandidatosAR
+	private static String TabCandid = "CandidatosPR";
+	private static String TabCandidID = "bi";
+	private static String TabCandidProf = "prof";
+	private static String TabCandidNasc = "dataNasc";
+	private static String TabCandidResid = "residencia";
+	private static String TabCandidNat = "naturalidade";
+	private static String TabCandidNome = "nome";
+	private static String TabCandidTipo = "tipo";
+	private static String TabCandidPart = "idPartido";
+
 	
 	
-	
-	
+		
 	protected Lista get_aux(Integer key,Connection c) throws SQLException{
 		return this.get(key);
 	}
@@ -41,38 +52,45 @@ public class ListaARDAO implements Map<Integer,Lista>{
 		this.Eleicao = eleicao;
 		this.circulo = circulo;
 	}
+	
 	protected void clear_aux(Connection c)throws SQLException{
-		this.clear();
-		
+		Iterator<Integer> i = this.keySet_aux(c).iterator();
+		while (i.hasNext()) {
+			this.remove_aux(i.next(),c);	
+		}	
 	}
-	public ListaARDAO(){
+	
+	private int size_aux(Connection c) throws SQLException{
+		int ret =0;
+		PreparedStatement ps = c.prepareStatement("SELECT COUNT(*) FROM " + TabName
+				+ " WHERE " + TabListIDCirc + "=?, AND " + TabListIDElei + "=?");
+		ps.setInt(1, this.circulo);
+		ps.setInt(2, this.Eleicao);
+		ResultSet rs = ps.executeQuery();
+		if(rs.next()){
+			ret = rs.getInt(1);
+		}
+		rs.close();
+		ps.close();
+		return ret;
 	}
-
+	
 	@Override
 	public int size() {
 		int ret=0;
     	Connection conn = null;
     	try{
-    		conn = Connector.newConnection(); 
-    		PreparedStatement ps = conn.prepareStatement("Select count(*) FROM ListasAR");
-    		ResultSet rs = ps.executeQuery();
-    		if(rs.next()) ret = rs.getInt(1);
-    		rs.close();
-    		ps.close();
-    		conn.commit();
+    		conn = Connector.newConnection(true); 
+    		ret = this.size_aux(conn);
     	}catch(Exception e){
-    		try {
-				conn.rollback();
-			} catch (SQLException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
+			e.printStackTrace();
+			throw new RuntimeException(e.getMessage());
     	}finally{
     		try {
 				conn.close();
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
+				throw new RuntimeException(e.getMessage());
 			}
     	}
         return ret; 
@@ -83,62 +101,69 @@ public class ListaARDAO implements Map<Integer,Lista>{
 		return this.size()==0;
 	}
 	
+	
+	private boolean containsKey_aux(Integer key,Connection c) throws SQLException{
+		boolean ret = false;
+		PreparedStatement ps = c.prepareStatement("Select EXISTS "
+				+ "(SELECT "+TabListID+" FROM ListasAR WHERE "
+				+TabListID +"= ? AND "+TabListIDCirc+"=? AND "+TabListIDElei+" =?)");
+		ps.setInt(1, key);
+		ps.setInt(2, this.circulo);
+		ps.setInt(3, this.Eleicao);
+		ResultSet rs = ps.executeQuery();
+		if(rs.next()){
+			ret=rs.getBoolean(1);
+		}
+		return ret;
+		
+	}
+
+	@Override
 	public boolean containsKey(Object key) {
 		boolean b=false;
         Connection conn = null;
         try{
-        	
-        	conn = Connector.newConnection();
-        	PreparedStatement ps = conn.prepareStatement("Select EXISTS (SELECT id FROM ListasAR WHERE id = ?)");
-        	ps.setInt(1,(Integer) key);
-        	ResultSet rs = ps.executeQuery();
-        	if (rs.next()) b = (rs.getInt(1)!=0);
-        	rs.close();
-        	ps.close();
-        	conn.commit();
+        	conn = Connector.newConnection(true);
+        	b=this.containsKey_aux((Integer)key, conn);
         }catch(Exception e){
-        	try {
-				conn.rollback();
-			} catch (SQLException e1) {	
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
+			e.printStackTrace();
         	throw new RuntimeException(e.getMessage());
         }finally{
         	try {
 				conn.close();
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
+	        	throw new RuntimeException(e.getMessage());
 			}
         }
         return b;
 	}
 
+	
+	
 	@Override
 	public void clear() {
 		Connection conn = null;
     	try{
-    		conn = Connector.newConnection();
-    		Statement s = conn.createStatement();
-    		s.executeUpdate("DELETE FROM ListasAR");
-    		s.close();
+    		conn = Connector.newConnection(false);
+    		this.clear_aux(conn);
     		conn.commit();
-    	}catch(Exception e){
+    	}catch(SQLException e){
     		try {
 				conn.rollback();
 			} catch (SQLException e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
+				throw new RuntimeException(e1.getMessage());
 			}
-    		throw new RuntimeException(e.getMessage());
-    	}
-    	finally {
+    	}catch(Exception e){
+    		e.printStackTrace();
+			throw new RuntimeException(e.getMessage());
+    	}finally {
     		try {
 				conn.close();
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
+				throw new RuntimeException(e.getMessage());
 			}
 		}
 	}
@@ -150,8 +175,7 @@ public class ListaARDAO implements Map<Integer,Lista>{
 
 	@Override
 	public Set<java.util.Map.Entry<Integer, Lista>> entrySet() {
-		// TODO Auto-generated method stub
-		return null;
+		throw new RuntimeException("Nao implementado");
 	}
 
 	@Override
@@ -191,36 +215,39 @@ public class ListaARDAO implements Map<Integer,Lista>{
         return l;
 	}
 
+	private Set<Integer> keySet_aux(Connection c) throws SQLException{
+		Set<Integer> ret = new TreeSet<Integer>();
+		PreparedStatement ps  = c.prepareStatement("SELECT "+TabListID+" FROM " +TabName
+				+ " WHERE " + TabListIDCirc + "=?, "+ TabListIDElei + "=?");
+		ps.setInt(1, this.circulo);
+		ps.setInt(2, this.Eleicao);
+		ResultSet rs = ps.executeQuery();
+		while(rs.next()){
+			ret.add(rs.getInt(TabListID));
+		}
+		return ret;
+	}
+	
 	@Override
 	public Set<Integer> keySet() {
 		Set<Integer> ret = new TreeSet<Integer>();
         Connection conn = null;
-        try{
-        	conn=Connector.newConnection();
-        	Statement s = conn.createStatement();
-            String querie = "Select id FROM ListasAR";
-            ResultSet rs = s.executeQuery(querie);
-            while(rs.next())
-               ret.add(rs.getInt("id"));
-            rs.close();
-            s.close();
-            conn.commit();
-        }catch(Exception e){
-    		try {
-				conn.rollback();
-			} catch (SQLException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-    	}finally{
-    		try {
+        try {
+			conn = Connector.newConnection(true);
+			ret = this.keySet_aux(conn);
+		}catch(Exception e){
+			e.printStackTrace();
+			throw new RuntimeException(e.getMessage());
+		}finally{
+			try {
 				conn.close();
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
+				throw new RuntimeException(e.getMessage());
 			}
-    	}
-        return ret;
+		}
+		
+		return ret;
 	}
 
 	@Override
@@ -280,10 +307,15 @@ public class ListaARDAO implements Map<Integer,Lista>{
 
 	@Override
 	public void putAll(Map<? extends Integer, ? extends Lista> m) {
-		// TODO Auto-generated method stub
+		throw new RuntimeException("Nao implementado");
 		
 	}
 
+	protected Lista remove_aux(Integer key, Connection c) throws SQLException{
+		return null;
+		// TODO
+	}
+	
 	@Override
 	public Lista remove(Object key) {
 		Connection conn = null;
@@ -316,15 +348,35 @@ public class ListaARDAO implements Map<Integer,Lista>{
        return l;
 	}
 
-	@Override
-	public Collection<Lista> values() {
+	private Collection<Lista> values_aux(Connection c) throws SQLException{
 		ArrayList <Lista> ret  = new ArrayList<>();
-        Set<Integer> keys = this.keySet();
-        Iterator<Integer> i  = keys.iterator();
+		 Iterator<Integer> i = this.keySet_aux(c).iterator();
         while (i.hasNext()){
-            ret.add(this.get((int) i.next()));
+            ret.add(this.get_aux(i.next(),c));
         }
         return ret;
+	}
+	
+	@Override
+	public Collection<Lista> values() {
+		Collection<Lista> ret = new ArrayList<>();
+		Connection c = null;
+		try{
+			c = Connector.newConnection(true);
+			ret= this.values_aux(c);	
+		}catch(Exception e){
+			e.printStackTrace();
+			throw new RuntimeException(e.getMessage());
+		}finally {
+			try {
+				c.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+				throw new RuntimeException(e.getMessage());
+			}
+		}
+
+		return ret;
 	}
 	
 	
