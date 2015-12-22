@@ -34,12 +34,12 @@ Coisas a considerar:
       - [x] Calculo percentagens votos brancos nulos e abstencao
     - [ ] Implementar selecao de colunas nas tabelas pra mostrar informacao
   - [ ] ResultadosPR
-    - [ ] Resultados globais
-      - [ ] Calculo votos brancos nulos e abstencao 
-      - [ ] Calculo percentagens votos brancos nulos e abstencao
-    - [ ] Resultados circulo
-      - [ ] Calculo votos brancos nulos e abstencao 
-      - [ ] Calculo percentagens votos brancos nulos e abstencao
+    - [x] Resultados globais
+      - [x] Calculo votos brancos nulos e abstencao 
+      - [x] Calculo percentagens votos brancos nulos e abstencao
+    - [x] Resultados circulo
+      - [x] Calculo votos brancos nulos e abstencao 
+      - [x] Calculo percentagens votos brancos nulos e abstencao
     - [ ] Implementar selecao de colunas nas tabelas pra mostrar informacao
   - [x] Votar
     - [x] Parse nome eleitor
@@ -47,23 +47,26 @@ Coisas a considerar:
     - [ ] Imagem
     - [x] Limpar
     - [x] Votar
+  - [x] Inserir caderno de recenseamento
+    - [x] Path parse
+    - [x] Ler ficheiro
+    - [x] Povoar table consoante circulo
+    - [ ] Escrever pra DB (funciona mas crasha ai a 60%)
 
 # Cenas dos DAO's:
-
-- [ ] Por Fazer/A fazer
-  - [ ] ListaARDAO
 
 - [ ] Feitas/Testas
   - [X] AdminDAO
   - [X] PartidosDAO
   - [X] CirculoInfoDAO
   - [X] Connector
-  - [ ] EleiçãoARDAO
+  - [X] EleiçãoARDAO
   - [ ] EleiçãoPRDAO
   - [X] EleitoresDAO
   - [ ] ListaPRDAO
   - [ ] ResultadoCirculoPRDAO
   - [X] CirculoInfoDAO
-  - [ ] ColigaçãoDAO
+  - [X] ColigaçãoDAO
   - [X] CirculoDAO
   - [ ] ResultadoCirculoARDAO
+  - [ ] ListaARDAO

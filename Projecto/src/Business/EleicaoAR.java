@@ -4,9 +4,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Random;
@@ -22,35 +20,30 @@ public class EleicaoAR extends Eleicao {
 	private CirculoInfoDAO circulos;
 	private ResultadoCirculoARDAO resultado;
 	
-	public EleicaoAR(int idEleicao, Calendar data,Collection<Circulo> circulos,int mandatosAssembleia) {
+	public EleicaoAR(int idEleicao, Calendar data,int mandatosAssembleia) {
 		super(idEleicao, data);
 		this.mandatosAssembleia = mandatosAssembleia;
 		this.circulos = new CirculoInfoDAO(idEleicao);
 		this.resultado = new ResultadoCirculoARDAO(idEleicao);
-		Iterator<Circulo> it = circulos.iterator();
-		while(it.hasNext()){
-			Circulo circulo = it.next();
-			if (!this.circulos.containsKey(circulo.getId()))
-				this.circulos.put(circulo.getId(), new CirculoInfo(idEleicao,circulo));
-			if (!this.resultado.containsKey(circulo.getId()))
-				this.resultado.put(circulo.getId(), new ResultadoCirculoAR(circulo));
-			}
-		this.calcularMandatosCirculos();
 	}
 
-	public EleicaoAR(int idEleicao, Calendar data, Collection<Circulo> circulos, int estado,int mandatosAssembleia, boolean permitirVotar, Set<Integer> vot) {
+	public EleicaoAR(int idEleicao, Calendar data, int estado, boolean permitirVotar, Set<Integer> vot,int mandatosAssembleia) {
 		super(idEleicao, data,estado,permitirVotar,vot);
 		this.mandatosAssembleia = mandatosAssembleia;
 		this.circulos = new CirculoInfoDAO(idEleicao);
 		this.resultado = new ResultadoCirculoARDAO(idEleicao);
+	}
+	
+	public void inicializarCirculos(Collection<Circulo> circulos){
 		Iterator<Circulo> it = circulos.iterator();
 		while(it.hasNext()){
 			Circulo circulo = it.next();
 			if (!this.circulos.containsKey(circulo.getId()))
-				this.circulos.put(circulo.getId(), new CirculoInfo(idEleicao,circulo));
+				this.circulos.put(circulo.getId(), new CirculoInfo(super.getIdEleicao(),circulo));
 			if (!this.resultado.containsKey(circulo.getId()))
 				this.resultado.put(circulo.getId(), new ResultadoCirculoAR(circulo));
-		}
+			}
+		this.calcularMandatosCirculos();
 	}
 	
 	/*
@@ -161,7 +154,7 @@ public class EleicaoAR extends Eleicao {
 		this.atribuirMandatosListas();
 	}
 	
-	public void addCandidato(Lista lista,CandidatoAR candidato) throws ExceptionLimiteCandidatos{
+	public void addCandidato(Lista lista,CandidatoAR candidato) throws ExceptionLimiteCandidatos, ExceptionMandanteInvalido{
 		CirculoInfo cinfo = this.circulos.get(lista.getCirculo().getId());
 		cinfo.addCandidatoLista(lista,candidato);
 	}
@@ -296,4 +289,12 @@ public class EleicaoAR extends Eleicao {
 		}
 	}
 	
+	public CandidatoAR getCandidato(int bi) {
+		CandidatoAR candidato = null;
+		for(CirculoInfo cinfo: this.circulos.values()){
+			candidato = cinfo.getCandidato(bi);
+			if(candidato != null) return candidato;
+		}
+		return candidato;
+	}
 }

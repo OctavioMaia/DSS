@@ -18,7 +18,7 @@ import Business.Partido;
 public class ColigacaoDAO implements Map<Integer, Coligacao> {
 	
 	//Tabela coligaçao
-	private static String TabColName= "Coligacoes";
+	private static String TabColName= "coligacoes";
 	private static String TabColID = "id";
 	private static String TabColNome = "nome";
 	private static String TabColSig = "sigla";
@@ -186,6 +186,8 @@ public class ColigacaoDAO implements Map<Integer, Coligacao> {
 		boolean ret = false;
 		PreparedStatement ps  = c.prepareStatement("SELECT * FROM " + TabColPartName + " WHERE "
 				+ TabColPartColId + "=? AND " + TabColPartPartId +" =?");
+		ps.setInt(1,col);
+		ps.setInt(2,part);
 		ResultSet rs = ps.executeQuery();
 		if(rs.next()){
 			ret=true;
@@ -196,8 +198,8 @@ public class ColigacaoDAO implements Map<Integer, Coligacao> {
 	private void addPartidos(Integer col,Iterator<Partido> i, Connection c) throws SQLException{
 		PartidosDAO pdao = new PartidosDAO();
 		PreparedStatement ps = c.prepareStatement("INSERT INTO " + TabColPartName +
-				" (,"+TabColPartColId+","+TabColPartPartId+") "
-				+ "VALUES "
+				" ("+TabColPartColId+","+TabColPartPartId+")"
+				+ " VALUES "
 				+ "(?,?)");
 		ps.setInt(1, col);
 		while (i.hasNext()) {
@@ -209,31 +211,31 @@ public class ColigacaoDAO implements Map<Integer, Coligacao> {
 			}
 			
 		}
-	}
-	
+	}	
 	private Coligacao put_aux(Integer key, Coligacao value,Connection c) throws SQLException{
 		Coligacao ret = this.get_aux(key, c);
 		if(ret!=null){//Existe UPDATE
 			PreparedStatement ps = c.prepareStatement("UPDATE " +TabColName 
-					+ " SET " + TabColNome + "=?,"+TabColSig+"=?,"+TabColSimb+"=?,"+TabColRem+"=? "
+					+ " SET " + TabColID + "=?,"+TabColNome+"=?,"+TabColSig+"=?,"+TabColSimb+"=?,"+TabColRem+"=?"
 					+ " WHERE "+ TabColID + "=?");
-			ps.setString(1,value.getNome());
-			ps.setString(2,value.getSigla());
-			ps.setString(3,value.getSimbolo());
-			ps.setBoolean(4,value.isRemovido());
 			ps.setInt(1,key);
+			ps.setString(2,value.getNome());
+			ps.setString(3,value.getSigla());
+			ps.setString(4,value.getSimbolo());
+			ps.setBoolean(5,value.isRemovido());
+			ps.setInt(6, key);
 			ps.execute();
 			ps.close();
 		}else{//Isereir
 			PreparedStatement ps = c.prepareStatement("INSERT INTO " +TabColName 
-					+ " (" + TabColNome + ","+TabColSig+","+TabColSimb+","+TabColRem+","+ TabColID+")"
+					+ " (" + TabColID + ","+TabColNome+","+TabColSig+","+TabColSimb+","+ TabColRem+")"
 					+ " VALUES "
 					+ "(?,?,?,?,?)");
-			ps.setString(1,value.getNome());
-			ps.setString(2,value.getSigla());
-			ps.setString(3,value.getSimbolo());
-			ps.setBoolean(4,value.isRemovido());
 			ps.setInt(1,key);
+			ps.setString(2,value.getNome());
+			ps.setString(3,value.getSigla());
+			ps.setString(4,value.getSimbolo());
+			ps.setBoolean(5,value.isRemovido());
 			ps.execute();
 			ps.close();	
 		}

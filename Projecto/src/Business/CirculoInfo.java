@@ -1,11 +1,10 @@
 package Business;
 
 import java.util.HashMap;
-import java.util.Set;
 
 import Data.ListaARDAO;
 import Exception.ExceptionLimiteCandidatos;
-import Exception.ExceptionListaExiste;
+import Exception.ExceptionMandanteInvalido;
 
 public class CirculoInfo {
 	private Circulo circulo;
@@ -57,7 +56,7 @@ public class CirculoInfo {
 		this.listas.remove(lista.getID());
 	}
 	
-	public void addCandidatoLista(Lista l, CandidatoAR c) throws ExceptionLimiteCandidatos{
+	public void addCandidatoLista(Lista l, CandidatoAR c) throws ExceptionLimiteCandidatos, ExceptionMandanteInvalido{
 		if((c.getTipo() == 'P') && l.getNumCandPrim() >= this.mandatos){
 			throw new ExceptionLimiteCandidatos("Limite de candidatos excedido ("+this.mandatos+")");
 		}
@@ -68,5 +67,14 @@ public class CirculoInfo {
 	public void removeCandidato(Lista l, CandidatoAR c){
 		l.removeCandidato(c);
 		this.listas.put(l.getID(),l);
+	}
+
+	public CandidatoAR getCandidato(int bi) {
+		CandidatoAR candidato = null;
+		for(Lista lista: this.listas.values()){
+			candidato = lista.getCandidato(bi);
+			if(candidato != null) return candidato;
+		}
+		return candidato;
 	}
 }
