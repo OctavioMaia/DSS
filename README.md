@@ -61,7 +61,7 @@ Coisas a considerar:
   - [ ] ListaPRDAO
   - [ ] ResultadoCirculoPRDAO
   - [X] CirculoInfoDAO
-  - [ ] ColigaçãoDAO
+  - [X] ColigaçãoDAO
   - [X] CirculoDAO
   - [ ] ResultadoCirculoARDAO
   - [ ] ListaARDAO
