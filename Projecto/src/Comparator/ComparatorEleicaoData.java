@@ -1,6 +1,8 @@
-package Business;
+package Comparator;
 
 import java.util.Comparator;
+
+import Business.Eleicao;
 
 public class ComparatorEleicaoData implements Comparator<Eleicao>{
 
