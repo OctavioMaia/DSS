@@ -7,7 +7,6 @@ package Presentation;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -24,6 +23,8 @@ public class CadernoRecenseamento extends JFrame {
 	
 	private SGE sge;
 	private String path;
+	private Object[][] data;
+	private Map<Integer,List<Eleitor>> map;
 	
 	public CadernoRecenseamento(SGE s) {
 		sge=s;
@@ -32,23 +33,64 @@ public class CadernoRecenseamento extends JFrame {
 	}
 
 	private void buttonProcurarActionPerformed(ActionEvent e) {
-		dialogGestorFicheiros.setVisible(true);
+		fileChooser1.setVisible(true);
 		int result = fileChooser1.showOpenDialog(fileChooser1);
 		if (result == JFileChooser.APPROVE_OPTION) {
 		    File selectedFile = fileChooser1.getSelectedFile();
 		    path = selectedFile.getAbsolutePath();
 		    pathImagem.setText(path);
-		    dialogGestorFicheiros.dispose();
+		    fileChooser1.setEnabled(false);
 		}else
-			dialogGestorFicheiros.dispose();
+			fileChooser1.setEnabled(false);
 	}
 
-	private void buttonAdicionarFotoActionPerformed(ActionEvent e) {
-		Map<Integer, List<Eleitor>> map = sge.lerCadernoRecenciamento(path);
+	private void buttonAdicionarCadernoActionPerformed(ActionEvent e) {
+		map = sge.lerCadernoRecenciamento(path);
+		data = new Object[map.get(comboBox1.getSelectedIndex()+1).size()][]; //vazio?
+		int i=0;
+		
+		for(Eleitor el : map.get(comboBox1.getSelectedIndex()+1)){	
+			data[i] = el.toTable();
+			
+			if(el.getCirculo()==1){
+				DefaultTableModel model = (DefaultTableModel) table1.getModel();
+				model.addRow(data[i]);
+			}
+
+			i++;
+		}
+		numeroEleitores.setText(((DefaultTableModel)table1.getModel()).getRowCount() +"");
 	}
 
-	private void buttonApagarInfoActionPerformed(ActionEvent e) {
-		// TODO add your code here
+	private void comboBox1ItemStateChanged(ItemEvent e) {
+		data = new Object[map.get(comboBox1.getSelectedIndex()+1).size()][]; //vazio?
+		int i=0;
+			
+		if (table1.getRowCount() > 0) {
+            for (int conta = table1.getRowCount() - 1; conta > -1; conta--) {
+                ((DefaultTableModel) table1.getModel()).removeRow(conta);;
+            }
+        }
+		
+		for(Eleitor el : map.get(comboBox1.getSelectedIndex()+1)){	
+			data[i] = el.toTable();
+			
+			if(el.getCirculo()==comboBox1.getSelectedIndex()+1){
+				DefaultTableModel model = (DefaultTableModel) table1.getModel();
+				model.addRow(data[i]);
+			}
+
+			i++;
+		}
+		numeroEleitores.setText( ((DefaultTableModel)table1.getModel()).getRowCount() +"");
+	}
+
+	private void buttonCancelarActionPerformed(ActionEvent e) {
+		this.setVisible(false);
+	}
+
+	private void buttonConfirmarActionPerformed(ActionEvent e) {
+		sge.confirmarCadernoRecenciamento(map);
 	}
 
 	private void initComponents() {
@@ -57,7 +99,7 @@ public class CadernoRecenseamento extends JFrame {
 		label1 = new JLabel();
 		buttonProcurar = new JButton();
 		pathImagem = new JTextField();
-		buttonAdicionarCandidato = new JButton();
+		buttonAdicionarCaderno = new JButton();
 		separator1 = new JSeparator();
 		label2 = new JLabel();
 		comboBox1 = new JComboBox<>();
@@ -67,7 +109,6 @@ public class CadernoRecenseamento extends JFrame {
 		table1 = new JTable();
 		buttonConfirmar = new JButton();
 		buttonCancelar = new JButton();
-		dialogGestorFicheiros = new JDialog();
 		fileChooser1 = new JFileChooser();
 
 		//======== this ========
@@ -95,12 +136,12 @@ public class CadernoRecenseamento extends JFrame {
 		contentPane.add(pathImagem);
 		pathImagem.setBounds(170, 25, 375, 25);
 
-		//---- buttonAdicionarCandidato ----
-		buttonAdicionarCandidato.setText("Adicionar");
-		buttonAdicionarCandidato.setFont(new Font("Arial", Font.PLAIN, 14));
-		buttonAdicionarCandidato.addActionListener(e -> buttonAdicionarFotoActionPerformed(e));
-		contentPane.add(buttonAdicionarCandidato);
-		buttonAdicionarCandidato.setBounds(450, 65, 95, buttonAdicionarCandidato.getPreferredSize().height);
+		//---- buttonAdicionarCaderno ----
+		buttonAdicionarCaderno.setText("Adicionar");
+		buttonAdicionarCaderno.setFont(new Font("Arial", Font.PLAIN, 14));
+		buttonAdicionarCaderno.addActionListener(e -> buttonAdicionarCadernoActionPerformed(e));
+		contentPane.add(buttonAdicionarCaderno);
+		buttonAdicionarCaderno.setBounds(450, 65, 95, buttonAdicionarCaderno.getPreferredSize().height);
 		contentPane.add(separator1);
 		separator1.setBounds(10, 100, 535, 5);
 
@@ -136,6 +177,7 @@ public class CadernoRecenseamento extends JFrame {
 			"21",
 			"22"
 		}));
+		comboBox1.addItemListener(e -> comboBox1ItemStateChanged(e));
 		contentPane.add(comboBox1);
 		comboBox1.setBounds(95, 125, 75, 25);
 
@@ -186,18 +228,19 @@ public class CadernoRecenseamento extends JFrame {
 			scrollPane1.setViewportView(table1);
 		}
 		contentPane.add(scrollPane1);
-		scrollPane1.setBounds(10, 170, 535, 255);
+		scrollPane1.setBounds(10, 160, 535, 265);
 
 		//---- buttonConfirmar ----
 		buttonConfirmar.setText("Confirmar");
 		buttonConfirmar.setFont(new Font("Arial", Font.PLAIN, 14));
+		buttonConfirmar.addActionListener(e -> buttonConfirmarActionPerformed(e));
 		contentPane.add(buttonConfirmar);
 		buttonConfirmar.setBounds(320, 435, 120, 25);
 
 		//---- buttonCancelar ----
 		buttonCancelar.setText("Cancelar");
 		buttonCancelar.setFont(new Font("Arial", Font.PLAIN, 14));
-		buttonCancelar.addActionListener(e -> buttonAdicionarFotoActionPerformed(e));
+		buttonCancelar.addActionListener(e -> buttonCancelarActionPerformed(e));
 		contentPane.add(buttonCancelar);
 		buttonCancelar.setBounds(450, 435, 95, 25);
 
@@ -217,35 +260,8 @@ public class CadernoRecenseamento extends JFrame {
 		setSize(575, 505);
 		setLocationRelativeTo(null);
 
-		//======== dialogGestorFicheiros ========
-		{
-			dialogGestorFicheiros.setResizable(false);
-			dialogGestorFicheiros.setFont(new Font("Arial", Font.PLAIN, 12));
-			dialogGestorFicheiros.setTitle("Gestor de Ficheiros");
-			Container dialogGestorFicheirosContentPane = dialogGestorFicheiros.getContentPane();
-			dialogGestorFicheirosContentPane.setLayout(null);
-
-			//---- fileChooser1 ----
-			fileChooser1.setFont(new Font("Arial", Font.PLAIN, 11));
-			dialogGestorFicheirosContentPane.add(fileChooser1);
-			fileChooser1.setBounds(0, 0, 437, 315);
-
-			{ // compute preferred size
-				Dimension preferredSize = new Dimension();
-				for(int i = 0; i < dialogGestorFicheirosContentPane.getComponentCount(); i++) {
-					Rectangle bounds = dialogGestorFicheirosContentPane.getComponent(i).getBounds();
-					preferredSize.width = Math.max(bounds.x + bounds.width, preferredSize.width);
-					preferredSize.height = Math.max(bounds.y + bounds.height, preferredSize.height);
-				}
-				Insets insets = dialogGestorFicheirosContentPane.getInsets();
-				preferredSize.width += insets.right;
-				preferredSize.height += insets.bottom;
-				dialogGestorFicheirosContentPane.setMinimumSize(preferredSize);
-				dialogGestorFicheirosContentPane.setPreferredSize(preferredSize);
-			}
-			dialogGestorFicheiros.pack();
-			dialogGestorFicheiros.setLocationRelativeTo(dialogGestorFicheiros.getOwner());
-		}
+		//---- fileChooser1 ----
+		fileChooser1.setFont(new Font("Arial", Font.PLAIN, 11));
 		// JFormDesigner - End of component initialization  //GEN-END:initComponents
 	}
 
@@ -254,7 +270,7 @@ public class CadernoRecenseamento extends JFrame {
 	private JLabel label1;
 	private JButton buttonProcurar;
 	private JTextField pathImagem;
-	private JButton buttonAdicionarCandidato;
+	private JButton buttonAdicionarCaderno;
 	private JSeparator separator1;
 	private JLabel label2;
 	private JComboBox<String> comboBox1;
@@ -264,7 +280,6 @@ public class CadernoRecenseamento extends JFrame {
 	private JTable table1;
 	private JButton buttonConfirmar;
 	private JButton buttonCancelar;
-	private JDialog dialogGestorFicheiros;
 	private JFileChooser fileChooser1;
 	// JFormDesigner - End of variables declaration  //GEN-END:variables
 }

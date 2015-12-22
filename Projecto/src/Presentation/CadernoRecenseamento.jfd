@@ -10,6 +10,9 @@ new FormModel {
 			"$locationPolicy": 1
 			"defaultCloseOperation": 3
 			"resizable": false
+			auxiliary() {
+				"JavaCodeGenerator.postCreateCode": "table1.setModel(new DefaultTableModel(data, 1));"
+			}
 			add( new FormComponent( "javax.swing.JLabel" ) {
 				name: "label1"
 				"text": "Localização de ficheiro:"
@@ -39,10 +42,10 @@ new FormModel {
 				"y": 25
 			} )
 			add( new FormComponent( "javax.swing.JButton" ) {
-				name: "buttonAdicionarCandidato"
+				name: "buttonAdicionarCaderno"
 				"text": "Adicionar"
 				"font": #Font1
-				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "buttonAdicionarFotoActionPerformed", true ) )
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "buttonAdicionarCadernoActionPerformed", true ) )
 			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
 				"width": 95
 				"x": 450
@@ -94,6 +97,7 @@ new FormModel {
 					addElement( "21" )
 					addElement( "22" )
 				}
+				addEvent( new FormEvent( "java.awt.event.ItemListener", "itemStateChanged", "comboBox1ItemStateChanged", true ) )
 			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
 				"x": 95
 				"y": 125
@@ -141,14 +145,15 @@ new FormModel {
 				} )
 			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
 				"x": 10
-				"y": 170
+				"y": 160
 				"width": 535
-				"height": 255
+				"height": 265
 			} )
 			add( new FormComponent( "javax.swing.JButton" ) {
 				name: "buttonConfirmar"
 				"text": "Confirmar"
 				"font": #Font1
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "buttonConfirmarActionPerformed", true ) )
 			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
 				"width": 120
 				"height": 25
@@ -159,7 +164,7 @@ new FormModel {
 				name: "buttonCancelar"
 				"text": "Cancelar"
 				"font": #Font1
-				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "buttonAdicionarFotoActionPerformed", true ) )
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "buttonCancelarActionPerformed", true ) )
 			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
 				"width": 95
 				"height": 25
@@ -167,26 +172,15 @@ new FormModel {
 				"y": 435
 			} )
 		}, new FormLayoutConstraints( null ) {
-			"location": new java.awt.Point( 0, 0 )
+			"location": new java.awt.Point( 5, 5 )
 			"size": new java.awt.Dimension( 575, 505 )
 		} )
-		add( new FormWindow( "javax.swing.JDialog", new FormLayoutManager( class com.jformdesigner.runtime.NullLayout ) ) {
-			name: "dialogGestorFicheiros"
-			"resizable": false
-			"font": new java.awt.Font( "Arial", 0, 12 )
-			"title": "Gestor de Ficheiros"
-			add( new FormComponent( "javax.swing.JFileChooser" ) {
-				name: "fileChooser1"
-				"font": new java.awt.Font( "Arial", 0, 11 )
-			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
-				"x": 0
-				"y": 0
-				"width": 437
-				"height": 315
-			} )
+		add( new FormComponent( "javax.swing.JFileChooser" ) {
+			name: "fileChooser1"
+			"font": new java.awt.Font( "Arial", 0, 11 )
 		}, new FormLayoutConstraints( null ) {
-			"size": new java.awt.Dimension( 450, 355 )
-			"location": new java.awt.Point( 615, 10 )
+			"location": new java.awt.Point( 645, 70 )
+			"size": new java.awt.Dimension( 437, 315 )
 		} )
 	}
 }
