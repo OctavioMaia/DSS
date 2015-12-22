@@ -43,13 +43,11 @@ Coisas a considerar:
     - [ ] Implementar selecao de colunas nas tabelas pra mostrar informacao
   - [ ] Votar
 
-# Cenas do JMS:
+# Cenas dos DAO's:
 
 - [ ] Por Fazer/A fazer
-  - [X] CirculoDAO
   - [ ] EleiçãoARDAO
   - [ ] ListaARDAO
-  - [X] ResultadoCirculoARDAO
 
 - [ ] Feitas/Testas
   - [X] AdminDAO
@@ -62,3 +60,5 @@ Coisas a considerar:
   - [ ] ResultadoCirculoPRDAO
   - [X] CirculoInfoDAO
   - [ ] ColigaçãoDAO
+  - [X] CirculoDAO
+  - [ ] ResultadoCirculoARDAO

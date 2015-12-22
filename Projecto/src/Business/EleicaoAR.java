@@ -85,13 +85,13 @@ public class EleicaoAR extends Eleicao {
 		int nulos = 0;
 		int brancos = 0;
 		int totEleitores = 0;
-		HashMap<Votavel,Integer> validos = new HashMap<>();
-		HashMap<Votavel,Integer> mandatos = new HashMap<>();
+		Map<Votavel,Integer> validos = new HashMap<>();
+		Map<Votavel,Integer> mandatos = new HashMap<>();
 		for(int circulo: this.circulos.keySet()){
 			nulos += this.resultado.get(circulo).getNulos();
 			brancos += this.resultado.get(circulo).getBrancos();
 			totEleitores += this.resultado.get(circulo).getTotEleitores();
-			HashMap<Lista,Integer> validosCirculo = this.resultado.get(circulo).getValidos();
+			Map<Lista,Integer> validosCirculo = this.resultado.get(circulo).getValidos();
 			for(Lista lista: validosCirculo.keySet()){
 				Votavel mandante = lista.getMandante();
 				if(!validos.containsKey(mandante))
@@ -99,7 +99,7 @@ public class EleicaoAR extends Eleicao {
 				else
 					validos.put(mandante, validos.get(mandante) + validosCirculo.get(mandante));
 			}
-			HashMap<Lista,Integer> mandatosCirculo = this.resultado.get(circulo).getMandatos();
+			Map<Lista,Integer> mandatosCirculo = this.resultado.get(circulo).getMandatos();
 			for(Lista lista: mandatosCirculo.keySet()){
 				Votavel mandante = lista.getMandante();
 				if(!mandatos.containsKey(mandante))
@@ -134,9 +134,9 @@ public class EleicaoAR extends Eleicao {
 		for(Integer circulo: this.resultado.keySet()){
 			int mandatosCirculo = this.circulos.get(circulo).getMandatos();
 			ResultadoCirculoAR resultadoCirculo = this.resultado.get(circulo);
-			HashMap<Lista,Integer> votos = resultadoCirculo.getValidos();
+			Map<Lista,Integer> votos = resultadoCirculo.getValidos();
 			@SuppressWarnings({ "unchecked", "static-access" })
-			HashMap<Lista,Integer> mandatos = (HashMap<Lista,Integer>)new Hondt().getMandatos(mandatosCirculo, votos);
+			Map<Lista,Integer> mandatos = (HashMap<Lista,Integer>)new Hondt().getMandatos(mandatosCirculo, votos);
 			resultadoCirculo.setMandatos(mandatos);
 		}
 	}
@@ -251,10 +251,13 @@ public class EleicaoAR extends Eleicao {
     	this.resultado.put(eleitor.getCirculo(),resCirculo);
 	}
 
-	@Override
 	public Boletim getBoletim(int idCirculo) {
-		// TODO Auto-generated method stub
-		return null;
+		int nListas = this.circulos.get(idCirculo).getListas().size();
+		Boletim boletim = new Boletim(nListas);
+		for(Lista lista: this.circulos.get(idCirculo).getListas().values()){
+			boletim.addLista(lista);
+		}
+		return boletim;
 	}
 	
 	public void geraBoletim(){
