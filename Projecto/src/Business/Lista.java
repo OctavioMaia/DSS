@@ -101,13 +101,13 @@ public class Lista implements Listavel{
 	}
 	
 	public void addCandidato(CandidatoAR candidato) throws ExceptionMandanteInvalido{
-		if(this.mandante.getClass().getName().equals("Partido")){
+		if(this.mandante.getClass().getSimpleName().equals("Partido")){
 			Partido partido = (Partido)this.mandante;
 			if(!candidato.getPartido().equals(partido)){
 				throw new ExceptionMandanteInvalido("Partido Inválido");
 			}
 		}
-		else if(this.mandante.getClass().getName().equals("Coligacao")){
+		else if(this.mandante.getClass().getSimpleName().equals("Coligacao")){
 			Coligacao coligacao = (Coligacao)this.mandante;
 			if(!coligacao.getPartidos().contains(candidato.getPartido())){
 				throw new ExceptionMandanteInvalido("Partido Inválido");

@@ -174,24 +174,24 @@ public class EleicaoAR extends Eleicao {
 			for(int idListaCirculo: listasCirculo.keySet()){
 				Lista listaCirculo = listasCirculo.get(idListaCirculo);
 				if(!l.getMandante().equals(listaCirculo.getMandante())){
-					if(l.getMandante().getClass().getName().equals("Partido")){
+					if(l.getMandante().getClass().getSimpleName().equals("Partido")){
 						Partido partidoLista = (Partido)l.getMandante();
-						if(listaCirculo.getMandante().getClass().getName().equals("Coligacao")){
+						if(listaCirculo.getMandante().getClass().getSimpleName().equals("Coligacao")){
 							Coligacao coligacaoListaCirculo = (Coligacao)listaCirculo.getMandante();
 							if(coligacaoListaCirculo.getPartidos().contains(partidoLista)){
 								throw new ExceptionMandanteInvalido("Partido "+partidoLista.getNome()+" ja pertence a uma coligacao");
 							}
 						}
 					}
-					else if(l.getMandante().getClass().getName().equals("Coligacao")){
+					else if(l.getMandante().getClass().getSimpleName().equals("Coligacao")){
 						Coligacao coligacaoLista = (Coligacao)l.getMandante();
-						if(listaCirculo.getMandante().getClass().getName().equals("Partido")){
+						if(listaCirculo.getMandante().getClass().getSimpleName().equals("Partido")){
 							Partido partidoListaCirculo = (Partido)listaCirculo.getMandante();
 							if(coligacaoLista.getPartidos().contains(partidoListaCirculo)){
 								throw new ExceptionMandanteInvalido("Partidos da coligacao "+coligacaoLista.getNome()+" ja registados fora da coligacao");
 							}
 						}
-						else if(listaCirculo.getMandante().getClass().getName().equals("Coligacao")){
+						else if(listaCirculo.getMandante().getClass().getSimpleName().equals("Coligacao")){
 							Coligacao coligacaoListaCirculo = (Coligacao)listaCirculo.getMandante();
 							for(Partido partidoColigacao: coligacaoListaCirculo.getPartidos()){
 								if(coligacaoLista.getPartidos().contains(partidoColigacao)){
