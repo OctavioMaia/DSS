@@ -17,6 +17,6 @@
 			<attribute name="javadoc_location" value="jar:platform:/resource/SGE/lib/jgoodies-uif-lite-javadoc.zip!/"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="C:/Users/Jorge Oliveira/Downloads/mysql-connector-java-5.1.38/mysql-connector-java-5.1.38/mysql-connector-java-5.1.38-bin.jar"/>
+	<classpathentry kind="lib" path="C:/Users/pedro/Documents/GitHub/DSS/Projecto/lib/mysql-connector-java-5.1.38.zip"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
