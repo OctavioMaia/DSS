@@ -149,7 +149,6 @@ public class EleicaoPR extends Eleicao {
 	 * Metodo que vai criar um objecto boletim com todas as listas que vao
 	 * participar na eleiçao
 	 */
-	@Override
 	public Boletim getBoletim(int idCirculo) {
 		Boletim b = null;
 		if (this.estado(0)) {
