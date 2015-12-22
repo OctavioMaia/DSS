@@ -1,3 +1,13 @@
+
+##O Mais Seguro nos DAO's é fazer os Clear assim
+```
+protected void clear_aux(Connection c)throws SQLException{
+		Iterator<Integer> i = this.keySet_aux(c).iterator();
+		while(i.hasNext()){
+			this.remove_aux(i.next(), c);
+		}
+	}
+```
 # Projeto DSS 2015/2016
 
 Coisas a considerar:
