@@ -19,7 +19,6 @@ import Business.SGE;
  * @author Octavio Maia
  */
 public class CriarEleicao extends JFrame {
-	
 	private SGE sge;
 	private GregorianCalendar dataInicio;
 	

@@ -37,8 +37,8 @@ public class GerirAR extends JFrame {
 			contentPane.setMinimumSize(preferredSize);
 			contentPane.setPreferredSize(preferredSize);
 		}
-		pack();
-		setLocationRelativeTo(getOwner());
+		setSize(400, 300);
+		setLocationRelativeTo(null);
 		// JFormDesigner - End of component initialization  //GEN-END:initComponents
 	}
 
