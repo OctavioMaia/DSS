@@ -221,6 +221,7 @@ public class SGE {
 
 	public EleicaoAR criarEleicaoAR(EleicaoAR eleicao) {
 		eleicao.setIdEleicao(this.chaveEleicao());
+		eleicao.inicializarCirculos(this.circulos.values());
 		this.eleicoesAR.put(eleicao.getIdEleicao(), eleicao);
 		return eleicao;
 	}

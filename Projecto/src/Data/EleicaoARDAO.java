@@ -28,7 +28,7 @@ public class EleicaoARDAO implements Map<Integer,EleicaoAR>{
 	private static String TabEleicoes = "Eleicoes";
 	private static String Estado = "estado";
 	private static String Data = "data";
-	private static String PermitirVotar = "permitirVotar";
+	private static String PermitirVotar = "permitidoVotar";
 	//Tabela Eleitores que votaram na eleicao
 	private static String TabEleitores = "Eleitor_Vota_Eleicao";
 	private static String Eleitor = "nrIdEleitor";
@@ -108,8 +108,8 @@ public class EleicaoARDAO implements Map<Integer,EleicaoAR>{
 		EleicaoAR eleicao = null;
         Connection conn = null; 
         try{
-        	if(!this.containsKey(key)) return null;
         	conn=Connector.newConnection(true);
+        	if(!this.containsKey(key)) return null;
         	int estado = 0;
         	Calendar data = null;
         	boolean permitirVotar = false;
@@ -146,8 +146,7 @@ public class EleicaoARDAO implements Map<Integer,EleicaoAR>{
         	if(rsEleicaoAR.next()){
         		mandatos = rsEleicaoAR.getInt(Mandatos);
         	}
-        	Collection<Circulo> circulos = new CirculoDAO().values();
-        	eleicao = new EleicaoAR((Integer)key,data,circulos,estado,permitirVotar,eleitores,mandatos);
+        	eleicao = new EleicaoAR((Integer)key,data,estado,permitirVotar,eleitores,mandatos);
         }catch(Exception e){
 			e.printStackTrace();
 			throw new RuntimeException(e.getMessage());
@@ -174,7 +173,7 @@ public class EleicaoARDAO implements Map<Integer,EleicaoAR>{
         try{
         	conn=Connector.newConnection(true);
         	ret = new TreeSet<Integer>();
-        	PreparedStatement ps  = conn.prepareStatement("SELECT " +Eleicao + " FROM " + Tabname + ")");
+        	PreparedStatement ps  = conn.prepareStatement("SELECT " +Eleicao + " FROM " + Tabname);
         	ResultSet rs = ps.executeQuery();
         	while(rs.next()){
         		int num = rs.getInt(Eleicao);
@@ -224,8 +223,8 @@ public class EleicaoARDAO implements Map<Integer,EleicaoAR>{
         		for(int eleitor: value.getVotantes()){
         			psEleitores.setInt(1, eleitor);
         			psEleitores.execute();
-        			psEleitores.close();
         		}
+    			psEleitores.close();
         	}else{//registo existente
         		PreparedStatement psEleicao = conn.prepareStatement("UPDATE "+ TabEleicoes + 
         				" SET "+Estado+" = ?,"+Data+" = ?,"+PermitirVotar+" = ? WHERE "+Eleicao+" = ?");
@@ -302,7 +301,7 @@ public class EleicaoARDAO implements Map<Integer,EleicaoAR>{
 			psEleicoesAR.execute();
 			psEleicoesAR.close();
 			//Remover DasEleicoes
-			PreparedStatement psEleicoes = conn.prepareStatement("DELETE FROM " + Tabname
+			PreparedStatement psEleicoes = conn.prepareStatement("DELETE FROM " + TabEleicoes
 					+ " WHERE "+Eleicao+" = ?");
 			psEleicoes.setInt(1,(Integer)key);
 			psEleicoes.execute();
