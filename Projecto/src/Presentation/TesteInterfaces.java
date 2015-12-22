@@ -11,7 +11,8 @@ public class TesteInterfaces{
 		//MainEleitor i = new MainEleitor(null);
 		//ResultadosAR i = new ResultadosAR(null);
 		//ResultadosPR i = new ResultadosPR();
-		CadernoRecenseamento i = new CadernoRecenseamento(s);
+		//CadernoRecenseamento i = new CadernoRecenseamento(s);
+		CriarEleicao i = new CriarEleicao(null);
 	}
 	
 }

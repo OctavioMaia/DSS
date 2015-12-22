@@ -52,6 +52,10 @@ Coisas a considerar:
     - [x] Ler ficheiro
     - [x] Povoar table consoante circulo
     - [ ] Escrever pra DB (funciona mas crasha ai a 60%)
+  - [x] Criar Eleição
+    - [x] Selecionar tipo
+    - [x] Selecionar data
+    - [x] Avançar pra eleicao respetiva
 
 # Cenas dos DAO's:
 
@@ -63,10 +67,10 @@ Coisas a considerar:
   - [X] EleiçãoARDAO
   - [ ] EleiçãoPRDAO
   - [X] EleitoresDAO
-  - [ ] ListaPRDAO
+  - [X] ListaPRDAO
   - [ ] ResultadoCirculoPRDAO
   - [X] CirculoInfoDAO
   - [X] ColigaçãoDAO
   - [X] CirculoDAO
-  - [ ] ResultadoCirculoARDAO
+  - [ ] ResultadoCirculoARDAO -> Falta testar com listas
   - [ ] ListaARDAO

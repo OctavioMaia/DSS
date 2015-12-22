@@ -97,12 +97,14 @@ public class ListaPRDAO implements Map<Integer,ListaPR> {
 	
 	private boolean containsKey_aux(Integer key,Connection c) throws SQLException{
 		boolean ret = false;
-		PreparedStatement ps = c.prepareStatement("Select EXISTS (SELECT "+TabId+" FROM "
-				+TabLista +" WHERE "+TabId+"=? AND "+Eleicao+"=?)");
+		PreparedStatement ps = c.prepareStatement("SELECT "+TabId+" FROM "
+				+TabLista +" WHERE "+TabId+"=? AND "+Eleicao+"=?");
 		ps.setInt(1,key);
 		ps.setInt(2, this.idEleicao);
 		ResultSet rs = ps.executeQuery();
-		if (rs.next()) ret = (rs.getInt(1)!=0);
+		if (rs.next()){
+			ret = true;
+		}
 		rs.close();
 		ps.close();
 		return ret;
@@ -135,16 +137,11 @@ public class ListaPRDAO implements Map<Integer,ListaPR> {
 		//Limpar Resultados das lsiats desta eleicao
 		this.v1.clear_aux(c);
 		this.v2.clear_aux(c);
-		Iterator<ListaPR> ls = this.values().iterator();//Todas as listas da eleicao
+		Iterator<Integer> i = this.keySet_aux(c).iterator();//Todas as listas da eleicao
 		//EliminaTodas as listas Desta eleicao
-		PreparedStatement psList  = c.prepareStatement("DELETE FROM " + TabLista 
-				+ " WHERE " +Eleicao + " = ?");
-		psList.setInt(1, this.idEleicao);
-		psList.execute();
-		psList.close();
 		//eliminar o candidato de todas as listas
-		while(ls.hasNext()){
-			this.removeCand(ls.next().getCandidato().getBi(), c);
+		while(i.hasNext()){
+			this.removeCand(i.next(), c);
 		}
 	}
 	
@@ -178,7 +175,7 @@ public class ListaPRDAO implements Map<Integer,ListaPR> {
 	
 	@Override
 	public boolean containsValue(Object value) {
-		return this.containsKey(((Lista)value).getID());
+		return this.containsKey(((ListaPR)value).getIdEleicao());
 	}
 	
 	private boolean containsCand(Integer key, Connection c) throws SQLException{
@@ -223,22 +220,22 @@ public class ListaPRDAO implements Map<Integer,ListaPR> {
 		Candidato ret = this.get_candid(key, conn);
 		if(ret!=null){
 			PreparedStatement candUP = conn.prepareStatement("UPDATE " + TabCandid
-					+ " SET "+Prof+"=?,"+Nasc+"=?,"+Resid+"=?,"+Nat+"=?,"+Nome+"=?, " + Foto + "=?"
+					+ " SET "+Prof+"=?,"+Nasc+"=?,"+Resid+"=?,"+Nat+"=?,"+Nome+"=?," + Foto + "=?"
 					+ " WHERE "+TabCandidID+"=?");
 			candUP.setString(1,c.getProf());
 			candUP.setDate(2, new Date(c.getDataNasc().getTimeInMillis()));
 			candUP.setString(3, c.getResidencia());
 			candUP.setString(4, c.getNaturalidade());
 			candUP.setString(5, c.getNome());
-			candUP.setInt(6, c.getBi());
-			candUP.setString(7, c.getFoto());
-			candUP.execute();
+			candUP.setInt(7, c.getBi());
+			candUP.setString(6, c.getFoto());
+			candUP.executeUpdate();
 			candUP.close();
 		}else{
 			PreparedStatement candIN = conn.prepareStatement("INSERT INTO " + TabCandid
-					+ "("+Prof+","+Nasc+","+Resid+","+Nat+","+Nome+","+TabCandidID+","+Foto+") "
-					+ "VALUES "
-					+ "(?,?,?,?,?,?");
+					+ " ("+Prof+","+Nasc+","+Resid+","+Nat+","+Nome+","+TabCandidID+","+Foto+") "
+					+ " VALUES "
+					+ " (?,?,?,?,?,?,?)");
 			candIN.setString(1,c.getProf());
 			candIN.setDate(2, new Date(c.getDataNasc().getTimeInMillis()));
 			candIN.setString(3, c.getResidencia());
@@ -246,7 +243,7 @@ public class ListaPRDAO implements Map<Integer,ListaPR> {
 			candIN.setString(5, c.getNome());
 			candIN.setInt(6, c.getBi());
 			candIN.setString(7, c.getFoto());
-			candIN.execute();
+			candIN.executeUpdate();
 			candIN.close();
 		}
 		return ret;
@@ -257,7 +254,7 @@ public class ListaPRDAO implements Map<Integer,ListaPR> {
 		
 		ListaPR ret = null;
 		if(this.containsKey_aux(key, c)){
-			PreparedStatement ps = c.prepareStatement("SELECT * FROM "+TabLista+" WHERE"
+			PreparedStatement ps = c.prepareStatement("SELECT * FROM "+TabLista+" WHERE "
 				+ TabId+" = ? AND "
 				+ Eleicao+" = ? ");
 			ps.setInt(1, (Integer)key);
@@ -314,6 +311,8 @@ public class ListaPRDAO implements Map<Integer,ListaPR> {
 				e1.printStackTrace();
 				throw new RuntimeException(e1.getMessage());
 			}
+			e.printStackTrace();
+			throw new RuntimeException(e.getMessage());
 		}catch(Exception e){
 			e.printStackTrace();
 			throw new RuntimeException(e.getMessage());
@@ -329,8 +328,7 @@ public class ListaPRDAO implements Map<Integer,ListaPR> {
 	}
 	
 	public ListaPR put_aux(Integer key, ListaPR value,Connection c) throws SQLException{
-		ListaPR ret = null;
-		ret = this.get_aux(key,c);
+		ListaPR ret = this.get_aux(key,c);
 			//Inserir o candidadato
 		this.insereCand(value.getCandidato(),c);
 			//Candidadto atulaizado na BD
@@ -376,20 +374,20 @@ public class ListaPRDAO implements Map<Integer,ListaPR> {
 		ListaPR ret = this.get_aux(key,c);
 		if(ret!=null){
 			//Remover resultados
-			PreparedStatement psRes = c.prepareStatement("DELETE FROM "+TabRes+" WHERE"
-					+ IdEleic+" =? AND"
+			PreparedStatement psRes = c.prepareStatement("DELETE FROM "+TabRes+" WHERE "
+					+ IdEleic+" =? AND "
 					+ IdListaPR+"= ?");
 			psRes.setInt(1,this.idEleicao);
 			psRes.setInt(2,key);
-			psRes.execute();
+			psRes.executeUpdate();
 			psRes.close();
 			//Remover Lista
-			PreparedStatement ps = c.prepareStatement("DELETE FROM "+TabLista+" WHERE"
-					+ Eleicao+ "= ? AND"
+			PreparedStatement ps = c.prepareStatement("DELETE FROM "+TabLista+" WHERE "
+					+ Eleicao+ "= ? AND "
 					+ TabId+ " = ?");
 			ps.setInt(1, this.idEleicao);
 			ps.setInt(2,key);
-			ps.execute();
+			ps.executeUpdate();
 			ps.close();
 			//Remover o candidadto?
 			this.removeCand(ret.getCandidato().getBi(), c);
@@ -414,7 +412,8 @@ public class ListaPRDAO implements Map<Integer,ListaPR> {
 				e1.printStackTrace();
 				throw new RuntimeException(e1.getMessage());
 			}
-
+    		e.printStackTrace();
+			throw new RuntimeException(e.getMessage());
     	}catch(Exception e){
     		e.printStackTrace();
     		throw new RuntimeException(e.getMessage());
