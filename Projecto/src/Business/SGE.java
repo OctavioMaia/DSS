@@ -61,6 +61,9 @@ public class SGE {
 			this.eleitor = null;
 			this.partidos = new PartidosDAO();
 			this.circulos = new CirculoDAO();
+			for(int i=1;i<=22;i++){
+				this.circulos.put(i, new Circulo(i, "PUTA "+i, 0));
+			}
 			this.coligacoes = new ColigacaoDAO();
 			this.eleitores = new EleitoresDAO();
 			this.eleicoesPR = new EleicaoPRDAO();
@@ -124,7 +127,7 @@ public class SGE {
 			while ((line = br.readLine()) != null) {
 				if (line.contains(flin)) {
 					csvSplit = line.split("=")[1];
-					System.out.println(csvSplit);
+					//System.out.println(csvSplit);
 				} else {
 					String[] eleitores = line.split(csvSplit);
 					int nCiruclo = Integer.parseInt(eleitores[1]);
