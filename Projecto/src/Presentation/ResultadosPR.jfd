@@ -15,7 +15,7 @@ new FormModel {
 				"font": &Font0 new java.awt.Font( "Arial", 1, 14 )
 			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
 				"x": 20
-				"y": 35
+				"y": 85
 			} )
 			add( new FormComponent( "javax.swing.JLabel" ) {
 				name: "label2"
@@ -25,7 +25,7 @@ new FormModel {
 				"width": 100
 				"height": 17
 				"x": 265
-				"y": 10
+				"y": 60
 			} )
 			add( new FormComponent( "javax.swing.JLabel" ) {
 				name: "label3"
@@ -35,7 +35,7 @@ new FormModel {
 				"width": 90
 				"height": 17
 				"x": 265
-				"y": 35
+				"y": 85
 			} )
 			add( new FormComponent( "javax.swing.JLabel" ) {
 				name: "label4"
@@ -45,13 +45,13 @@ new FormModel {
 				"width": 85
 				"height": 17
 				"x": 265
-				"y": 60
+				"y": 110
 			} )
 			add( new FormComponent( "javax.swing.JSeparator" ) {
 				name: "separator1"
 			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
 				"x": 15
-				"y": 300
+				"y": 350
 				"width": 560
 				"height": 2
 			} )
@@ -79,7 +79,7 @@ new FormModel {
 				"width": 235
 				"height": 195
 				"x": 15
-				"y": 90
+				"y": 140
 			} )
 			add( new FormComponent( "javax.swing.JLabel" ) {
 				name: "label5"
@@ -89,67 +89,79 @@ new FormModel {
 				"width": 134
 				"height": 17
 				"x": 15
-				"y": 310
+				"y": 360
 			} )
 			add( new FormComponent( "javax.swing.JLabel" ) {
 				name: "globaisBrancosN"
-				"text": "N"
 				"font": #Font1
+				auxiliary() {
+					"JavaCodeGenerator.preInitCode": "//globaisBrancosN.setText(\"\"+sge.getResultadoGlobalPR(eleicao, voltaBox.getSelectedIndex()+1).getBrancos());"
+				}
 			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
-				"width": 40
+				"width": 75
 				"height": 17
-				"x": 405
-				"y": 10
+				"x": 380
+				"y": 60
 			} )
 			add( new FormComponent( "javax.swing.JLabel" ) {
 				name: "globaisNulosN"
-				"text": "N"
 				"font": #Font1
+				auxiliary() {
+					"JavaCodeGenerator.preInitCode": "//globaisNulosN.setText(\"\"+sge.getResultadoGlobalPR(eleicao, voltaBox.getSelectedIndex()+1).getNulos());"
+				}
 			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
-				"width": 40
+				"width": 75
 				"height": 17
-				"x": 405
-				"y": 35
+				"x": 380
+				"y": 85
 			} )
 			add( new FormComponent( "javax.swing.JLabel" ) {
 				name: "globaisAbstencaoN"
-				"text": "N"
 				"font": #Font1
+				auxiliary() {
+					"JavaCodeGenerator.preInitCode": "//globaisAbstencaoN.setText(\"\"+sge.getResultadoGlobalPR(eleicao, voltaBox.getSelectedIndex()+1).getAbstencao));"
+				}
 			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
-				"width": 40
+				"width": 75
 				"height": 17
-				"x": 405
-				"y": 60
+				"x": 380
+				"y": 110
 			} )
 			add( new FormComponent( "javax.swing.JLabel" ) {
 				name: "globaisAbstencaoP"
-				"text": "%"
 				"font": #Font1
+				auxiliary() {
+					"JavaCodeGenerator.preInitCode": "//globaisAbstencaoP.setText(Math.round(100.0 / eleicao.numeroEleitores() * sge.getResultadoGlobalPR(eleicao,voltaBox.getSelectedIndex()+1).getAbstencao())+\"%\");"
+				}
 			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
-				"width": 40
+				"width": 55
 				"height": 17
-				"x": 470
-				"y": 60
+				"x": 480
+				"y": 110
 			} )
 			add( new FormComponent( "javax.swing.JLabel" ) {
 				name: "globaisNulosP"
-				"text": "%"
 				"font": #Font1
+				auxiliary() {
+					"JavaCodeGenerator.preInitCode": "//globaisNulosP.setText(Math.round(100.0 / eleicao.numeroEleitores() * sge.getResultadoGlobalPR(eleicao,voltaBox.getSelectedIndex()+1).getNulos())+\"%\");"
+				}
 			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
-				"width": 40
+				"width": 55
 				"height": 17
-				"x": 470
-				"y": 35
+				"x": 480
+				"y": 85
 			} )
 			add( new FormComponent( "javax.swing.JLabel" ) {
 				name: "globaisBrancosP"
-				"text": "%"
 				"font": #Font1
+				auxiliary() {
+					"JavaCodeGenerator.preInitCode": "//globaisBrancosP.setText(Math.round(100.0 / eleicao.numeroEleitores() * sge.getResultadoGlobalPR(eleicao,voltaBox.getSelectedIndex()+1).getBrancos())+\"%\");"
+				}
 			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
-				"width": 40
+				"width": 55
 				"height": 17
-				"x": 470
-				"y": 10
+				"x": 480
+				"y": 60
 			} )
 			add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
 				name: "scrollCirculo"
@@ -159,17 +171,24 @@ new FormModel {
 					"font": new java.awt.Font( "Arial", 0, 12 )
 					"model": new com.jformdesigner.model.SwingTableModel( new java.util.Vector, new java.util.Vector {
 						add( "Círculo" )
+						add( null )
 					}, new java.util.Vector {
+						add( null )
 						add( null )
 					}, new java.util.Vector {
 						add( false )
+						add( null )
 					}, new java.util.Vector {
 						add( new com.jformdesigner.model.SwingTableColumn( null, 0, 0, 0, false ) )
+						add( null )
 					} )
+					auxiliary() {
+						"JavaCodeGenerator.postInitCode": "tableCirculo.getColumnModel().getColumn(1).setPreferredWidth(0);\ntableCirculo.getColumnModel().getColumn(1).setMinWidth(0);\ntableCirculo.getColumnModel().getColumn(1).setWidth(0);\ntableCirculo.getColumnModel().getColumn(1).setMaxWidth(0);"
+					}
 				} )
 			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
 				"x": 15
-				"y": 335
+				"y": 385
 				"width": 130
 				"height": 190
 			} )
@@ -181,67 +200,79 @@ new FormModel {
 				"width": 100
 				"height": 17
 				"x": 265
-				"y": 310
+				"y": 360
 			} )
 			add( new FormComponent( "javax.swing.JLabel" ) {
 				name: "circuloBrancosN"
-				"text": "N"
 				"font": #Font1
+				auxiliary() {
+					"JavaCodeGenerator.preInitCode": "//circuloBrancosN.setText(\"\"+sge.getResultadoCirculoPR(eleicao, voltaBox.getSelectedIndex()+1, (int) tableCirculo.getModel().getValueAt(tableCirculo.getSelectedRow(), 1)).getBrancos());"
+				}
 			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
-				"width": 40
+				"width": 75
 				"height": 17
-				"x": 415
-				"y": 310
+				"x": 380
+				"y": 360
 			} )
 			add( new FormComponent( "javax.swing.JLabel" ) {
 				name: "circuloBrancosP"
-				"text": "%"
 				"font": #Font1
+				auxiliary() {
+					"JavaCodeGenerator.preInitCode": "//circuloBrancosP.setText(Math.round(100.0 / eleicao.numeroEleitores() * sge.getResultadoCirculoPR(eleicao,voltaBox.getSelectedIndex()+1,(int) tableCirculo.getValueAt(tableCirculo.getSelectedRow(), 1)).getBrancos())+\"%\");"
+				}
 			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
-				"width": 40
+				"width": 55
 				"height": 17
 				"x": 480
-				"y": 310
+				"y": 360
 			} )
 			add( new FormComponent( "javax.swing.JLabel" ) {
 				name: "circuloNulosP"
-				"text": "%"
 				"font": #Font1
+				auxiliary() {
+					"JavaCodeGenerator.preInitCode": "//circuloNulosP.setText(Math.round(100.0 / eleicao.numeroEleitores() * sge.getResultadoCirculoPR(eleicao,voltaBox.getSelectedIndex()+1,(int) tableCirculo.getValueAt(tableCirculo.getSelectedRow(), 1)).getNulos())+\"%\");"
+				}
 			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
-				"width": 40
+				"width": 55
 				"height": 17
 				"x": 480
-				"y": 335
+				"y": 385
 			} )
 			add( new FormComponent( "javax.swing.JLabel" ) {
 				name: "circuloAbstencaoP"
-				"text": "%"
 				"font": #Font1
+				auxiliary() {
+					"JavaCodeGenerator.preInitCode": "//circuloAbstencaoP.setText(Math.round(100.0 / eleicao.numeroEleitores() * sge.getResultadoCirculoPR(eleicao,voltaBox.getSelectedIndex()+1,(int) tableCirculo.getValueAt(tableCirculo.getSelectedRow(), 1)).getAbstencao())+\"%\");"
+				}
 			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
-				"width": 40
+				"width": 55
 				"height": 17
 				"x": 480
-				"y": 360
+				"y": 410
 			} )
 			add( new FormComponent( "javax.swing.JLabel" ) {
 				name: "circuloAbstencaoN"
-				"text": "N"
 				"font": #Font1
+				auxiliary() {
+					"JavaCodeGenerator.preInitCode": "//circuloAbstencaoN.setText(\"\"+sge.getResultadoCirculoPR(eleicao, voltaBox.getSelectedIndex()+1, (int) tableCirculo.getModel().getValueAt(tableCirculo.getSelectedRow(), 1)).getAbstencao());"
+				}
 			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
-				"width": 40
+				"width": 75
 				"height": 17
-				"x": 415
-				"y": 360
+				"x": 380
+				"y": 410
 			} )
 			add( new FormComponent( "javax.swing.JLabel" ) {
 				name: "circuloNulosN"
-				"text": "N"
 				"font": #Font1
+				auxiliary() {
+					"JavaCodeGenerator.preInitCode": "//circuloNulosN.setText(\"\"+sge.getResultadoCirculoPR(eleicao, voltaBox.getSelectedIndex()+1, (int) tableCirculo.getModel().getValueAt(tableCirculo.getSelectedRow(), 1)).getNulos());"
+				}
 			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
-				"width": 40
+				"width": 75
 				"height": 17
-				"x": 415
-				"y": 335
+				"x": 380
+				"y": 385
 			} )
 			add( new FormComponent( "javax.swing.JLabel" ) {
 				name: "label19"
@@ -251,7 +282,7 @@ new FormModel {
 				"width": 90
 				"height": 17
 				"x": 265
-				"y": 335
+				"y": 385
 			} )
 			add( new FormComponent( "javax.swing.JLabel" ) {
 				name: "label20"
@@ -261,7 +292,7 @@ new FormModel {
 				"width": 85
 				"height": 17
 				"x": 265
-				"y": 360
+				"y": 410
 			} )
 			add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
 				name: "scrollCirculoExpanded"
@@ -272,32 +303,39 @@ new FormModel {
 						add( "Percentagem" )
 						add( "Lista" )
 						add( "Número de Votos" )
+						add( null )
 					}, new java.util.Vector {
 						add( class java.lang.String )
 						add( null )
 						add( null )
+						add( null )
 					}, new java.util.Vector {
 						add( false )
 						add( false )
+						add( null )
 						add( null )
 					}, new java.util.Vector {
 						add( #SwingTableColumn0 )
 						add( null )
 						add( null )
+						add( null )
 					} )
 					"font": #Font3
+					auxiliary() {
+						"JavaCodeGenerator.postInitCode": "tableResultadosCirculo.getColumnModel().getColumn(3).setPreferredWidth(0);\ntableResultadosCirculo.getColumnModel().getColumn(3).setMinWidth(0);\ntableResultadosCirculo.getColumnModel().getColumn(3).setWidth(0);\ntableResultadosCirculo.getColumnModel().getColumn(3).setMaxWidth(0);"
+					}
 				} )
 			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
 				"width": 420
 				"height": 135
 				"x": 155
-				"y": 390
+				"y": 440
 			} )
 			add( new FormComponent( "javax.swing.JToolBar$Separator" ) {
 				name: "separator2"
 			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
 				"x": 195
-				"y": 40
+				"y": 90
 			} )
 			add( new FormContainer( "javax.swing.JDesktopPane", new FormLayoutManager( class javax.swing.JDesktopPane ) ) {
 				name: "desktopPane1"
@@ -305,7 +343,7 @@ new FormModel {
 				"border": &EtchedBorder0 new javax.swing.border.EtchedBorder( 1, null, null )
 			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
 				"x": 255
-				"y": 5
+				"y": 55
 				"height": 80
 				"width": 320
 			} )
@@ -317,19 +355,50 @@ new FormModel {
 				"width": 320
 				"height": 80
 				"x": 255
-				"y": 305
+				"y": 355
 			} )
 			add( new FormComponent( "javax.swing.JLabel" ) {
 				name: "imagem"
 				"icon": new com.jformdesigner.model.SwingIcon( 0, "/img/PS.png" )
 			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
 				"x": 335
-				"y": 110
+				"y": 160
 				"width": 165
 				"height": 170
 			} )
+			add( new FormComponent( "javax.swing.JSeparator" ) {
+				name: "separator3"
+			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
+				"width": 560
+				"height": 2
+				"x": 15
+				"y": 45
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label6"
+				"text": "Selecione a volta:"
+				"font": #Font0
+			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
+				"width": 134
+				"height": 17
+				"x": 20
+				"y": 15
+			} )
+			add( new FormComponent( "javax.swing.JComboBox" ) {
+				name: "voltaBox"
+				"font": new java.awt.Font( "Arial", 0, 14 )
+				"model": new javax.swing.DefaultComboBoxModel {
+					selectedItem: "Primeira Volta"
+					addElement( "Primeira Volta" )
+					addElement( "Segunda Volta" )
+				}
+			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
+				"x": 165
+				"y": 15
+				"width": 135
+			} )
 		}, new FormLayoutConstraints( null ) {
-			"size": new java.awt.Dimension( 605, 580 )
+			"size": new java.awt.Dimension( 605, 625 )
 			"location": new java.awt.Point( 0, 0 )
 		} )
 	}

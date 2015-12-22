@@ -158,7 +158,7 @@ public class MainEleitor {
 						{null, null, null},
 					},
 					new String[] {
-						"Data de in\u00edcio", "Data de fim", "Tipo de Elei\u00e7\u00e3o"
+						"Data de in\u00edcio", "Tipo de Elei\u00e7\u00e3o", "id"
 					}
 				) {
 					Class<?>[] columnTypes = new Class<?>[] {
@@ -187,6 +187,10 @@ public class MainEleitor {
 						scrollPane1MouseClicked(e);
 					}
 				});
+				tableEleicoes.getColumnModel().getColumn(2).setPreferredWidth(0);
+				tableEleicoes.getColumnModel().getColumn(2).setMinWidth(0);
+				tableEleicoes.getColumnModel().getColumn(2).setWidth(0);
+				tableEleicoes.getColumnModel().getColumn(2).setMaxWidth(0);
 				scrollPane1.setViewportView(tableEleicoes);
 			}
 			frameEleitorContentPane.add(scrollPane1);

@@ -1,6 +1,8 @@
 package Business;
 
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Set;
 
 public class ResultadoGlobalPR {
@@ -48,7 +50,18 @@ public class ResultadoGlobalPR {
 		this.validos = validos;
 	}
 	
-	
+	public int getAbstencao(){
+		int totVotos=0,abstencao;
+		Iterator<ListavelVotos> i = validos.iterator();
+		
+		while(i.hasNext()){
+			totVotos+=i.next().getVotos();
+		}
+		
+		abstencao = totVotos-brancos-nulos;
+		
+		return abstencao;
+	}
 	
 	
 }
