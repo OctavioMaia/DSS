@@ -124,7 +124,13 @@ public class ColigacaoDAO implements Map<Integer, Coligacao> {
 			ps.execute();
 			ps.close();
 			ret.setRemovido(true);
+			PreparedStatement ps1 = c.prepareStatement("DELETE FROM "+ TabColPartName
+					+" WHERE "+TabColPartColId+"=?");
+			ps1.setInt(1, key);
+			ps1.executeUpdate();
+			ps1.close();
 		}
+		
 		return ret;
 	}
 	
