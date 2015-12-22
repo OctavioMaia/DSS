@@ -140,6 +140,15 @@ public class Lista implements Listavel{
 		return this.candidatos.size()-this.getNumCandPrim();
 	}
 	
+	public CandidatoAR getCandidato(int bi) {
+		CandidatoAR candidato = null;
+		for(CandidatoAR c: this.candidatos){
+			if(c.getBi()==bi)
+				return c;
+		}
+		return candidato;
+	}
+	
 	@Override
 	public boolean equals(Object o){
         if (o == null) {
@@ -152,4 +161,5 @@ public class Lista implements Listavel{
         return this.circulo.equals(lista.getCirculo()) 
         		&& this.nome.equals(lista.getNome());
 	}
+	
 }
