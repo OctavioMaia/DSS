@@ -76,7 +76,6 @@ public class ListaPR implements Listavel {
 		ListaPR lista = (ListaPR) obj;
 		return this.idEleicao==lista.idEleicao;
 	}
-	
 	public boolean equalsID(int idLista){
 		return this.idEleicao==idLista;
 	}
