@@ -81,8 +81,8 @@ public class ResultadoCirculoAR {
 		return mandatos;
 	}
 
-	public void setMandatos(HashMap<Lista, Integer> mandatos) {
-		this.mandatos = mandatos;
+	public void setMandatos(Map<Lista, Integer> mandatos2) {
+		this.mandatos = mandatos2;
 	}
 
 	public void setMandatosLista(Lista lista, int mandatos) {
