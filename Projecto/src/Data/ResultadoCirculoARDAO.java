@@ -14,9 +14,8 @@ import java.util.TreeSet;
 
 import Business.Circulo;
 import Business.Lista;
-import Business.ListaPR;
 import Business.ResultadoCirculoAR;
-import Business.ResultadoCirculoPR;
+
 
 public class ResultadoCirculoARDAO implements Map<Integer,ResultadoCirculoAR>{
 	private int idEleicao;
@@ -206,14 +205,99 @@ public class ResultadoCirculoARDAO implements Map<Integer,ResultadoCirculoAR>{
 		return r;
 	}
 	
+	private boolean existResLista(Integer idLista, Integer idCirculo, Connection c) throws SQLException{
+		boolean ret = false;
+		PreparedStatement ps = c.prepareStatement("SELECT * FROM " + TabResLista+
+				" WHERE " + TabResListaIDElei + "=? AND " + TabResListaIDCirc + "=? AND " + 
+				TabResListaIDLista +"=?");
+		ps.setInt(1, this.idEleicao);
+		ps.setInt(2, idCirculo);
+		ps.setInt(3, idLista);
+		ResultSet rs = ps.executeQuery();
+		if(rs.next()){
+			ret=true;
+		}
+		rs.close();
+		ps.close();
+		return ret;
+	}
+	
+	private void insereListasRes(Integer key, ResultadoCirculoAR value,Connection c) throws SQLException{
+		Map<Lista,Integer> mandatos = value.getMandatos();
+		Map<Lista,Integer> votos = value.getValidos();
+		Iterator<Lista> i = mandatos.keySet().iterator();
+
+		PreparedStatement psU = c.prepareStatement("UPDATE " + TabResLista + " "
+				+ "SET "+ TabResListaMandatos+"=?,"+TabResListaVotos+"=?, "
+				+ "WHERE " + TabResListaIDCirc+"=? AND "+TabResListaIDElei+"=? AND "
+				+ TabResListaIDLista +"=?");
+		
+		psU.setInt(3, key);
+		psU.setInt(4, this.idEleicao);
+		
+		
+		PreparedStatement psI = c.prepareStatement("INSERT INTO " + TabResLista + " "
+				+ "("+TabResListaIDLista+","+TabResListaIDCirc+","+TabResListaIDElei+","
+				+TabResListaMandatos+","+TabResListaVotos+") "
+				+ "VALEUS "
+				+ "(?,?,?,?,?)");
+		psI.setInt(2, key);
+		psI.setInt(3, this.idEleicao);
+		
+		while (i.hasNext()) {
+			Lista l =  i.next();
+			int idlista =l.getID();
+			int vot = votos.get(l);
+			int mand = mandatos.get(l);
+			if(this.existResLista(idlista,key,c)){
+				psU.setInt(5, idlista);
+				psU.setInt(1, mand);
+				psU.setInt(2, vot);
+				psU.execute();
+			}else{
+				psI.setInt(1, idlista);
+				psI.setInt(4, mand);
+				psI.setInt(5, vot);
+				psI.execute();
+			}
+		}
+		psI.close();
+		psU.close();
+	}
+	//Assmindo que todas as listas estam na BD
 	protected ResultadoCirculoAR put_aux(Integer key, ResultadoCirculoAR value,Connection c) throws SQLException{
 		ResultadoCirculoAR ret = this.get_aux(key, c);
 		if(ret!=null){//Existe na DB
-			// TODO
+			/*
+			 	private static String TabResGeralNulo = "nulos";
+				private static String TabResGeralBranc = "brancos";
+				private static String TabResGeralTotEleit = "totEleitores";
+				private static String TabResGeralIDElei = "idEleicao";
+			 */
+			PreparedStatement ps = c.prepareStatement("UPDATE " + TabResGeral +
+					" SET "+TabResGeralNulo+"=?,"+TabResGeralBranc+"=?,"+TabResGeralTotEleit+"=?,"+
+					" WHERE " + TabResGeralIDElei + "=? AND " +TabResGeralIDCirc +"=?");
+			ps.setInt(1, value.getNulos());
+			ps.setInt(2, value.getBrancos());
+			ps.setInt(3, value.getTotEleitores());
+			ps.setInt(4, this.idEleicao);
+			ps.setInt(5, key);
+			ps.execute();
+			ps.close();
 		}else{//novo
-			
+			PreparedStatement ps = c.prepareStatement("INSERT INTO " + TabResGeral +
+					" ("+TabResGeralNulo+","+TabResGeralBranc+","+TabResGeralTotEleit+","+TabResGeralIDElei + "," +TabResGeralIDCirc +")"
+					+ " VALUES "
+					+ "(?,?,?,?,?)");
+			ps.setInt(1, value.getNulos());
+			ps.setInt(2, value.getBrancos());
+			ps.setInt(3, value.getTotEleitores());
+			ps.setInt(4, this.idEleicao);
+			ps.setInt(5, key);
+			ps.execute();
+			ps.close();
 		}
-		
+		this.insereListasRes(key,value,c);
 		return ret;
 	}
 	
@@ -246,10 +330,33 @@ public class ResultadoCirculoARDAO implements Map<Integer,ResultadoCirculoAR>{
 		return ret;
 	}
 	
+	private void removeRLista(Integer idLista, Integer idCirculo,Connection c) throws SQLException{
+		PreparedStatement ps = c.prepareStatement("DELETE FROM " + TabResLista
+				+ " WHERE " + TabResListaIDElei + "=? AND " + TabResListaIDCirc + "=? AND " + 
+				TabResListaIDLista +"=?");
+		ps.setInt(1, this.idEleicao);
+		ps.setInt(2, idCirculo);
+		ps.setInt(3, idLista);
+		ps.executeUpdate();
+		ps.close();
+	}
+	
 	private ResultadoCirculoAR remove_aux(Integer key,Connection c) throws SQLException{
 		ResultadoCirculoAR ret = this.get_aux(key, c);
 		if(ret!=null){//Limpar na BD
-			// TODO 
+			//Remover o resultado de todas as listas para quele circulo
+			Iterator<Lista> i =ret.getMandatos().keySet().iterator();
+			while(i.hasNext()){
+				int idLista = i.next().getID();
+				this.removeRLista(idLista, key, c);
+			}
+			//Remover Globais daquele Circulo
+			PreparedStatement ps = c.prepareStatement("DELETE FROM " + TabResGeral
+					+ " WHERE " + TabResGeralIDCirc + "=? AND " + TabResGeralIDElei +"=?");
+			ps.setInt(1, key);
+			ps.setInt(2, this.idEleicao);
+			ps.executeUpdate();
+			ps.close();	
 		}
 		return ret;
 	}

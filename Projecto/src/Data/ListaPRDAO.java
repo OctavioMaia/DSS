@@ -5,7 +5,6 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.GregorianCalendar;
@@ -15,11 +14,8 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import Business.Candidato;
-import Business.EleicaoPR;
 import Business.Lista;
 import Business.ListaPR;
-import Business.Votavel;
-import java.sql.SQLException;
 
 public class ListaPRDAO implements Map<Integer,ListaPR> {
 	private int idEleicao;
@@ -44,11 +40,11 @@ public class ListaPRDAO implements Map<Integer,ListaPR> {
 	private static String Foto = "foto";
 	//Tabela ResultadoLista
 	private static String TabRes = "Resultado_ListaPR";
-	private static String IdCirculo = "idCirculo";
+	//private static String IdCirculo = "idCirculo";
 	private static String IdListaPR = "idlistaPR";
-	private static String Votos = "NrVotos";
+	//private static String Votos = "NrVotos";
 	private static String IdEleic = "idEleicao";
-	private static String Volta = "volta";
+	//private static String Volta = "volta";
 
 	
 	public ListaPRDAO (int idEleicao){
