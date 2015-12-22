@@ -38,7 +38,7 @@ public class EleicaoAR extends Eleicao {
 		this.calcularMandatosCirculos();
 	}
 
-	public EleicaoAR(int idEleicao, Calendar data, Collection<Circulo> circulos, int estado,int mandatosAssembleia, boolean permitirVotar, Set<Integer> vot) {
+	public EleicaoAR(int idEleicao, Calendar data, Collection<Circulo> circulos, int estado, boolean permitirVotar, Set<Integer> vot,int mandatosAssembleia) {
 		super(idEleicao, data,estado,permitirVotar,vot);
 		this.mandatosAssembleia = mandatosAssembleia;
 		this.circulos = new CirculoInfoDAO(idEleicao);
@@ -161,7 +161,7 @@ public class EleicaoAR extends Eleicao {
 		this.atribuirMandatosListas();
 	}
 	
-	public void addCandidato(Lista lista,CandidatoAR candidato) throws ExceptionLimiteCandidatos{
+	public void addCandidato(Lista lista,CandidatoAR candidato) throws ExceptionLimiteCandidatos, ExceptionMandanteInvalido{
 		CirculoInfo cinfo = this.circulos.get(lista.getCirculo().getId());
 		cinfo.addCandidatoLista(lista,candidato);
 	}

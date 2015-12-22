@@ -5,14 +5,19 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
+import java.util.GregorianCalendar;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
+import Business.Circulo;
 import Business.CirculoInfo;
 import Business.EleicaoAR;
+import Business.EleicaoPR;
 
 public class EleicaoARDAO implements Map<Integer,EleicaoAR>{
 	//Tabela Eleições AR
@@ -26,12 +31,42 @@ public class EleicaoARDAO implements Map<Integer,EleicaoAR>{
 	private static String PermitirVotar = "permitirVotar";
 	//Tabela Eleitores que votaram na eleicao
 	private static String TabEleitores = "Eleitor_Vota_Eleicao";
+	private static String Eleitor = "nrIdEleitor";
+	private static String Volta = "volta";
 	
 
 	@Override
 	public void clear() {
-		// TODO Auto-generated method stub
-		
+		Connection c = null;
+		try {
+			c = Connector.newConnection(false);
+			Set<Integer> eleicoes = this.keySet();
+			if(eleicoes==null || eleicoes.isEmpty()) return;
+			Iterator<Integer> itEleicoes = eleicoes.iterator();
+			while(itEleicoes.hasNext()){
+				this.remove(itEleicoes.next());
+			}				
+			c.commit();	
+		} catch (SQLException e) {
+			try {
+				c.rollback();
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+				throw new RuntimeException(e1.getMessage());
+			}
+			e.printStackTrace();
+			throw new RuntimeException(e.getMessage());
+		}catch(Exception e){
+			e.printStackTrace();
+			throw new RuntimeException(e.getMessage());
+		}finally {
+			try {
+				c.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+				throw new RuntimeException(e.getMessage());
+			}
+		}
 	}
 
 	@Override
@@ -41,7 +76,7 @@ public class EleicaoARDAO implements Map<Integer,EleicaoAR>{
         try{
         	conn = Connector.newConnection(true);
         	PreparedStatement ps = conn.prepareStatement("SELECT  EXISTS (SELECT * FROM "+ Tabname +
-        			" WHERE "+Eleicao+" = ?");
+        			" WHERE "+Eleicao+" = ?)");
         	ps.setInt(1,(Integer)key);
         	ResultSet rs = ps.executeQuery();
         	if(rs.next()){
@@ -68,13 +103,63 @@ public class EleicaoARDAO implements Map<Integer,EleicaoAR>{
 		return this.containsKey( ((EleicaoAR)value).getIdEleicao() );
 	}
 
-	/* (non-Javadoc)
-	 * @see java.util.Map#get(java.lang.Object)
-	 */
 	@Override
 	public EleicaoAR get(Object key) {
-		// TODO Auto-generated method stub
-		return null;
+		EleicaoAR eleicao = null;
+        Connection conn = null; 
+        try{
+        	if(!this.containsKey(key)) return null;
+        	conn=Connector.newConnection(true);
+        	int estado = 0;
+        	Calendar data = null;
+        	boolean permitirVotar = false;
+        	HashSet<Integer> eleitores = new HashSet<>();
+        	int mandatos = 0;
+        	// tabela eleicoes
+        	PreparedStatement psEleicao = conn.prepareStatement("Select * FROM "+TabEleicoes+
+        			" WHERE "+Eleicao+" = ?");
+        	psEleicao.setInt(1,(Integer)key);
+        	ResultSet rsEleicao = psEleicao.executeQuery();
+        	if(rsEleicao.next()){
+        		estado = rsEleicao.getInt(Estado);
+        		data = new GregorianCalendar();
+        		data.setTime(rsEleicao.getDate(Data));
+        		permitirVotar = rsEleicao.getBoolean(PermitirVotar);
+        	}
+        	rsEleicao.close();
+        	psEleicao.close();
+        	// conjunto de eleitores
+        	PreparedStatement psEleitores = conn.prepareStatement("Select "+Eleitor+" from "+TabEleitores+
+        			" where "+Eleicao+" = ?");
+        	psEleitores.setInt(1,(Integer)key);
+        	ResultSet rsEleitores = psEleitores.executeQuery();
+        	while(rsEleitores.next()){
+        		eleitores.add(rsEleitores.getInt(Eleitor));
+        	}
+        	rsEleitores.close();
+        	psEleitores.close();
+        	// tabela eleicoesAR
+        	PreparedStatement psEleicaoAR = conn.prepareStatement("select "+Mandatos+" from "+Tabname
+        			+" where "+Eleicao+" = ?");
+        	psEleicaoAR.setInt(1, (Integer)key);
+        	ResultSet rsEleicaoAR = psEleicaoAR.executeQuery();
+        	if(rsEleicaoAR.next()){
+        		mandatos = rsEleicaoAR.getInt(Mandatos);
+        	}
+        	Collection<Circulo> circulos = new CirculoDAO().values();
+        	eleicao = new EleicaoAR((Integer)key,data,circulos,estado,permitirVotar,eleitores,mandatos);
+        }catch(Exception e){
+			e.printStackTrace();
+			throw new RuntimeException(e.getMessage());
+    	}finally{
+    		try {
+				conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+				throw new RuntimeException(e.getMessage());
+			}
+    	}
+        return eleicao;
 	}
 
 	@Override
@@ -133,6 +218,14 @@ public class EleicaoARDAO implements Map<Integer,EleicaoAR>{
         		psEleicaoAR.setInt(2, value.getMandatosAssembleia());
         		psEleicaoAR.execute();
         		psEleicaoAR.close();
+    			PreparedStatement psEleitores = conn.prepareStatement("Insert into "+TabEleitores
+    					+" ("+Eleitor+","+Eleicao+","+Volta+") values " + "(?,?,0)");
+    			psEleitores.setInt(2, key);
+        		for(int eleitor: value.getVotantes()){
+        			psEleitores.setInt(1, eleitor);
+        			psEleitores.execute();
+        			psEleitores.close();
+        		}
         	}else{//registo existente
         		PreparedStatement psEleicao = conn.prepareStatement("UPDATE "+ TabEleicoes + 
         				" SET "+Estado+" = ?,"+Data+" = ?,"+PermitirVotar+" = ? WHERE "+Eleicao+" = ?");
@@ -148,6 +241,22 @@ public class EleicaoARDAO implements Map<Integer,EleicaoAR>{
         		psEleicaoAR.setInt(2, key);
         		psEleicaoAR.execute();
         		psEleicaoAR.close();
+        		//Remover eleitores antigos
+    			PreparedStatement psRemoveEleitor = conn.prepareStatement("DELETE FROM "+TabEleitores+" WHERE "+Eleicao+" =?");
+    			psRemoveEleitor.setInt(1, key);
+    			psRemoveEleitor.execute();
+    			psRemoveEleitor.close();
+    			//Inserir novos eleitores
+        		PreparedStatement psInsertEleitor = conn.prepareStatement("INSERT INTRO "+ TabEleitores +
+        				 " VALUES ("+Eleitor+","+Eleicao+","+Volta+")"
+        				+ "(?,?,0)");
+        		psInsertEleitor.setInt(2,key);
+        		Iterator<Integer> eleitores = value.getVotantes().iterator();
+        		while(eleitores.hasNext()){
+        			int eleitor = eleitores.next();
+        			psInsertEleitor.setInt(1, eleitor);
+        			psInsertEleitor.executeQuery();
+        		}
         	}
     		conn.commit();
     	}catch(Exception e){
@@ -170,13 +279,56 @@ public class EleicaoARDAO implements Map<Integer,EleicaoAR>{
     	return eleicao;
 	}
 
-	/* (non-Javadoc)
-	 * @see java.util.Map#remove(java.lang.Object)
-	 */
 	@Override
 	public EleicaoAR remove(Object key) {
-		// TODO Auto-generated method stub
-		return null;
+		Connection conn =null;
+		EleicaoAR ret = null;
+		try{
+			conn= Connector.newConnection(false);
+			ret = this.get(key);
+			if(ret == null) return null;
+			new CirculoInfoDAO((Integer)key).clear();
+			new ResultadoCirculoARDAO((Integer)key).clear();
+			//Remover Votantes
+			PreparedStatement psEleitores = conn.prepareStatement("DELETE FROM " +TabEleitores
+					+ " WHERE "+Eleicao+" = ?");
+			psEleitores.setInt(1,(Integer)key);
+			psEleitores.execute();
+			psEleitores.close();
+			//Remover DasEleicoesAR
+			PreparedStatement psEleicoesAR = conn.prepareStatement("DELETE FROM "+ Tabname
+					+ " WHERE "+Eleicao+" = ?");
+			psEleicoesAR.setInt(1,(Integer)key);
+			psEleicoesAR.execute();
+			psEleicoesAR.close();
+			//Remover DasEleicoes
+			PreparedStatement psEleicoes = conn.prepareStatement("DELETE FROM " + Tabname
+					+ " WHERE "+Eleicao+" = ?");
+			psEleicoes.setInt(1,(Integer)key);
+			psEleicoes.execute();
+			psEleicoes.close();
+			conn.commit();	
+		}catch(SQLException e){
+    		try {
+				conn.rollback();
+				e.printStackTrace();
+				throw new RuntimeException(e.getMessage());
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+				throw new RuntimeException(e1.getMessage());
+			}
+    	}catch(Exception e){
+			e.printStackTrace();
+			throw new RuntimeException(e.getMessage());
+    	}finally{
+    		try {
+				conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+				throw new RuntimeException(e.getMessage());
+			}
+    	}
+		return ret;
 	}
 
 	@Override
