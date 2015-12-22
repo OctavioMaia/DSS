@@ -234,7 +234,8 @@ public class PartidosDAO implements Map<Integer,Partido>{
 		Partido p = this.get_aux((Integer)key, c);
 		if(p!=null){
 			PreparedStatement ps = c.prepareStatement("UPDATE " + TabPartName+
-					" SET "+TabPartRemov+"=true");
+					" SET "+TabPartRemov+"=true"+" WHERE id=?");
+			ps.setInt(1, key);
 			ps.executeUpdate();
 			ps.close();
 			PreparedStatement ps1 = c.prepareStatement("SELECT idColigacao FROM Partido_pertence_Coligacao WHERE idPartido = ?");
@@ -244,7 +245,10 @@ public class PartidosDAO implements Map<Integer,Partido>{
 				cdao.remove_aux(rs.getInt("idColigacao"), c);
 			}
 			p.setRemovido(true);
-			
+			PreparedStatement ps2 = c.prepareStatement("DELETE FROM Partido_pertence_Coligacao WHERE idPartido= ?");
+			ps2.setInt(1,key);
+			ps2.execute();
+			ps2.close();
 		}
 		return p;
 	}
