@@ -25,7 +25,7 @@ public class PartidosDAO implements Map<Integer,Partido>{
 	
 	//Tabela de Partidos
 	private static String TabPartName = "Partidos";
-	private static String TabPartID = "Partidos";
+	private static String TabPartID = "id";
 	private static String TabPartNome = "nome";
 	private static String TabPartSimb = "simbolo";
 	private static String TabPartSigl = "sigla";
@@ -89,7 +89,7 @@ public class PartidosDAO implements Map<Integer,Partido>{
 	private boolean containsKey_aux(Integer key,Connection c) throws SQLException{
 		boolean ret = false;
 		PreparedStatement ps = c.prepareStatement(" SELECT EXISTS (SELECT "+TabPartID+" FROM " + TabPartName+ 
-                " WHERE id = ?)");
+                " WHERE "+TabPartID+ "= ?)");
 		ps.setInt(1,key);
     	ResultSet rs = ps.executeQuery();
     	if (rs.next()){
@@ -126,9 +126,10 @@ public class PartidosDAO implements Map<Integer,Partido>{
 		return this.containsKey(((Partido)value).getId());
 	}
 	
-	private Partido get_aux(Integer key,Connection c) throws SQLException{
+	protected Partido get_aux(Integer key,Connection c) throws SQLException{
 		Partido p =null;
 		PreparedStatement ps = c.prepareStatement("SELECT * FROM " + TabPartName + " WHERE " + TabPartID+ "=?");
+		ps.setInt(1,key);
 		ResultSet rs = ps.executeQuery();
 		if(rs.next()){
 			String sigla = rs.getString(TabPartSigl);
@@ -170,22 +171,23 @@ public class PartidosDAO implements Map<Integer,Partido>{
 	protected Partido put_aux(Integer key,Partido value, Connection c) throws SQLException{
 		Partido p = this.get_aux(key, c);
 		if(p!=null){//update
-			PreparedStatement ps = c.prepareStatement("UPDATE " + TabPartName+ 
-                    " SET "+TabPartNome+"=?,"+TabPartSimb+"=?,"+TabPartSigl+"=?, " + TabPartRemov + "=?, "+
-                    " WHERE " +TabPartID +"=?");
-			ps.setInt(5,key);
-			ps.setString(1,value.getNome());
-			ps.setString(2,value.getSimbolo());
-			ps.setString(3,value.getSigla());
-			ps.setBoolean(4,value.isRemovido());
+			PreparedStatement ps = c.prepareStatement("UPDATE " +TabPartName+ 
+                    " SET "+TabPartID+"=?,"+TabPartNome+"=?,"+TabPartSimb+"=?,"+TabPartSigl+"=?,"+TabPartRemov+"=? "+
+                    "WHERE " +TabPartID +"=?");
+			ps.setInt(1,key);
+			ps.setString(2,value.getNome());
+			ps.setString(3,value.getSimbolo());
+			ps.setString(4,value.getSigla());
+			ps.setBoolean(5,value.isRemovido());
+			ps.setInt(6,key);
 			ps.execute();
 			ps.close();
 			
 		}else{//novo
 			PreparedStatement ps = c.prepareStatement("INSERT INTO " + TabPartName+ 
-                    " ("+TabPartID+","+TabPartNome+","+TabPartSimb+","+TabPartSigl+","+TabPartRemov+") " +
+                    " ("+TabPartID+","+TabPartNome+","+TabPartSimb+","+TabPartSigl+","+TabPartRemov+")" +
                     " value " +
-                    " (?,?,?,?)");
+                    "(?,?,?,?,?)");
 			ps.setInt(1,key);
 			ps.setString(2,value.getNome());
 			ps.setString(3,value.getSimbolo());
@@ -200,7 +202,7 @@ public class PartidosDAO implements Map<Integer,Partido>{
 	@Override
 	public Partido put(Integer key, Partido value) {
 		Connection conn=null;
-		Partido partido = this.remove(key);
+		Partido partido = null;
     	try{
     		conn = Connector.newConnection(false);
     		partido = this.put_aux(key, value, conn);
@@ -227,13 +229,13 @@ public class PartidosDAO implements Map<Integer,Partido>{
     	return partido;
 	}
 
-	private Partido remove_aux(Integer key,Connection c)throws SQLException{
+	private Partido remove_aux(Integer key,Connection c) throws SQLException{
 		ColigacaoDAO cdao = new ColigacaoDAO();
 		Partido p = this.get_aux((Integer)key, c);
 		if(p!=null){
 			PreparedStatement ps = c.prepareStatement("UPDATE " + TabPartName+
-					"SET " + TabPartRemov +"=True");
-			ps.execute();
+					" SET "+TabPartRemov+"=true");
+			ps.executeUpdate();
 			ps.close();
 			PreparedStatement ps1 = c.prepareStatement("SELECT idColigacao FROM Partido_pertence_Coligacao WHERE idPartido = ?");
 			ps1.setInt(1, key);
