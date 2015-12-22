@@ -6,8 +6,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
-import com.sun.org.apache.bcel.internal.generic.NEW;
-
 import Comparator.ComparatorEleicaoData;
 import Comparator.ComparatorListavelVotos;
 import Comparator.ComparatorVotavelVotos;
@@ -25,15 +23,11 @@ import Exception.ExceptionPartidoExiste;
 import Exception.ExceptionPartidoNaoExiste;
 import Exception.ExceptionTerminarEleicao;
 import Data.ColigacaoDAO;
-import Data.Connector;
 import Data.EleicaoARDAO;
 import Data.EleicaoPRDAO;
 import Data.EleitoresDAO;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collection;
 import java.util.Collections;
-import java.util.Date;
 import java.util.HashMap;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -224,6 +218,7 @@ public class SGE {
 
 	public EleicaoAR criarEleicaoAR(EleicaoAR eleicao) {
 		eleicao.setIdEleicao(this.chaveEleicao());
+		eleicao.inicializarCirculos(this.circulos.values());
 		this.eleicoesAR.put(eleicao.getIdEleicao(), eleicao);
 		return eleicao;
 	}
@@ -410,6 +405,15 @@ public class SGE {
 		return el;
 	}
 
+	public CandidatoAR getCandidatoAR(int bi){
+		CandidatoAR candidato = null;
+		for(EleicaoAR eleicao: this.eleicoesAR.values()){
+			candidato = eleicao.getCandidato(bi);
+			if(candidato != null) return candidato;
+		}
+		return candidato;
+	}
+	
 	public ResultadoCirculoPR getResultadoCirculoPR(EleicaoPR e, int volta, int circulo) {
 		return e.getResultadoCirculo(volta, circulo);
 	}

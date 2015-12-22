@@ -1,11 +1,9 @@
 package Business;
 
 import java.util.HashMap;
-import java.util.Set;
 
 import Data.ListaARDAO;
 import Exception.ExceptionLimiteCandidatos;
-import Exception.ExceptionListaExiste;
 import Exception.ExceptionMandanteInvalido;
 
 public class CirculoInfo {
@@ -69,5 +67,14 @@ public class CirculoInfo {
 	public void removeCandidato(Lista l, CandidatoAR c){
 		l.removeCandidato(c);
 		this.listas.put(l.getID(),l);
+	}
+
+	public CandidatoAR getCandidato(int bi) {
+		CandidatoAR candidato = null;
+		for(Lista lista: this.listas.values()){
+			candidato = lista.getCandidato(bi);
+			if(candidato != null) return candidato;
+		}
+		return candidato;
 	}
 }

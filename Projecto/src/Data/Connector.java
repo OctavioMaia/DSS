@@ -4,8 +4,8 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 
 public class Connector {
-	private static String url="jdbc:mysql://localhost:3306/sge";
-	private static String username="adminsge";
+	private static String url="jdbc:mysql://192.168.1.152:3306/sge";
+	private static String username="root";
 	private static String password="1";
 
 	public static Connection newConnection(boolean autoCommit) throws Exception {
