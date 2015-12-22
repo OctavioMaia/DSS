@@ -55,6 +55,9 @@ public class SGE {
 			this.eleitor = null;
 			this.partidos = new PartidosDAO();
 			this.circulos = new CirculoDAO();
+			for(int i=1;i<=22;i++){
+				this.circulos.put(i, new Circulo(i, "PUTA "+i, 0));
+			}
 			this.coligacoes = new ColigacaoDAO();
 			this.eleitores = new EleitoresDAO();
 			this.eleicoesPR = new EleicaoPRDAO();
