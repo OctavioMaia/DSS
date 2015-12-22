@@ -19,6 +19,7 @@ import Business.Candidato;
 import Business.CandidatoAR;
 import Business.Circulo;
 import Business.Lista;
+import Business.Listavel;
 import Business.Partido;
 import Business.ResultadoCirculoAR;
 import Business.Votavel;
@@ -36,6 +37,7 @@ public class ListaARDAO implements Map<Integer,Lista>{
 	private static String TabListIDElei = "idEleicao";
 	private static String TabListPart =  "idPartido";
 	private static String TabListCol = "idColigacao";
+	private static String TabListOrd = "ordem";
 	//Tabela de CandidatosAR
 	private static String TabCandid = "CandidatosPR";
 	private static String TabCandidID = "bi";
@@ -278,9 +280,28 @@ public class ListaARDAO implements Map<Integer,Lista>{
 		psL.setInt(1, key);
 		ResultSet rsL = psL.executeQuery();
 		if(rsL.next()){
+			Votavel mandante = null;
 			CirculoDAO cdao = new CirculoDAO();
 			Circulo ci  = cdao.get_aux(this.circulo, c);
-			l = new Lista(key, ci, ordem, sigla, nome, simbolo, mandante, cands)
+			String sigla = rs.getString(TabListSig);
+			String nome = rs.getString(TabListNome);
+			String simbolo = rs.getString(TabListSimb);
+			//Ver aqui por causa de um deles ser NULL
+			Integer partido = rs.getInt(TabListPart);
+			Integer coligacao = rs.getInt(TabListCol);
+			Integer mandanteid =partido;
+			int ordem = rs.getInt(TabListOrd);
+			if(partido==null){
+				ColigacaoDAO coldao = new ColigacaoDAO();
+				mandanteid =coligacao;
+				mandante  = coldao.get_aux(mandanteid,c);
+			}else{
+				PartidosDAO pdao = new PartidosDAO();
+				mandante = pdao.get_aux(mandanteid, c);
+				
+			}
+			
+			l = new Lista(key, ci, ordem, sigla, nome, simbolo, mandante, cands);
 			
 		}
 		rsL.close();
