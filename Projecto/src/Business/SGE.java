@@ -8,6 +8,9 @@ import java.util.TreeSet;
 
 import com.sun.org.apache.bcel.internal.generic.NEW;
 
+import Comparator.ComparatorEleicaoData;
+import Comparator.ComparatorListavelVotos;
+import Comparator.ComparatorVotavelVotos;
 import Data.CirculoDAO;
 import Data.PartidosDAO;
 import Exception.ExceptionColigacaoExiste;
@@ -28,6 +31,7 @@ import Data.EleicaoPRDAO;
 import Data.EleitoresDAO;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -42,9 +46,6 @@ public class SGE {
 	private static final int ATIVA = 0;
 	private static final int TERMINADA = 1;
 
-	/**
-	 * ao criaar eleição passar no construtor todos os circulos
-	 */
 	private static Admin admin = new Admin(0, "0");
 	private Eleitor eleitor;
 	private PartidosDAO partidos;
@@ -159,9 +160,6 @@ public class SGE {
 		this.atualizarCirculos(listaEleitores);
 	}
 
-	/**
-	 * Atualizar totEleitores que esta nos ciruclos das eleiçoes
-	 */
 	public void atualizarCirculos(Map<Integer, List<Eleitor>> listaEleitores) {
 		for (Circulo circulo : this.circulos.values()) {
 			circulo.setTotEleitores(listaEleitores.get(circulo.getId()).size());
@@ -400,25 +398,45 @@ public class SGE {
 		pr.addLista(lista);
 		this.eleicoesPR.put(pr.getIdEleicao(), pr);
 	}
-	
-	public Eleicao getEleicao(int idEleicao){
+
+	public Eleicao getEleicao(int idEleicao) {
 		Eleicao el;
-		if((el = this.eleicoesPR.get(idEleicao))==null){
+		if ((el = this.eleicoesPR.get(idEleicao)) == null) {
 			el = this.eleicoesAR.get(idEleicao);
 		}
 		return el;
 	}
-	
-	public ResultadoCirculoPR getResultadoCirculoPR(EleicaoPR e , int volta, int circulo){
+
+	public ResultadoCirculoPR getResultadoCirculoPR(EleicaoPR e, int volta, int circulo) {
 		return e.getResultadoCirculo(volta, circulo);
 	}
-	public ResultadoCirculoAR getResultadoCirculoAR(EleicaoAR e, int circulo){
+
+	public ResultadoCirculoAR getResultadoCirculoAR(EleicaoAR e, int circulo) {
 		return e.getResultadoCirculo(circulo);
 	}
-	public  ResultadoGlobalPR getResultadoGlobalPR(EleicaoPR e , int volta){
+
+	public ResultadoGlobalPR getResultadoGlobalPR(EleicaoPR e, int volta) {
 		return e.getResultadoGlobal(volta);
 	}
-	public ResultadoGlobalAR getResultadoGlobalAR(EleicaoAR e){
+
+	public ResultadoGlobalAR getResultadoGlobalAR(EleicaoAR e) {
 		return e.getResultadoGlobal();
+	}
+
+	public Set<ListavelVotos> ordenarListavel(HashMap<Listavel, Integer> listas) {
+		TreeSet<ListavelVotos> listasSeg = new TreeSet<>(new ComparatorListavelVotos());
+		for (Listavel lista : listas.keySet()) {
+			ListavelVotos lv = new ListavelVotos(lista, listas.get(lista));
+			listasSeg.add(lv);
+		}
+		return listasSeg;
+	}
+	public Set<VotavelVotos> ordenarVotavel(HashMap<Votavel, Integer> listas){
+		TreeSet<VotavelVotos> listasOrdenadas = new TreeSet<>(new ComparatorVotavelVotos());
+		for (Votavel vot : listas.keySet()) {
+			VotavelVotos vv = new VotavelVotos(vot, listas.get(vot));
+			listasOrdenadas.add(vv);
+		}
+		return listasOrdenadas;
 	}
 }

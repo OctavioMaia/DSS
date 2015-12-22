@@ -12,6 +12,7 @@ import java.util.Random;
 import java.util.Set;
 import java.util.TreeSet;
 
+import Comparator.ComparatorListavelVotos;
 import Data.ListaPRDAO;
 import Data.ResultadoCirculoPRDAO;
 import Exception.ExceptionEleicaoEstado;
