@@ -31,6 +31,12 @@ public class ListaARDAO implements Map<Integer,Lista>{
 	private static String TabListPart =  "idPartido";
 	private static String TabListCol = "idColigacao";
 	
+	
+	
+	
+	protected Lista get_aux(Integer key,Connection c) throws SQLException{
+		return this.get(key);
+	}
 	public ListaARDAO(int eleicao, int circulo) {
 		this.Eleicao = eleicao;
 		this.circulo = circulo;
