@@ -67,10 +67,10 @@ Coisas a considerar:
   - [X] EleiçãoARDAO
   - [ ] EleiçãoPRDAO
   - [X] EleitoresDAO
-  - [ ] ListaPRDAO
+  - [X] ListaPRDAO
   - [ ] ResultadoCirculoPRDAO
   - [X] CirculoInfoDAO
   - [X] ColigaçãoDAO
   - [X] CirculoDAO
-  - [ ] ResultadoCirculoARDAO
+  - [ ] ResultadoCirculoARDAO -> Falta testar com listas
   - [ ] ListaARDAO
