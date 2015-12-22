@@ -19,12 +19,12 @@ Coisas a considerar:
     - [x] Apagar informacoes
     - [x] Adicionar ao SGE 
   - [ ] MainEleitor
-    - [x] Nome eleitor (falta metodo no sge)
+    - [x] Nome eleitor
     - [x] Tipo eleicao
     - [x] Data eleicao
-    - [ ] Votar (butão nao faz nada ainda)
+    - [x] Votar
     - [ ] Historico eleicoes
-    - [ ] Ver resultados
+    - [x] Ver resultados
   - [ ] ResultadosAR
     - [x] Resultados globais
       - [x] Calculo votos brancos nulos e abstencao 
@@ -41,7 +41,12 @@ Coisas a considerar:
       - [ ] Calculo votos brancos nulos e abstencao 
       - [ ] Calculo percentagens votos brancos nulos e abstencao
     - [ ] Implementar selecao de colunas nas tabelas pra mostrar informacao
-  - [ ] Votar
+  - [x] Votar
+    - [x] Parse nome eleitor
+    - [ ] Listagem das listas/candidatos
+    - [ ] Imagem
+    - [x] Limpar
+    - [x] Votar
 
 # Cenas dos DAO's:
 

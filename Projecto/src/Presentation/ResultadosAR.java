@@ -11,6 +11,7 @@ import javax.swing.border.*;
 import javax.swing.table.*;
 
 import Business.EleicaoAR;
+import Business.SGE;
 
 /**
  * @author Octavio Maia
@@ -19,9 +20,9 @@ public class ResultadosAR {
 	
 	EleicaoAR eleicao;
 	
-	public ResultadosAR(EleicaoAR e) {
-		eleicao = e;
-		initComponents(e);
+	public ResultadosAR(SGE sge, int id) {
+		//eleicao = sge.getEleicaoAR(id);
+		initComponents(eleicao);
 		ResultadosAR.setVisible(true);
 	}
 
