@@ -124,7 +124,7 @@ public class SGE {
 			while ((line = br.readLine()) != null) {
 				if (line.contains(flin)) {
 					csvSplit = line.split("=")[1];
-					System.out.println(csvSplit);
+					//System.out.println(csvSplit);
 				} else {
 					String[] eleitores = line.split(csvSplit);
 					int nCiruclo = Integer.parseInt(eleitores[1]);
