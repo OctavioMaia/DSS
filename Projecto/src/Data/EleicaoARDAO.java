@@ -8,18 +8,12 @@ import Business.EleicaoAR;
 
 public class EleicaoARDAO implements Map<Integer,EleicaoAR>{
 
-	/* (non-Javadoc)
-	 * @see java.util.Map#clear()
-	 */
 	@Override
 	public void clear() {
 		// TODO Auto-generated method stub
 		
 	}
 
-	/* (non-Javadoc)
-	 * @see java.util.Map#containsKey(java.lang.Object)
-	 */
 	@Override
 	public boolean containsKey(Object key) {
 		// TODO Auto-generated method stub

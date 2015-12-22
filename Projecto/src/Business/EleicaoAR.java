@@ -142,7 +142,12 @@ public class EleicaoAR extends Eleicao {
 	}
 	
 	@Override
-	public void iniciar(){
+	public void iniciar() throws ExceptionIniciarEleicao{
+		for(CirculoInfo cinfo: this.circulos.values()){
+			if(cinfo.getListas().size() == 0){
+				throw new ExceptionIniciarEleicao("Existem círculos sem listas");
+			}
+		}
 		super.setEstado(0);
 		super.setPermitirVotar(true);
 		this.calcularMandatosCirculos();
@@ -152,6 +157,7 @@ public class EleicaoAR extends Eleicao {
 	public void terminar(){
 		super.setEstado(1);
 		super.setPermitirVotar(false);
+		this.geraBoletim();
 		this.atribuirMandatosListas();
 	}
 	
@@ -203,6 +209,11 @@ public class EleicaoAR extends Eleicao {
 			if(maxcirculo>=maxID) maxID = maxcirculo;
 		}
 		l.setID(maxID+1);
+		
+		/*
+		 * Atencao: nao e garantido que a lista seja adicionada aos circulos e aos resultados,
+		 * se acontecer um errro na base de dados
+		 */
 		this.circulos.get(l.getCirculo().getId()).addLista(l);
 		ResultadoCirculoAR resultadoCirculo = this.resultado.get(l.getCirculo().getId());
 		resultadoCirculo.addLista(l);
