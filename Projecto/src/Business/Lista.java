@@ -3,6 +3,8 @@ package Business;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import Exception.ExceptionMandanteInvalido;
+
 /*
  * Lista da Assembleia da Republica
  */
@@ -98,7 +100,19 @@ public class Lista implements Listavel{
 		return this.candidatos;
 	}
 	
-	public void addCandidato(CandidatoAR candidato){
+	public void addCandidato(CandidatoAR candidato) throws ExceptionMandanteInvalido{
+		if(this.mandante.getClass().getName().equals("Partido")){
+			Partido partido = (Partido)this.mandante;
+			if(!candidato.getPartido().equals(partido)){
+				throw new ExceptionMandanteInvalido("Partido Inválido");
+			}
+		}
+		else if(this.mandante.getClass().getName().equals("Coligacao")){
+			Coligacao coligacao = (Coligacao)this.mandante;
+			if(!coligacao.getPartidos().contains(candidato.getPartido())){
+				throw new ExceptionMandanteInvalido("Partido Inválido");
+			}
+		}
 		candidato.setOrdem(this.candidatos.size()+1);
 		this.candidatos.add(candidato);
 	}
