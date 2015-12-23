@@ -3,6 +3,8 @@ package Business;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import Exception.ExceptionMandanteInvalido;
+
 /*
  * Lista da Assembleia da Republica
  */
@@ -98,11 +100,29 @@ public class Lista implements Listavel{
 		return this.candidatos;
 	}
 	
-	public void addCandidato(CandidatoAR candidato){
+	public void addCandidato(CandidatoAR candidato) throws ExceptionMandanteInvalido{
+		if(this.mandante.getClass().getSimpleName().equals("Partido")){
+			Partido partido = (Partido)this.mandante;
+			if(!candidato.getPartido().equals(partido)){
+				throw new ExceptionMandanteInvalido("Partido Inválido");
+			}
+		}
+		else if(this.mandante.getClass().getSimpleName().equals("Coligacao")){
+			Coligacao coligacao = (Coligacao)this.mandante;
+			if(!coligacao.getPartidos().contains(candidato.getPartido())){
+				throw new ExceptionMandanteInvalido("Partido Inválido");
+			}
+		}
+		candidato.setOrdem(this.candidatos.size()+1);
 		this.candidatos.add(candidato);
 	}
 
 	public void removeCandidato(CandidatoAR candidato){
+		int posicao = this.candidatos.indexOf(candidato);
+		for(int i = posicao; i<this.candidatos.size(); i++){
+			CandidatoAR candidatoAux = this.candidatos.get(i);
+			candidatoAux.setOrdem(candidatoAux.getOrdem()-1);
+		}
 		this.candidatos.remove(candidato);
 	}
 	
@@ -120,6 +140,15 @@ public class Lista implements Listavel{
 		return this.candidatos.size()-this.getNumCandPrim();
 	}
 	
+	public CandidatoAR getCandidato(int bi) {
+		CandidatoAR candidato = null;
+		for(CandidatoAR c: this.candidatos){
+			if(c.getBi()==bi)
+				return c;
+		}
+		return candidato;
+	}
+	
 	@Override
 	public boolean equals(Object o){
         if (o == null) {
@@ -132,4 +161,5 @@ public class Lista implements Listavel{
         return this.circulo.equals(lista.getCirculo()) 
         		&& this.nome.equals(lista.getNome());
 	}
+	
 }

@@ -19,16 +19,19 @@ public class Candidato {
 	private String prof;
 	private String residencia;
 	private String naturalidade;
+	private String foto;
 
-	public Candidato(String nome, int bi, String prof, Calendar dataNasc, String residencia, String naturalidade) {
+	public Candidato(String nome, int bi, String prof, Calendar dataNasc, String residencia, String naturalidade,
+			String foto) {
 		this.nome = nome;
 		this.bi = bi;
 		this.prof = prof;
 		this.dataNasc = dataNasc;
 		this.residencia = residencia;
 		this.naturalidade = naturalidade;
+		this.foto = foto;
 	}
-
+	
 	public String getNome() {
 		return nome;
 	}
@@ -40,7 +43,7 @@ public class Candidato {
 	public String getProf() {
 		return prof;
 	}
-
+	
 	public Calendar getDataNasc() {
 		return dataNasc;
 	}
@@ -73,6 +76,15 @@ public class Candidato {
 		this.naturalidade = naturalidade;
 	}
 
+	
+	public String getFoto() {
+		return foto;
+	}
+
+	public void setFoto(String foto) {
+		this.foto = foto;
+	}
+
 	public String toString() {
 		StringBuilder stringBuilder = new StringBuilder();
 		stringBuilder.append("Candidato ");
@@ -87,6 +99,6 @@ public class Candidato {
 	@Override
 	public boolean equals(Object obj) {
 		Candidato c = (Candidato) obj;
-		return	this.bi==c.getBi();
+		return this.bi == c.getBi();
 	}
 }

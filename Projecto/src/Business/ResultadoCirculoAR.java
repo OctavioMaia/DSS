@@ -1,6 +1,9 @@
 package Business;
 
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 import Exception.ExceptionListaExiste;
 
@@ -9,8 +12,8 @@ public class ResultadoCirculoAR {
 	private int totEleitores;
 	private int brancos;
 	private int nulos;
-	private HashMap<Lista, Integer> validos;
-	private HashMap<Lista, Integer> mandatos;
+	private Map<Lista, Integer> validos;
+	private Map<Lista, Integer> mandatos;
 
 	public ResultadoCirculoAR(Circulo c) {
 		this.circulo = c;
@@ -21,8 +24,8 @@ public class ResultadoCirculoAR {
 		this.mandatos = new HashMap<>();
 	}
 
-	public ResultadoCirculoAR(Circulo c, int totEleitores, int brancos, int nulos, HashMap<Lista, Integer> validos,
-			HashMap<Lista, Integer> mandatos) {
+	public ResultadoCirculoAR(Circulo c, int totEleitores, int brancos, int nulos, Map<Lista, Integer> validos,
+			Map<Lista, Integer> mandatos) {
 		this.circulo = c;
 		this.totEleitores = totEleitores;
 		this.brancos = brancos;
@@ -50,6 +53,20 @@ public class ResultadoCirculoAR {
 	public int getNulos() {
 		return nulos;
 	}
+	
+	public int getAbstencao(){
+		int totVotos=0,abstencao;
+		Collection<Integer> c = validos.values();
+		Iterator<Integer> i = c.iterator();
+		
+		while(i.hasNext()){
+			totVotos+=i.next();
+		}
+		
+		abstencao = totVotos-brancos-nulos;
+		
+		return abstencao;
+	}
 
 	public void setBrancos(int brancos) {
 		this.brancos = brancos;
@@ -67,7 +84,7 @@ public class ResultadoCirculoAR {
 		this.circulo = circulo;
 	}
 
-	public HashMap<Lista, Integer> getValidos() {
+	public Map<Lista, Integer> getValidos() {
 		return validos;
 	}
 
@@ -75,12 +92,12 @@ public class ResultadoCirculoAR {
 		this.validos = validos;
 	}
 
-	public HashMap<Lista, Integer> getMandatos() {
+	public Map<Lista, Integer> getMandatos() {
 		return mandatos;
 	}
 
-	public void setMandatos(HashMap<Lista, Integer> mandatos) {
-		this.mandatos = mandatos;
+	public void setMandatos(Map<Lista, Integer> mandatos2) {
+		this.mandatos = mandatos2;
 	}
 
 	public void setMandatosLista(Lista lista, int mandatos) {

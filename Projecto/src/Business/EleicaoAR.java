@@ -1,13 +1,15 @@
 package Business;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
-import java.util.Date;
+import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Random;
 import java.util.Set;
+import java.util.TreeSet;
 
 import Data.CirculoInfoDAO;
 import Data.ResultadoCirculoARDAO;
@@ -18,35 +20,30 @@ public class EleicaoAR extends Eleicao {
 	private CirculoInfoDAO circulos;
 	private ResultadoCirculoARDAO resultado;
 	
-	public EleicaoAR(int idEleicao, Calendar data,Collection<Circulo> circulos,int mandatosAssembleia) {
+	public EleicaoAR(int idEleicao, Calendar data,int mandatosAssembleia) {
 		super(idEleicao, data);
 		this.mandatosAssembleia = mandatosAssembleia;
 		this.circulos = new CirculoInfoDAO(idEleicao);
 		this.resultado = new ResultadoCirculoARDAO(idEleicao);
-		Iterator<Circulo> it = circulos.iterator();
-		while(it.hasNext()){
-			Circulo circulo = it.next();
-			if (!this.circulos.containsKey(circulo.getId()))
-				this.circulos.put(circulo.getId(), new CirculoInfo(circulo));
-			if (!this.resultado.containsKey(circulo.getId()))
-				this.resultado.put(circulo.getId(), new ResultadoCirculoAR(circulo));
-			}
-		this.calcularMandatosCirculos();
 	}
 
-	public EleicaoAR(int idEleicao, Calendar data, Collection<Circulo> circulos, int estado,int mandatosAssembleia, boolean permitirVotar, Set<Integer> vot) {
+	public EleicaoAR(int idEleicao, Calendar data, int estado, boolean permitirVotar, Set<Integer> vot,int mandatosAssembleia) {
 		super(idEleicao, data,estado,permitirVotar,vot);
 		this.mandatosAssembleia = mandatosAssembleia;
 		this.circulos = new CirculoInfoDAO(idEleicao);
 		this.resultado = new ResultadoCirculoARDAO(idEleicao);
+	}
+	
+	public void inicializarCirculos(Collection<Circulo> circulos){
 		Iterator<Circulo> it = circulos.iterator();
 		while(it.hasNext()){
 			Circulo circulo = it.next();
 			if (!this.circulos.containsKey(circulo.getId()))
-				this.circulos.put(circulo.getId(), new CirculoInfo(circulo));
+				this.circulos.put(circulo.getId(), new CirculoInfo(super.getIdEleicao(),circulo));
 			if (!this.resultado.containsKey(circulo.getId()))
 				this.resultado.put(circulo.getId(), new ResultadoCirculoAR(circulo));
-		}
+			}
+		this.calcularMandatosCirculos();
 	}
 	
 	/*
@@ -81,13 +78,13 @@ public class EleicaoAR extends Eleicao {
 		int nulos = 0;
 		int brancos = 0;
 		int totEleitores = 0;
-		HashMap<Votavel,Integer> validos = new HashMap<>();
-		HashMap<Votavel,Integer> mandatos = new HashMap<>();
+		Map<Votavel,Integer> validos = new HashMap<>();
+		Map<Votavel,Integer> mandatos = new HashMap<>();
 		for(int circulo: this.circulos.keySet()){
 			nulos += this.resultado.get(circulo).getNulos();
 			brancos += this.resultado.get(circulo).getBrancos();
 			totEleitores += this.resultado.get(circulo).getTotEleitores();
-			HashMap<Lista,Integer> validosCirculo = this.resultado.get(circulo).getValidos();
+			Map<Lista,Integer> validosCirculo = this.resultado.get(circulo).getValidos();
 			for(Lista lista: validosCirculo.keySet()){
 				Votavel mandante = lista.getMandante();
 				if(!validos.containsKey(mandante))
@@ -95,7 +92,7 @@ public class EleicaoAR extends Eleicao {
 				else
 					validos.put(mandante, validos.get(mandante) + validosCirculo.get(mandante));
 			}
-			HashMap<Lista,Integer> mandatosCirculo = this.resultado.get(circulo).getMandatos();
+			Map<Lista,Integer> mandatosCirculo = this.resultado.get(circulo).getMandatos();
 			for(Lista lista: mandatosCirculo.keySet()){
 				Votavel mandante = lista.getMandante();
 				if(!mandatos.containsKey(mandante))
@@ -130,15 +127,20 @@ public class EleicaoAR extends Eleicao {
 		for(Integer circulo: this.resultado.keySet()){
 			int mandatosCirculo = this.circulos.get(circulo).getMandatos();
 			ResultadoCirculoAR resultadoCirculo = this.resultado.get(circulo);
-			HashMap<Lista,Integer> votos = resultadoCirculo.getValidos();
+			Map<Lista,Integer> votos = resultadoCirculo.getValidos();
 			@SuppressWarnings({ "unchecked", "static-access" })
-			HashMap<Lista,Integer> mandatos = (HashMap<Lista,Integer>)new Hondt().getMandatos(mandatosCirculo, votos);
+			Map<Lista,Integer> mandatos = (HashMap<Lista,Integer>)new Hondt().getMandatos(mandatosCirculo, votos);
 			resultadoCirculo.setMandatos(mandatos);
 		}
 	}
 	
 	@Override
-	public void iniciar(){
+	public void iniciar() throws ExceptionIniciarEleicao{
+		for(CirculoInfo cinfo: this.circulos.values()){
+			if(cinfo.getListas().size() == 0){
+				throw new ExceptionIniciarEleicao("Existem círculos sem listas");
+			}
+		}
 		super.setEstado(0);
 		super.setPermitirVotar(true);
 		this.calcularMandatosCirculos();
@@ -148,10 +150,11 @@ public class EleicaoAR extends Eleicao {
 	public void terminar(){
 		super.setEstado(1);
 		super.setPermitirVotar(false);
+		this.geraBoletim();
 		this.atribuirMandatosListas();
 	}
 	
-	public void addCandidato(Lista lista,CandidatoAR candidato) throws ExceptionLimiteCandidatos{
+	public void addCandidato(Lista lista,CandidatoAR candidato) throws ExceptionLimiteCandidatos, ExceptionMandanteInvalido{
 		CirculoInfo cinfo = this.circulos.get(lista.getCirculo().getId());
 		cinfo.addCandidatoLista(lista,candidato);
 	}
@@ -164,24 +167,24 @@ public class EleicaoAR extends Eleicao {
 			for(int idListaCirculo: listasCirculo.keySet()){
 				Lista listaCirculo = listasCirculo.get(idListaCirculo);
 				if(!l.getMandante().equals(listaCirculo.getMandante())){
-					if(l.getMandante().getClass().getName().equals("Partido")){
+					if(l.getMandante().getClass().getSimpleName().equals("Partido")){
 						Partido partidoLista = (Partido)l.getMandante();
-						if(listaCirculo.getMandante().getClass().getName().equals("Coligacao")){
+						if(listaCirculo.getMandante().getClass().getSimpleName().equals("Coligacao")){
 							Coligacao coligacaoListaCirculo = (Coligacao)listaCirculo.getMandante();
 							if(coligacaoListaCirculo.getPartidos().contains(partidoLista)){
 								throw new ExceptionMandanteInvalido("Partido "+partidoLista.getNome()+" ja pertence a uma coligacao");
 							}
 						}
 					}
-					else if(l.getMandante().getClass().getName().equals("Coligacao")){
+					else if(l.getMandante().getClass().getSimpleName().equals("Coligacao")){
 						Coligacao coligacaoLista = (Coligacao)l.getMandante();
-						if(listaCirculo.getMandante().getClass().getName().equals("Partido")){
+						if(listaCirculo.getMandante().getClass().getSimpleName().equals("Partido")){
 							Partido partidoListaCirculo = (Partido)listaCirculo.getMandante();
 							if(coligacaoLista.getPartidos().contains(partidoListaCirculo)){
 								throw new ExceptionMandanteInvalido("Partidos da coligacao "+coligacaoLista.getNome()+" ja registados fora da coligacao");
 							}
 						}
-						else if(listaCirculo.getMandante().getClass().getName().equals("Coligacao")){
+						else if(listaCirculo.getMandante().getClass().getSimpleName().equals("Coligacao")){
 							Coligacao coligacaoListaCirculo = (Coligacao)listaCirculo.getMandante();
 							for(Partido partidoColigacao: coligacaoListaCirculo.getPartidos()){
 								if(coligacaoLista.getPartidos().contains(partidoColigacao)){
@@ -193,10 +196,29 @@ public class EleicaoAR extends Eleicao {
 				}
 			}
 		}
+		int maxID = 0;
+		for(CirculoInfo cinfo: this.circulos.values()){
+			int maxcirculo = Collections.max(cinfo.getListas().keySet());
+			if(maxcirculo>=maxID) maxID = maxcirculo;
+		}
+		l.setID(maxID+1);
+		
+		/*
+		 * Atencao: nao e garantido que a lista seja adicionada aos circulos e aos resultados,
+		 * se acontecer um errro na base de dados
+		 */
 		this.circulos.get(l.getCirculo().getId()).addLista(l);
 		ResultadoCirculoAR resultadoCirculo = this.resultado.get(l.getCirculo().getId());
 		resultadoCirculo.addLista(l);
 		this.resultado.put(l.getCirculo().getId(), resultadoCirculo);
+	}
+	
+	public Set<Lista> getListasCirculo(int idCirculo){
+		TreeSet<Lista> listas = new TreeSet<>();
+		for(Lista lista: this.circulos.get(idCirculo).getListas().values()){
+			listas.add(lista);
+		}
+		return listas;
 	}
 	
 	@Override
@@ -209,31 +231,70 @@ public class EleicaoAR extends Eleicao {
 	}
 	
 	@Override
-	public void addVoto(Listavel lista,Circulo circulo){
+	public void addVoto(Listavel lista,Eleitor eleitor){
 		Lista l = (Lista)lista;
-		ResultadoCirculoAR resCirculo = this.resultado.get(circulo.getId());
+		super.addVotante(eleitor);
+		ResultadoCirculoAR resCirculo = this.resultado.get(eleitor.getCirculo());
 		resCirculo.addVoto(l);
-    	this.resultado.put(circulo.getId(),resCirculo);
+    	this.resultado.put(eleitor.getCirculo(),resCirculo);
     }
 	
 	@Override
-	public void addVotoBranco(int idCirculo){
-		ResultadoCirculoAR resCirculo = this.resultado.get(idCirculo);
+	public void addVotoBranco(Eleitor eleitor){
+		super.addVotante(eleitor);
+		ResultadoCirculoAR resCirculo = this.resultado.get(eleitor.getCirculo());
 		resCirculo.addVotoBranco();
-    	this.resultado.put(idCirculo,resCirculo);
+    	this.resultado.put(eleitor.getCirculo(),resCirculo);
 	}
 	
 	@Override
-	public void addVotoNulo(int idCirculo){
-		ResultadoCirculoAR resCirculo = this.resultado.get(idCirculo);
+	public void addVotoNulo(Eleitor eleitor){
+		super.addVotante(eleitor);
+		ResultadoCirculoAR resCirculo = this.resultado.get(eleitor.getCirculo());
 		resCirculo.addVotoNulo();
-    	this.resultado.put(idCirculo,resCirculo);
+    	this.resultado.put(eleitor.getCirculo(),resCirculo);
 	}
 
-	@Override
 	public Boletim getBoletim(int idCirculo) {
-		// TODO Auto-generated method stub
-		return null;
+		int nListas = this.circulos.get(idCirculo).getListas().size();
+		Boletim boletim = new Boletim(nListas);
+		for(Lista lista: this.circulos.get(idCirculo).getListas().values()){
+			boletim.addLista(lista);
+		}
+		return boletim;
 	}
 	
+	public void geraBoletim(){
+		Random r = new Random();
+		ArrayList<Integer> nums = null;
+		Collection<Lista> listasCirculo = null;
+		int rand;
+		for(CirculoInfo cinfo: this.circulos.values()){
+			listasCirculo = cinfo.getListas().values();
+			nums = new ArrayList<>();
+			for(Lista listaCirculo: listasCirculo){
+				int nListas = listasCirculo.size();
+				rand = r.nextInt(nListas-1);
+				while(nums.contains(rand)){
+					rand = r.nextInt(nListas-1);
+				}
+				listaCirculo.setOrdem(rand);
+				nums.add(rand);
+				try {
+					cinfo.addLista(listaCirculo);
+				} catch (ExceptionLimiteCandidatos e) {
+					e.printStackTrace();
+				}
+			}
+		}
+	}
+	
+	public CandidatoAR getCandidato(int bi) {
+		CandidatoAR candidato = null;
+		for(CirculoInfo cinfo: this.circulos.values()){
+			candidato = cinfo.getCandidato(bi);
+			if(candidato != null) return candidato;
+		}
+		return candidato;
+	}
 }

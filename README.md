@@ -12,28 +12,61 @@ Coisas a considerar:
     - [x] Butão sair
     - [x] Parse numero identificacao
     - [x] Parse password
-  - [ ] GerirPR
-    - [ ] Passar o eleitor quando formos votar 
+  - [x] GerirPR
+    - [x] Data Inicio + parse
+    - [x] Data nascimento + parse
+    - [x] Nome, naturalidade,residencia,profissao,bi, foto + parse
+    - [x] Apagar informacoes
+    - [x] Adicionar ao SGE 
   - [ ] MainEleitor
+    - [x] Nome eleitor
+    - [x] Tipo eleicao
+    - [x] Data eleicao
+    - [x] Votar
+    - [ ] Historico eleicoes
+    - [x] Ver resultados
   - [ ] ResultadosAR
+    - [x] Resultados globais
+      - [x] Calculo votos brancos nulos e abstencao 
+      - [x] Calculo percentagens votos brancos nulos e abstencao
+    - [x] Resultados circulo
+      - [x] Calculo votos brancos nulos e abstencao 
+      - [x] Calculo percentagens votos brancos nulos e abstencao
+    - [ ] Implementar selecao de colunas nas tabelas pra mostrar informacao
   - [ ] ResultadosPR
-  - [ ] Votar
+    - [x] Resultados globais
+      - [x] Calculo votos brancos nulos e abstencao 
+      - [x] Calculo percentagens votos brancos nulos e abstencao
+    - [x] Resultados circulo
+      - [x] Calculo votos brancos nulos e abstencao 
+      - [x] Calculo percentagens votos brancos nulos e abstencao
+    - [ ] Implementar selecao de colunas nas tabelas pra mostrar informacao
+  - [x] Votar
+    - [x] Parse nome eleitor
+    - [ ] Listagem das listas/candidatos
+    - [ ] Imagem
+    - [x] Limpar
+    - [x] Votar
+  - [x] Inserir caderno de recenseamento
+    - [x] Path parse
+    - [x] Ler ficheiro
+    - [x] Povoar table consoante circulo
+    - [ ] Escrever pra DB (funciona mas crasha ai a 60%)
 
-# Cenas do JMS:
-
-- [ ] Por Fazer
-  - [ ] AdminDAO
-  - [ ] CirculoDAO
-  - [ ] CirculoInfoDAO
-  - [ ] ColigaçãoDAO
-  - [ ] EleiçãoARDAO
-  - [ ] ListaARDAO
-  - [ ] PartidosDAO
-  - [ ] ResultadoCirculoARDAO
+# Cenas dos DAO's:
 
 - [ ] Feitas/Testas
+  - [X] AdminDAO
+  - [X] PartidosDAO
+  - [X] CirculoInfoDAO
   - [X] Connector
+  - [X] EleiçãoARDAO
   - [ ] EleiçãoPRDAO
   - [X] EleitoresDAO
   - [ ] ListaPRDAO
   - [ ] ResultadoCirculoPRDAO
+  - [X] CirculoInfoDAO
+  - [X] ColigaçãoDAO
+  - [X] CirculoDAO
+  - [ ] ResultadoCirculoARDAO
+  - [ ] ListaARDAO

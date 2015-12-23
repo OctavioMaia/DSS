@@ -70,6 +70,20 @@ public class ResultadoCirculoPR {
 	public void setNulos(int nulos) {
 		this.nulos = nulos;
 	}
+	
+	public int getAbstencao(){
+		int totVotos=0,abstencao;
+		Collection<Integer> c = validos.values();
+		Iterator<Integer> i = c.iterator();
+		
+		while(i.hasNext()){
+			totVotos+=i.next();
+		}
+		
+		abstencao = totVotos-brancos-nulos;
+		
+		return abstencao;
+	}
 
 	public HashMap<ListaPR, Integer> getValidos() {
 		return validos;
@@ -108,5 +122,9 @@ public class ResultadoCirculoPR {
 
 	public int votosLista(ListaPR lista) {
 		return this.validos.get(lista);
+	}
+
+	public void atualizarTotEleitores(){
+		this.totEleitores = this.circulo.getTotEleitores();
 	}
 }

@@ -1,4 +1,4 @@
-package Data;
+package teste;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -8,6 +8,8 @@ import java.io.IOException;
 import java.sql.*;
 import java.util.*;
 import Business.*;
+import Data.CirculoDAO;
+import Data.EleitoresDAO;
 
 public class cenasNuno {
 
@@ -69,10 +71,6 @@ public class cenasNuno {
 					
 					int a = Integer.parseInt(eleitores[1]);
 					int b = Integer.parseInt(eleitores[0]);
-					//System.out.println(a);
-					//System.out.println(b);
-					//System.out.println(eleitores[2]);
-					//System.out.println(eleitores[3]);
 					Eleitor e = new Eleitor(eleitores[2], a, b, eleitores[3]);
 					listaEleitores.add(e);
 				}

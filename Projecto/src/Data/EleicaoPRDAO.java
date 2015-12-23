@@ -7,7 +7,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
-import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -234,7 +233,7 @@ public class EleicaoPRDAO implements Map<Integer,EleicaoPR>{
 					+ "(?,?,?,?)");
 			psElei.setInt(1, key);
 			psElei.setInt(2, value.getEstado());
-			psElei.setDate(3, new java.sql.Date(value.getData().getTimeInMillis())); //atencao aqui
+			psElei.setDate(3, new java.sql.Date(value.getData().getTimeInMillis()));
 			psElei.setBoolean(4, value.isPermitirVotar());
 			psElei.execute();
 			psElei.close();
@@ -389,14 +388,24 @@ public class EleicaoPRDAO implements Map<Integer,EleicaoPR>{
 			this.clear_aux(c);
 			c.commit();	
 		} catch (SQLException e) {
-			c.rollback();
+			try {
+				c.rollback();
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+				throw new RuntimeException(e1.getMessage());
+			}
 			e.printStackTrace();
 			throw new RuntimeException(e.getMessage());
 		}catch(Exception e){
 			e.printStackTrace();
-			throw new RuntimeException(e.getMessage())
+			throw new RuntimeException(e.getMessage());
 		}finally {
-			c.close();
+			try {
+				c.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+				throw new RuntimeException(e.getMessage());
+			}
 		}
 		
 	}
