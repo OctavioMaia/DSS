@@ -35,7 +35,7 @@ public class EleicaoPR extends Eleicao {
 	private ListaPRDAO listas;
 	private Set<Integer> votantes2;
 
-	public EleicaoPR(int idEleicao, Calendar data, Collection<Circulo> c) {
+	public EleicaoPR(int idEleicao, Calendar data) {
 		super(idEleicao, data);
 		this.volta2 = false;
 		this.data2 = defData2(data);
