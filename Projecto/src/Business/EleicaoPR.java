@@ -13,6 +13,7 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import Comparator.ComparatorListavelVotos;
+import Data.EleicaoPRDAO;
 import Data.ListaPRDAO;
 import Data.ResultadoCirculoPRDAO;
 import Exception.ExceptionEleicaoEstado;
@@ -34,12 +35,12 @@ public class EleicaoPR extends Eleicao {
 	private ListaPRDAO listas;
 	private Set<Integer> votantes2;
 
-	public EleicaoPR(int idEleicao, Calendar data, Collection<Circulo> c) {
+	public EleicaoPR(int idEleicao, Calendar data) {
 		super(idEleicao, data);
 		this.volta2 = false;
 		this.data2 = defData2(data);
-		this.voltaR1 = initResultadoCirculoPRDAO(idEleicao, 1, c);
-		this.voltaR2 = initResultadoCirculoPRDAO(idEleicao, 2, c);
+		this.voltaR1 = null;
+		this.voltaR2 = null;
 		this.listas = new ListaPRDAO(idEleicao);
 		this.votantes2 = new HashSet<>();
 	}
@@ -55,7 +56,7 @@ public class EleicaoPR extends Eleicao {
 		this.votantes2 = vot2;
 	}
 
-	private ResultadoCirculoPRDAO initResultadoCirculoPRDAO(int idEleicao, int volta, Collection<Circulo> circulos) {
+	public ResultadoCirculoPRDAO initResultadoCirculoPRDAO(int idEleicao, int volta, Collection<Circulo> circulos) {
 		ResultadoCirculoPRDAO resDAO = new ResultadoCirculoPRDAO(idEleicao, volta);
 		for (Circulo c : circulos) {
 			if (!resDAO.containsKey(c.getId())) {

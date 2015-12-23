@@ -55,9 +55,7 @@ public class SGE {
 			this.eleitor = null;
 			this.partidos = new PartidosDAO();
 			this.circulos = new CirculoDAO();
-			for(int i=1;i<=22;i++){
-				this.circulos.put(i, new Circulo(i, "PUTA "+i, 0));
-			}
+			this.initCirculos();
 			this.coligacoes = new ColigacaoDAO();
 			this.eleitores = new EleitoresDAO();
 			this.eleicoesPR = new EleicaoPRDAO();
@@ -67,6 +65,31 @@ public class SGE {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+	
+	private void initCirculos(){
+		this.circulos.put(1, new Circulo(1, "Aveiro", 0));
+		this.circulos.put(2, new Circulo(2, "Beja", 0));
+		this.circulos.put(3, new Circulo(3, "Braga", 0));
+		this.circulos.put(4, new Circulo(4, "Braganca", 0));
+		this.circulos.put(5, new Circulo(5, "Castelo Branco", 0));
+		this.circulos.put(6, new Circulo(6, "Coimbra", 0));
+		this.circulos.put(7, new Circulo(7, "Evora", 0));
+		this.circulos.put(8, new Circulo(8, "Faro", 0));
+		this.circulos.put(9, new Circulo(9, "Guarda", 0));
+		this.circulos.put(10, new Circulo(10, "Leiria", 0));
+		this.circulos.put(11, new Circulo(11, "Lisboa", 0));
+		this.circulos.put(12, new Circulo(12, "Portalegre", 0));
+		this.circulos.put(13, new Circulo(13, "Porto", 0));
+		this.circulos.put(14, new Circulo(14, "Santarem", 0));
+		this.circulos.put(15, new Circulo(15, "Setubal", 0));
+		this.circulos.put(16, new Circulo(16, "Viana do Castelo", 0));
+		this.circulos.put(17, new Circulo(17, "Vila Real", 0));
+		this.circulos.put(18, new Circulo(18, "Viseu", 0));
+		this.circulos.put(19, new Circulo(19, "Acores", 0));
+		this.circulos.put(20, new Circulo(20, "Madeira", 0));
+		this.circulos.put(21, new Circulo(21, "Europa", 0));
+		this.circulos.put(22, new Circulo(22, "Fora da Europa", 0));
 	}
 
 	public static Admin getAdmin() {
@@ -212,6 +235,8 @@ public class SGE {
 
 	public EleicaoPR criarEleicaoPR(EleicaoPR eleicao) {
 		eleicao.setIdEleicao(this.chaveEleicao());
+		eleicao.initResultadoCirculoPRDAO(eleicao.getIdEleicao(), 1, circulos.values());
+		eleicao.initResultadoCirculoPRDAO(eleicao.getIdEleicao(), 2, circulos.values());
 		this.eleicoesPR.put(eleicao.getIdEleicao(), eleicao);
 		return eleicao;
 	}

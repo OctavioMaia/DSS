@@ -103,7 +103,7 @@ public class ResultadoCirculoPRDAO implements Map<Integer,ResultadoCirculoPR>{
             ps2.setInt(3,key );
             ResultSet rs2 = ps2.executeQuery();
         	if(rs2.next()){
-        		ret= ret && (rs.getInt(1)!=0);
+        		ret= ret && (rs2.getInt(1)!=0);
         	}else{
         		ret = false;
         	}
@@ -145,9 +145,10 @@ public class ResultadoCirculoPRDAO implements Map<Integer,ResultadoCirculoPR>{
 		CirculoDAO cd = new CirculoDAO();
 
 		PreparedStatement psRLista = c.prepareStatement("SELECT "+Lista+", "+Votos+" FROM " + TabLista
-				+ "WHERE "+Eleicao+" = ? and "+Volta+" = ? and "+IdCirculo+" = ?)");
+				+ " WHERE "+Eleicao+" = ? and "+Volta+" = ? and "+IdCirculo+" = ?");
 		psRLista.setInt(1, this.idEleicao);
 		psRLista.setInt(2, this.volta);
+		psRLista.setInt(3, key);
 		HashMap<ListaPR,Integer> listasvotos= new HashMap<>();
 		ResultSet rs = psRLista.executeQuery();
 		while(rs.next()){
@@ -158,7 +159,7 @@ public class ResultadoCirculoPRDAO implements Map<Integer,ResultadoCirculoPR>{
 		psRLista.close();
 		PreparedStatement circuloGeral = c.prepareStatement("SELECT "+Nulos+", "+Brancos+", " + Toteleitores
 				+ " FROM " + TabGlobal
-				+ " WHERE "+Eleicao+" = ? and "+Volta+" = ? and "+IdCirculo+" = ?)");
+				+ " WHERE "+Eleicao+" = ? and "+Volta+" = ? and "+IdCirculo+" = ?");
 		circuloGeral.setInt(1, this.idEleicao);
 		circuloGeral.setInt(2, this.volta);
 		circuloGeral.setInt(3,key);
@@ -195,6 +196,57 @@ public class ResultadoCirculoPRDAO implements Map<Integer,ResultadoCirculoPR>{
 		return r;
 	}
 
+
+	private boolean listaHasResult(Integer idLista, Integer idCirculo,Connection c) throws SQLException{
+		boolean ret = false;
+		PreparedStatement ps = c.prepareStatement("SELECT * FROM " + TabLista +
+				" WHERE " +IdCirculo+ "= ? AND " + Eleicao +" = ? AND " + VoltaL +" = ? AND " + Lista + "= ? ");
+		ps.setInt(1, idCirculo);
+		ps.setInt(2, this.idEleicao);
+		ps.setInt(3, this.volta);
+		ps.setInt(4, idLista);
+		ResultSet rs = ps.executeQuery();
+		if(rs.next()){
+			ret=true;
+		}
+		rs.close();
+		ps.close();
+		return ret;
+	}
+	
+	private void updateListas(Map<ListaPR,Integer> votos, int idCirculo, Connection c) throws SQLException{
+		//Update aos resultados das listas
+		PreparedStatement psUPLista = c.prepareStatement("UPDATE " + TabLista + 
+				" SET " + Votos + "=?" +
+			    " WHERE " +IdCirculo+ "= ? AND " + Eleicao +" = ? AND " + VoltaL +" = ? AND " + Lista + "= ? ");
+		psUPLista.setInt(2, idCirculo);
+		psUPLista.setInt(3, this.idEleicao);
+		psUPLista.setInt(4, this.volta);
+		//Inserir aos resultados das listas
+		PreparedStatement psINSLista = c.prepareStatement("INSERT INTO "+TabLista+
+                " ("+IdCirculo+","+Lista+","+Votos+","+Eleicao+","+Volta+") " +
+                "values " +
+                "(?,?,?,?,?)");
+		psINSLista.setInt(1,idCirculo);
+		psINSLista.setInt(4, this.idEleicao);
+		psINSLista.setInt(5, this.volta);
+		Iterator<ListaPR> i = votos.keySet().iterator();
+		while(i.hasNext()){
+			ListaPR l = i.next();
+			if(this.listaHasResult(l.getIdListaPR(),idCirculo,c)){
+				psUPLista.setInt(1, votos.get(l));
+				psUPLista.setInt(5, l.getIdListaPR());
+				psUPLista.execute();
+			}else{
+				psINSLista.setInt(2, l.getIdListaPR());
+				psINSLista.setInt(3, votos.get(l));
+				psINSLista.execute();
+			}
+			
+		}
+		psINSLista.close();
+		psUPLista.close();
+	}
 	
 	protected ResultadoCirculoPR put_aux(Integer key, ResultadoCirculoPR value,Connection c) throws SQLException{
 		ResultadoCirculoPR ret = this.get_aux(key,c);
@@ -212,26 +264,6 @@ public class ResultadoCirculoPRDAO implements Map<Integer,ResultadoCirculoPR>{
 			psGeral.setInt(6,this.volta);
 			psGeral.execute();
 			psGeral.close();
-			//Update aos resultados das listas
-
-			PreparedStatement psRLista = c.prepareStatement("UPDATE " + TabLista + 
-					" SET " + Votos + "=?" +
-				    " WHERE " +IdCirculo+ "= ? AND " + Eleicao +" = ? AND " + VoltaL +" = ? AND " + Lista + "= ? ");
-			psRLista.setInt(2, key);
-			psRLista.setInt(3, this.idEleicao);
-			psRLista.setInt(4, this.volta);
-			Map<ListaPR,Integer> votos = value.getValidos();
-			Iterator<ListaPR> i = votos.keySet().iterator();
-			while(i.hasNext()){
-				ListaPR l = i.next();
-				int idLista = l.getIdListaPR();
-				int vot = votos.get(l);
-				psRLista.setInt(1, vot);
-				psRLista.setInt(5, idLista);
-				psRLista.execute();
-			}
-			psRLista.close();
-			
 		}else{//Novo na BD
 			//Inserir global
 			PreparedStatement psRGeral = c.prepareStatement("INSERT INTO "+ TabGlobal +
@@ -246,26 +278,8 @@ public class ResultadoCirculoPRDAO implements Map<Integer,ResultadoCirculoPR>{
 			psRGeral.setInt(6,this.volta);
 			psRGeral.execute();
 			psRGeral.close();
-			//Inserir as Listas
-			PreparedStatement psRLista = c.prepareStatement("INSERT INTO "+TabLista+
-                    " ("+IdCirculo+","+Lista+","+Votos+","+Eleicao+","+Volta+") " +
-                    "values " +
-                    "(?,?,?,?,?)");
-			psRLista.setInt(1,key);
-			psRLista.setInt(4, this.idEleicao);
-			psRLista.setInt(5, this.volta);
-			Map<ListaPR,Integer> val = value.getValidos();
-			Iterator<ListaPR> i = val.keySet().iterator();
-			while(i.hasNext()){
-				ListaPR lista = i.next();
-				int listaID = lista.getIdListaPR();
-				int valid = val.get(lista);
-				psRLista.setInt(2, listaID);
-				psRLista.setInt(3, valid);
-				psRLista.execute();
-			}
-			psRLista.close();
 		}
+		this.updateListas(value.getValidos(), key, c);
 		return ret;
 	}
 
@@ -284,7 +298,9 @@ public class ResultadoCirculoPRDAO implements Map<Integer,ResultadoCirculoPR>{
 			} catch (SQLException e1) {
 				e1.printStackTrace();
 				throw new RuntimeException(e1.getMessage());
-			}	
+			}
+			e.printStackTrace();
+			throw new RuntimeException(e.getMessage());
 		}catch (Exception e) {
 			e.printStackTrace();
 			throw new RuntimeException(e.getMessage());
@@ -338,6 +354,8 @@ public class ResultadoCirculoPRDAO implements Map<Integer,ResultadoCirculoPR>{
 				e1.printStackTrace();
 				throw new RuntimeException(e1.getMessage());
 			}
+			e.printStackTrace();
+			throw new RuntimeException(e.getMessage());
 		}catch(Exception e){
 			e.printStackTrace();
 			throw new RuntimeException(e.getMessage());
@@ -360,18 +378,10 @@ public class ResultadoCirculoPRDAO implements Map<Integer,ResultadoCirculoPR>{
 
 	
 	protected void clear_aux(Connection c)throws SQLException{
-		//Limpa a tabela global
-		PreparedStatement ps = c.prepareStatement("DELETE FROM "+TabGlobal+" WHERE "+Eleicao+" = ? AND "+Volta+" = ?");
-		ps.setInt(1, this.idEleicao);
-		ps.setInt(2, this.volta);
-		ps.execute();
-		ps.close();
-		//Limpa os tesultados das listas
-		PreparedStatement ps2 = c.prepareStatement("DELETE FROM "+TabLista+" WHERE "+Eleicao+" = ? AND "+VoltaL+" = ?");
-		ps2.setInt(1, this.idEleicao);
-		ps2.setInt(2, this.volta);
-		ps2.executeUpdate();
-		ps2.close();
+		Iterator<Integer> i = this.keySet_aux(c).iterator();
+		while(i.hasNext()){
+			this.remove_aux(i.next(), c);
+		}
 	}
 	
 	@Override
