@@ -141,7 +141,7 @@ public class ListaPRDAO implements Map<Integer,ListaPR> {
 		//EliminaTodas as listas Desta eleicao
 		//eliminar o candidato de todas as listas
 		while(i.hasNext()){
-			this.removeCand(i.next(), c);
+			this.remove_aux(i.next(), c);
 		}
 	}
 	

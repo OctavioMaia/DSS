@@ -35,7 +35,6 @@ public class testesJMS {
 		
 		EleicaoPR epr = new EleicaoPR(1, new GregorianCalendar(2017,0,2),cd.values()); 
 		elidao.put(1, epr);
-;
 		for (int i = 1; i < 11; i++) {
 			Candidato c = new Candidato("NUNO PANELEIRO"+i, 12345679+i, "Come CONAS VELHAS " +i, new GregorianCalendar(1969,0,2), "Braga"+i, "Lisboa"+i, "A tua prima " +i);
 			ListaPR lp =  new ListaPR(1, i, c);
@@ -77,6 +76,7 @@ public class testesJMS {
 		rcprdao.clear();
 		System.out.println("CLEAR\nSize:" + rcprdao.size());
 		//System.out.println("Exiete a lista:" + lpdao.containsValue(lp));
+		//elidao.remove(1);
 		System.out.println("FIM");
 		//System.out.println("REM:" + lpdao.remove(1));
 		/*System.out.println("Size:" + lpdao.size());

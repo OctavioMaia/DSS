@@ -13,6 +13,7 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import Comparator.ComparatorListavelVotos;
+import Data.EleicaoPRDAO;
 import Data.ListaPRDAO;
 import Data.ResultadoCirculoPRDAO;
 import Exception.ExceptionEleicaoEstado;
@@ -38,10 +39,13 @@ public class EleicaoPR extends Eleicao {
 		super(idEleicao, data);
 		this.volta2 = false;
 		this.data2 = defData2(data);
-		this.voltaR1 = initResultadoCirculoPRDAO(idEleicao, 1, c);
-		this.voltaR2 = initResultadoCirculoPRDAO(idEleicao, 2, c);
 		this.listas = new ListaPRDAO(idEleicao);
 		this.votantes2 = new HashSet<>();
+		
+		EleicaoPRDAO dao = new EleicaoPRDAO();
+		dao.put(idEleicao, this);
+		this.voltaR1 = initResultadoCirculoPRDAO(idEleicao, 1, c);
+		this.voltaR2 = initResultadoCirculoPRDAO(idEleicao, 2, c);
 	}
 
 	public EleicaoPR(int idEleicao, Calendar data, int estado, boolean permitirVotar, Set<Integer> vot,
