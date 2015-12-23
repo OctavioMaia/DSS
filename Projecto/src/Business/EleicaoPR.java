@@ -39,13 +39,10 @@ public class EleicaoPR extends Eleicao {
 		super(idEleicao, data);
 		this.volta2 = false;
 		this.data2 = defData2(data);
+		this.voltaR1 = null;
+		this.voltaR2 = null;
 		this.listas = new ListaPRDAO(idEleicao);
 		this.votantes2 = new HashSet<>();
-		
-		EleicaoPRDAO dao = new EleicaoPRDAO();
-		dao.put(idEleicao, this);
-		this.voltaR1 = initResultadoCirculoPRDAO(idEleicao, 1, c);
-		this.voltaR2 = initResultadoCirculoPRDAO(idEleicao, 2, c);
 	}
 
 	public EleicaoPR(int idEleicao, Calendar data, int estado, boolean permitirVotar, Set<Integer> vot,
@@ -59,7 +56,7 @@ public class EleicaoPR extends Eleicao {
 		this.votantes2 = vot2;
 	}
 
-	private ResultadoCirculoPRDAO initResultadoCirculoPRDAO(int idEleicao, int volta, Collection<Circulo> circulos) {
+	public ResultadoCirculoPRDAO initResultadoCirculoPRDAO(int idEleicao, int volta, Collection<Circulo> circulos) {
 		ResultadoCirculoPRDAO resDAO = new ResultadoCirculoPRDAO(idEleicao, volta);
 		for (Circulo c : circulos) {
 			if (!resDAO.containsKey(c.getId())) {

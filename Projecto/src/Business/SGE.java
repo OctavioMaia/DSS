@@ -235,6 +235,8 @@ public class SGE {
 
 	public EleicaoPR criarEleicaoPR(EleicaoPR eleicao) {
 		eleicao.setIdEleicao(this.chaveEleicao());
+		eleicao.initResultadoCirculoPRDAO(eleicao.getIdEleicao(), 1, circulos.values());
+		eleicao.initResultadoCirculoPRDAO(eleicao.getIdEleicao(), 2, circulos.values());
 		this.eleicoesPR.put(eleicao.getIdEleicao(), eleicao);
 		return eleicao;
 	}
