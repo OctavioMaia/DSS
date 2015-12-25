@@ -28,6 +28,7 @@ Coisas a considerar:
     - [x] Nome, naturalidade,residencia,profissao,bi, foto + parse
     - [x] Apagar informacoes
     - [x] Adicionar ao SGE 
+  - [ ] GerirAR
   - [ ] MainEleitor
     - [x] Nome eleitor
     - [x] Tipo eleicao
@@ -35,6 +36,14 @@ Coisas a considerar:
     - [x] Votar
     - [ ] Historico eleicoes
     - [x] Ver resultados
+  - [ ] MainAdmin
+    - [x] Parse eleicao ativa
+    - [x] Terminar eleicao ativa
+    - [x] Ver resultados
+    - [x] Iniciar eleicao
+    - [x] Criar eleicao
+    - [x] Inserir caderno
+    - [ ] Povoar tabelas
   - [ ] ResultadosAR
     - [x] Resultados globais
       - [x] Calculo votos brancos nulos e abstencao 
