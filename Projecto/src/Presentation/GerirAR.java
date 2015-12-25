@@ -7,11 +7,20 @@ package Presentation;
 import java.awt.*;
 import javax.swing.*;
 
+import Business.Eleicao;
+import Business.SGE;
+
 /**
  * @author Octavio Maia
  */
 public class GerirAR extends JFrame {
-	public GerirAR() {
+	
+	private SGE sge;
+	private Eleicao eleicao;
+	
+	public GerirAR(SGE s, Eleicao e) {
+		eleicao=e;
+		sge=s;
 		initComponents();
 		this.setVisible(true);
 	}
