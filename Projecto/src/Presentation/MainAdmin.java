@@ -31,6 +31,8 @@ public class MainAdmin extends JFrame {
 		scrollPane2 = new JScrollPane();
 		table2 = new JTable();
 		separator1 = new JSeparator();
+		buttonVerResultados = new JButton();
+		buttonIniciarEleicao = new JButton();
 
 		//======== this ========
 		setTitle("Main Admin");
@@ -143,6 +145,19 @@ public class MainAdmin extends JFrame {
 		contentPane.add(separator1);
 		separator1.setBounds(10, 45, 720, 5);
 
+		//---- buttonVerResultados ----
+		buttonVerResultados.setText("Ver resultados");
+		buttonVerResultados.setFont(new Font("Arial", Font.PLAIN, 14));
+		buttonVerResultados.setEnabled(false);
+		contentPane.add(buttonVerResultados);
+		buttonVerResultados.setBounds(new Rectangle(new Point(590, 160), buttonVerResultados.getPreferredSize()));
+
+		//---- buttonIniciarEleicao ----
+		buttonIniciarEleicao.setText("Iniciar elei\u00e7\u00e3o");
+		buttonIniciarEleicao.setFont(new Font("Arial", Font.PLAIN, 14));
+		contentPane.add(buttonIniciarEleicao);
+		buttonIniciarEleicao.setBounds(new Rectangle(new Point(590, 200), buttonIniciarEleicao.getPreferredSize()));
+
 		{ // compute preferred size
 			Dimension preferredSize = new Dimension();
 			for(int i = 0; i < contentPane.getComponentCount(); i++) {
@@ -173,5 +188,7 @@ public class MainAdmin extends JFrame {
 	private JScrollPane scrollPane2;
 	private JTable table2;
 	private JSeparator separator1;
+	private JButton buttonVerResultados;
+	private JButton buttonIniciarEleicao;
 	// JFormDesigner - End of variables declaration  //GEN-END:variables
 }

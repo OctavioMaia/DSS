@@ -120,6 +120,23 @@ new FormModel {
 				"height": 5
 				"width": 720
 			} )
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "buttonVerResultados"
+				"text": "Ver resultados"
+				"font": new java.awt.Font( "Arial", 0, 14 )
+				"enabled": false
+			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
+				"x": 590
+				"y": 160
+			} )
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "buttonIniciarEleicao"
+				"text": "Iniciar eleição"
+				"font": new java.awt.Font( "Arial", 0, 14 )
+			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
+				"x": 590
+				"y": 200
+			} )
 		}, new FormLayoutConstraints( null ) {
 			"location": new java.awt.Point( 0, 0 )
 			"size": new java.awt.Dimension( 755, 490 )
