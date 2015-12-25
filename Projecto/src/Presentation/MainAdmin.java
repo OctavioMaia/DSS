@@ -5,18 +5,129 @@
 package Presentation;
 
 import java.awt.*;
+import java.awt.event.*;
+import java.beans.*;
 import javax.swing.*;
 import javax.swing.table.*;
+
+import Business.SGE;
+import Exception.ExceptionEleicaoAtiva;
+import Exception.ExceptionIniciarEleicao;
+import Exception.ExceptionTerminarEleicao;
 
 /**
  * @author Octavio Maia
  */
 public class MainAdmin extends JFrame {
 	
-	public MainAdmin() {
+	private SGE sge;
+	
+	public MainAdmin(SGE s) {
+		sge = s;
 		initComponents();
 		this.setVisible(true);
 	}
+
+	private void buttonSairActionPerformed(ActionEvent e) {
+		this.setVisible(false);	
+	}
+
+	private void buttonIniciarEleicaoActionPerformed(ActionEvent e) {
+		if(panel1.isShowing()){
+			try {
+				sge.iniciarEleicao(sge.getEleicao((int) table1.getValueAt(table1.getSelectedRow(), 2)));
+			} catch (ExceptionEleicaoAtiva e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			} catch (ExceptionIniciarEleicao e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		}else{
+			try {
+				sge.iniciarEleicao(sge.getEleicao((int) table2.getValueAt(table2.getSelectedRow(), 2)));
+			} catch (ExceptionEleicaoAtiva e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			} catch (ExceptionIniciarEleicao e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		}
+	}
+
+	private void buttonCriarEleicaoActionPerformed(ActionEvent e) {
+		new CriarEleicao(sge);
+	}
+
+	private void buttonInserirCadernoActionPerformed(ActionEvent e) {
+		new CadernoRecenseamento(sge);
+	}
+
+	private void buttonGerirEleicaoActionPerformed(ActionEvent e) {
+		if(panel1.isShowing()){
+			if(table1.getValueAt(table1.getSelectedRow(), 1).equals("Assembleia da República")){
+				new GerirAR(sge, null);
+			}else{
+				new GerirPR(sge, null);
+			}
+		}
+	}
+
+	private void buttonVerResultadosActionPerformed(ActionEvent e) {
+		if(panel1.isShowing()){
+			if(table1.getValueAt(table1.getSelectedRow(), 1).equals("Assembleia da República")){
+				new ResultadosAR(sge, (int) table1.getValueAt(table1.getSelectedRow(), 2));
+			}else{
+				new ResultadosPR(sge, (int) table1.getValueAt(table1.getSelectedRow(), 2));
+			}
+		}else{
+			if(table2.getValueAt(table2.getSelectedRow(), 1).equals("Assembleia da República")){
+				new ResultadosAR(sge, (int) table2.getValueAt(table2.getSelectedRow(), 2));
+			}else{
+				new ResultadosPR(sge, (int) table2.getValueAt(table2.getSelectedRow(), 2));
+			}
+		}
+	}
+
+	private void table1FocusGained(FocusEvent e) {
+		if(panel1.isShowing()){
+			for (int i = 0; i < table1.getRowCount(); i++) {
+				if(table1.isRowSelected(i)){
+					buttonVerResultados.setEnabled(true);
+				}
+			}
+		}else{
+			buttonVerResultados.setEnabled(false);
+		}
+	}
+
+	private void scrollPane2FocusGained(FocusEvent e) {
+		if(panel2.isShowing()){
+			for (int i = 0; i < table2.getRowCount(); i++) {
+				if(table2.isRowSelected(i)){
+					buttonVerResultados.setEnabled(true);
+				}
+			}
+		}else{
+			buttonVerResultados.setEnabled(false);
+		}
+	}
+
+	private void buttonTerminarEleicaoActionPerformed(ActionEvent e) {
+		try {
+			sge.terminarEleicao(sge.eleicaoAtiva());
+		} catch (ExceptionEleicaoAtiva e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (ExceptionTerminarEleicao e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+	}
+		
+
+
 
 	private void initComponents() {
 		// JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
@@ -33,6 +144,11 @@ public class MainAdmin extends JFrame {
 		separator1 = new JSeparator();
 		buttonVerResultados = new JButton();
 		buttonIniciarEleicao = new JButton();
+		buttonCriarEleicao = new JButton();
+		buttonGerirEleicao = new JButton();
+		buttonInserirCaderno = new JButton();
+		buttonSair = new JButton();
+		buttonTerminarEleicao = new JButton();
 
 		//======== this ========
 		setTitle("Main Admin");
@@ -49,10 +165,11 @@ public class MainAdmin extends JFrame {
 		label1.setBounds(10, 10, label1.getPreferredSize().width, 25);
 
 		//---- labelEleicaoAtiva ----
+		//labelEleicaoAtiva.setText(sge.eleicaoAtiva().toString());
 		labelEleicaoAtiva.setEnabled(false);
 		labelEleicaoAtiva.setFont(new Font("Arial", Font.PLAIN, 14));
 		contentPane.add(labelEleicaoAtiva);
-		labelEleicaoAtiva.setBounds(105, 10, 625, 25);
+		labelEleicaoAtiva.setBounds(105, 10, 480, 25);
 
 		//======== tabbedPane1 ========
 		{
@@ -76,12 +193,24 @@ public class MainAdmin extends JFrame {
 					//---- table1 ----
 					table1.setModel(new DefaultTableModel(
 						new Object[][] {
-							{null, null},
+							{"teste1", "Presid\u00eancia da Rep\u00fablica", null},
+							{"teste2", "Assembleia da Rep\u00fablica", null},
 						},
 						new String[] {
-							"Data de in\u00edcio", "Tipo de elei\u00e7\u00e3o"
+							"Data da elei\u00e7\u00e3o", "Tipo de elei\u00e7\u00e3o", "id"
 						}
 					));
+					table1.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+					table1.addFocusListener(new FocusAdapter() {
+						@Override
+						public void focusGained(FocusEvent e) {
+							table1FocusGained(e);
+						}
+					});
+					table1.getColumnModel().getColumn(2).setPreferredWidth(0);
+					table1.getColumnModel().getColumn(2).setMinWidth(0);
+					table1.getColumnModel().getColumn(2).setWidth(0);
+					table1.getColumnModel().getColumn(2).setMaxWidth(0);
 					scrollPane1.setViewportView(table1);
 				}
 				panel1.add(scrollPane1);
@@ -109,16 +238,26 @@ public class MainAdmin extends JFrame {
 
 				//======== scrollPane2 ========
 				{
+					scrollPane2.addFocusListener(new FocusAdapter() {
+						@Override
+						public void focusGained(FocusEvent e) {
+							scrollPane2FocusGained(e);
+						}
+					});
 
 					//---- table2 ----
 					table2.setModel(new DefaultTableModel(
 						new Object[][] {
-							{null, null, null},
 						},
 						new String[] {
-							"Data da elei\u00e7\u00e3o", "Tipo de elei\u00e7\u00e3o", "Vencedor"
+							"Data da elei\u00e7\u00e3o", "Tipo de elei\u00e7\u00e3o", "id"
 						}
 					));
+					table2.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+					table2.getColumnModel().getColumn(2).setPreferredWidth(0);
+					table2.getColumnModel().getColumn(2).setMinWidth(0);
+					table2.getColumnModel().getColumn(2).setWidth(0);
+					table2.getColumnModel().getColumn(2).setMaxWidth(0);
 					scrollPane2.setViewportView(table2);
 				}
 				panel2.add(scrollPane2);
@@ -143,20 +282,57 @@ public class MainAdmin extends JFrame {
 		contentPane.add(tabbedPane1);
 		tabbedPane1.setBounds(10, 55, 565, 385);
 		contentPane.add(separator1);
-		separator1.setBounds(10, 45, 720, 5);
+		separator1.setBounds(10, 45, 745, 5);
 
 		//---- buttonVerResultados ----
 		buttonVerResultados.setText("Ver resultados");
 		buttonVerResultados.setFont(new Font("Arial", Font.PLAIN, 14));
 		buttonVerResultados.setEnabled(false);
+		buttonVerResultados.addActionListener(e -> buttonVerResultadosActionPerformed(e));
 		contentPane.add(buttonVerResultados);
-		buttonVerResultados.setBounds(new Rectangle(new Point(590, 160), buttonVerResultados.getPreferredSize()));
+		buttonVerResultados.setBounds(590, 85, 155, 25);
 
 		//---- buttonIniciarEleicao ----
 		buttonIniciarEleicao.setText("Iniciar elei\u00e7\u00e3o");
 		buttonIniciarEleicao.setFont(new Font("Arial", Font.PLAIN, 14));
+		buttonIniciarEleicao.addActionListener(e -> buttonIniciarEleicaoActionPerformed(e));
 		contentPane.add(buttonIniciarEleicao);
-		buttonIniciarEleicao.setBounds(new Rectangle(new Point(590, 200), buttonIniciarEleicao.getPreferredSize()));
+		buttonIniciarEleicao.setBounds(590, 125, 155, 25);
+
+		//---- buttonCriarEleicao ----
+		buttonCriarEleicao.setText("Criar elei\u00e7\u00e3o");
+		buttonCriarEleicao.setFont(new Font("Arial", Font.PLAIN, 14));
+		buttonCriarEleicao.addActionListener(e -> buttonCriarEleicaoActionPerformed(e));
+		contentPane.add(buttonCriarEleicao);
+		buttonCriarEleicao.setBounds(590, 165, 155, 25);
+
+		//---- buttonGerirEleicao ----
+		buttonGerirEleicao.setText("Gerir elei\u00e7\u00e3o");
+		buttonGerirEleicao.setFont(new Font("Arial", Font.PLAIN, 14));
+		buttonGerirEleicao.addActionListener(e -> buttonGerirEleicaoActionPerformed(e));
+		contentPane.add(buttonGerirEleicao);
+		buttonGerirEleicao.setBounds(590, 205, 155, 25);
+
+		//---- buttonInserirCaderno ----
+		buttonInserirCaderno.setText("<html><center>Inserir caderno<br />de recenseamento<center></html>");
+		buttonInserirCaderno.setFont(new Font("Arial", Font.PLAIN, 14));
+		buttonInserirCaderno.addActionListener(e -> buttonInserirCadernoActionPerformed(e));
+		contentPane.add(buttonInserirCaderno);
+		buttonInserirCaderno.setBounds(590, 245, 155, 85);
+
+		//---- buttonSair ----
+		buttonSair.setText("Sair");
+		buttonSair.setFont(new Font("Arial", Font.PLAIN, 14));
+		buttonSair.addActionListener(e -> buttonSairActionPerformed(e));
+		contentPane.add(buttonSair);
+		buttonSair.setBounds(590, 415, 155, 25);
+
+		//---- buttonTerminarEleicao ----
+		buttonTerminarEleicao.setText("Terminar elei\u00e7\u00e3o");
+		buttonTerminarEleicao.setFont(new Font("Arial", Font.PLAIN, 14));
+		buttonTerminarEleicao.addActionListener(e -> buttonTerminarEleicaoActionPerformed(e));
+		contentPane.add(buttonTerminarEleicao);
+		buttonTerminarEleicao.setBounds(590, 10, 155, 25);
 
 		{ // compute preferred size
 			Dimension preferredSize = new Dimension();
@@ -171,7 +347,7 @@ public class MainAdmin extends JFrame {
 			contentPane.setMinimumSize(preferredSize);
 			contentPane.setPreferredSize(preferredSize);
 		}
-		setSize(755, 490);
+		setSize(780, 490);
 		setLocationRelativeTo(null);
 		// JFormDesigner - End of component initialization  //GEN-END:initComponents
 	}
@@ -190,5 +366,10 @@ public class MainAdmin extends JFrame {
 	private JSeparator separator1;
 	private JButton buttonVerResultados;
 	private JButton buttonIniciarEleicao;
+	private JButton buttonCriarEleicao;
+	private JButton buttonGerirEleicao;
+	private JButton buttonInserirCaderno;
+	private JButton buttonSair;
+	private JButton buttonTerminarEleicao;
 	// JFormDesigner - End of variables declaration  //GEN-END:variables
 }
