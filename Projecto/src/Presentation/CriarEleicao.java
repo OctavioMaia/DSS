@@ -12,15 +12,14 @@ import java.util.GregorianCalendar;
 import javax.swing.*;
 import com.toedter.calendar.*;
 
-import Business.EleicaoPR;
 import Business.SGE;
 
 /**
  * @author Octavio Maia
  */
 public class CriarEleicao extends JFrame {
+	
 	private SGE sge;
-	private GregorianCalendar dataInicio;
 	
 	public CriarEleicao(SGE s) {
 		sge=s;
@@ -39,8 +38,7 @@ public class CriarEleicao extends JFrame {
 		int ano = cal.get(Calendar.YEAR);
 		data.setText(dia+"/"+mes+"/"+ano);
 		
-		dataInicio = new GregorianCalendar(ano, mes, dia);
-		//TODO implementar dataInicio
+		new GregorianCalendar(ano, mes, dia);
 		
 		dialogoCalendar.setVisible(false);
 		buttonAvancar.setEnabled(true);
@@ -56,9 +54,9 @@ public class CriarEleicao extends JFrame {
 
 	private void buttonAvancarActionPerformed(ActionEvent e) {
 		if(comboBox1.getSelectedIndex()==0){
-			GerirAR gui = new GerirAR();
+			GerirAR gui = new GerirAR(); // TODO fazer gerirAR
 		}else{
-			GerirPR gui = new GerirPR(sge, null); //TODO temos que substituir null por getCirculos
+			GerirPR gui = new GerirPR(sge, null); // TODO temos que substituir null por getCirculos
 		}
 	}
 

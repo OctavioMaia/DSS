@@ -307,24 +307,6 @@ new FormModel {
 			"location": new java.awt.Point( 5, 5 )
 			"size": new java.awt.Dimension( 560, 660 )
 		} )
-		add( new FormWindow( "javax.swing.JDialog", new FormLayoutManager( class com.jformdesigner.runtime.NullLayout ) ) {
-			name: "dialog1"
-			"resizable": false
-			"font": new java.awt.Font( "Arial", 0, 12 )
-			"title": "Gestor de Ficheiros"
-			add( new FormComponent( "javax.swing.JFileChooser" ) {
-				name: "fileChooser1"
-				"font": new java.awt.Font( "Arial", 0, 11 )
-			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
-				"x": 0
-				"y": 0
-				"width": 437
-				"height": 315
-			} )
-		}, new FormLayoutConstraints( null ) {
-			"location": new java.awt.Point( 590, 5 )
-			"size": new java.awt.Dimension( 450, 355 )
-		} )
 		add( new FormWindow( "javax.swing.JDialog", new FormLayoutManager( class com.jformdesigner.runtime.NullLayout ) {
 			"autoSize": false
 		} ) {
@@ -410,6 +392,13 @@ new FormModel {
 		}, new FormLayoutConstraints( null ) {
 			"size": #Dimension0
 			"location": new java.awt.Point( 850, 375 )
+		} )
+		add( new FormComponent( "javax.swing.JFileChooser" ) {
+			name: "fileChooser1"
+			"font": new java.awt.Font( "Arial", 0, 11 )
+		}, new FormLayoutConstraints( null ) {
+			"location": new java.awt.Point( 610, 5 )
+			"size": new java.awt.Dimension( 475, 310 )
 		} )
 	}
 }
