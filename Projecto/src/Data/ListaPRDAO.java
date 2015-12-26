@@ -56,11 +56,11 @@ public class ListaPRDAO implements Map<Integer,ListaPR> {
 	
 	private int size_aux(Connection c) throws SQLException{
 		int ret=0;
-		PreparedStatement ps = c.prepareStatement("SELECT COUNT(*) FROM "+TabLista+" WHERE "+TabId+" = ?");
+		PreparedStatement ps = c.prepareStatement("SELECT * FROM "+TabLista+" WHERE "+Eleicao+" = ?");
 		ps.setInt(1, this.idEleicao);
 		ResultSet rs = ps.executeQuery();
-		if(rs.next()){
-			ret = rs.getInt(1);
+		while(rs.next()){
+			ret++;
 		}
 		rs.close();
 		ps.close();
@@ -141,7 +141,7 @@ public class ListaPRDAO implements Map<Integer,ListaPR> {
 		//EliminaTodas as listas Desta eleicao
 		//eliminar o candidato de todas as listas
 		while(i.hasNext()){
-			this.removeCand(i.next(), c);
+			this.remove_aux(i.next(), c);
 		}
 	}
 	
@@ -257,7 +257,7 @@ public class ListaPRDAO implements Map<Integer,ListaPR> {
 			PreparedStatement ps = c.prepareStatement("SELECT * FROM "+TabLista+" WHERE "
 				+ TabId+" = ? AND "
 				+ Eleicao+" = ? ");
-			ps.setInt(1, (Integer)key);
+			ps.setInt(1, key);
 			ps.setInt(2, this.idEleicao);
 			ResultSet rs = ps.executeQuery();
 			if(rs.next()){

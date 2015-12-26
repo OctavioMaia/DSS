@@ -18,9 +18,6 @@ public class Partido implements Votavel {
 	private String simbolo;
 	private boolean removido;
 
-	public Partido() {
-	}
-
 	public Partido(int id, String sigla, String nome, String simbolo) {
 		this.id = id;
 		this.sigla = sigla;
@@ -29,13 +26,14 @@ public class Partido implements Votavel {
 		this.removido = false;
 	}
 
-	public Partido(int id, String sigla, String nome, String simbolo,boolean removido) {
+	public Partido(int id, String sigla, String nome, String simbolo, boolean removido) {
 		this.id = id;
 		this.sigla = sigla;
 		this.nome = nome;
 		this.simbolo = simbolo;
 		this.removido = removido;
 	}
+
 	public boolean isRemovido() {
 		return removido;
 	}
@@ -82,9 +80,15 @@ public class Partido implements Votavel {
 
 	@Override
     public boolean equals(Object obj) {
-		if(this.getClass() == obj.getClass()) return false; 
+		if(this.getClass() != obj.getClass()) return false;
 		Partido part = (Partido) obj;
 		return this.nome==part.getNome() && this.sigla==part.getSigla() && this.simbolo==part.getSimbolo();
+	}
+
+	@Override
+	public String[] toTable() {
+		String[] partido = { this.sigla, this.nome, Integer.toString(this.id)};
+		return partido;
 	}
 
 }
