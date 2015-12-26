@@ -17,6 +17,6 @@
 			<attribute name="javadoc_location" value="jar:platform:/resource/SGE/lib/jgoodies-uif-lite-javadoc.zip!/"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="/Users/joaosilva/Dropbox/joaosilva@outlook.com/NetBeans/SGE/src/mysql-connector-java-5.1.37-bin.jar"/>
+	<classpathentry kind="lib" path="lib/jcalendar-1.4.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
