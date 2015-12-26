@@ -110,6 +110,11 @@ public class Candidato {
 		Candidato c = (Candidato) obj;
 		return this.bi == c.getBi();
 	}
+	
+	@Override
+	public int hashCode(){
+		return this.bi;
+	}
 
 	public String[] toTable(){
 		String[] lista = {this.nome, Integer.toString(this.bi)};

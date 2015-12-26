@@ -68,6 +68,11 @@ public class Circulo {
         Circulo circulo = (Circulo)obj;
         return this.id == circulo.getId();
     }
+
+    @Override
+	public int hashCode() {
+		return this.id;
+	}
     
     public String toString(){
     	return "Circulo " + nome + ",com id " + id + " e " + totEleitores + " eleitores.";
