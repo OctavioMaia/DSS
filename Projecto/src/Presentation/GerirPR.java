@@ -37,14 +37,14 @@ public class GerirPR {
 	}
 
 	private void buttonProcurarActionPerformed(ActionEvent e) {
-		dialog1.setVisible(true);
+		fileChooser1.setVisible(true);
 		int result = fileChooser1.showOpenDialog(fileChooser1);
 		if (result == JFileChooser.APPROVE_OPTION) {
 		    File selectedFile = fileChooser1.getSelectedFile();
 		    pathImagem.setText(selectedFile.getAbsolutePath());
-		    dialog1.dispose();
+		    fileChooser1.setVisible(false);
 		}else
-			dialog1.dispose();
+			fileChooser1.setVisible(false);
 	}
 
 	private void buttonSairActionPerformed(ActionEvent e) {
@@ -174,8 +174,6 @@ public class GerirPR {
 		labelFoto = new JLabel();
 		separator3 = new JSeparator();
 		buttonEliminarCandidato = new JButton();
-		dialog1 = new JDialog();
-		fileChooser1 = new JFileChooser();
 		dialogoCalendario = new JDialog();
 		calendar1 = new JCalendar();
 		buttonConfirmarDataInicio = new JButton();
@@ -184,6 +182,7 @@ public class GerirPR {
 		calendar2 = new JCalendar();
 		buttonConfirmarDataNascimento = new JButton();
 		buttonCancelarData2 = new JButton();
+		fileChooser1 = new JFileChooser();
 
 		//======== GerirPR ========
 		{
@@ -401,36 +400,6 @@ public class GerirPR {
 			GerirPR.setLocationRelativeTo(null);
 		}
 
-		//======== dialog1 ========
-		{
-			dialog1.setResizable(false);
-			dialog1.setFont(new Font("Arial", Font.PLAIN, 12));
-			dialog1.setTitle("Gestor de Ficheiros");
-			Container dialog1ContentPane = dialog1.getContentPane();
-			dialog1ContentPane.setLayout(null);
-
-			//---- fileChooser1 ----
-			fileChooser1.setFont(new Font("Arial", Font.PLAIN, 11));
-			dialog1ContentPane.add(fileChooser1);
-			fileChooser1.setBounds(0, 0, 437, 315);
-
-			{ // compute preferred size
-				Dimension preferredSize = new Dimension();
-				for(int i = 0; i < dialog1ContentPane.getComponentCount(); i++) {
-					Rectangle bounds = dialog1ContentPane.getComponent(i).getBounds();
-					preferredSize.width = Math.max(bounds.x + bounds.width, preferredSize.width);
-					preferredSize.height = Math.max(bounds.y + bounds.height, preferredSize.height);
-				}
-				Insets insets = dialog1ContentPane.getInsets();
-				preferredSize.width += insets.right;
-				preferredSize.height += insets.bottom;
-				dialog1ContentPane.setMinimumSize(preferredSize);
-				dialog1ContentPane.setPreferredSize(preferredSize);
-			}
-			dialog1.pack();
-			dialog1.setLocationRelativeTo(dialog1.getOwner());
-		}
-
 		//======== dialogoCalendario ========
 		{
 			dialogoCalendario.setTitle("Calendario");
@@ -488,6 +457,9 @@ public class GerirPR {
 			dialogoCalendario2.setSize(225, 235);
 			dialogoCalendario2.setLocationRelativeTo(null);
 		}
+
+		//---- fileChooser1 ----
+		fileChooser1.setFont(new Font("Arial", Font.PLAIN, 11));
 		// JFormDesigner - End of component initialization  //GEN-END:initComponents
 	}
 
@@ -524,8 +496,6 @@ public class GerirPR {
 	private JLabel labelFoto;
 	private JSeparator separator3;
 	private JButton buttonEliminarCandidato;
-	private JDialog dialog1;
-	private JFileChooser fileChooser1;
 	private JDialog dialogoCalendario;
 	private JCalendar calendar1;
 	private JButton buttonConfirmarDataInicio;
@@ -534,5 +504,6 @@ public class GerirPR {
 	private JCalendar calendar2;
 	private JButton buttonConfirmarDataNascimento;
 	private JButton buttonCancelarData2;
+	private JFileChooser fileChooser1;
 	// JFormDesigner - End of variables declaration  //GEN-END:variables
 }
