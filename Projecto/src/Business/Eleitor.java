@@ -52,6 +52,7 @@ public class Eleitor {
         this.pin = pin;
     }
 
+    @Override
     public boolean equals(Object obj) {
         if (obj == null) {
             return false;
@@ -62,6 +63,11 @@ public class Eleitor {
         final Eleitor other = (Eleitor) obj;
         
         return (this.nIdent == other.nIdent);
+    }
+    
+    @Override
+    public int hashCode(){
+    	return this.nIdent;
     }
     
     public boolean verificaPin(String pass) {
@@ -77,6 +83,11 @@ public class Eleitor {
     		return true;
     	}
     	return false;
+    }
+    
+    public String[] toTable(){
+    	String[] eleitor = {this.nome, Integer.toString(this.nIdent)};
+    	return eleitor;
     }
     
     

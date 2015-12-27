@@ -1,3 +1,13 @@
+
+##O Mais Seguro nos DAO's é fazer os Clear assim
+```
+protected void clear_aux(Connection c)throws SQLException{
+		Iterator<Integer> i = this.keySet_aux(c).iterator();
+		while(i.hasNext()){
+			this.remove_aux(i.next(), c);
+		}
+	}
+```
 # Projeto DSS 2015/2016
 
 Coisas a considerar:
@@ -18,13 +28,22 @@ Coisas a considerar:
     - [x] Nome, naturalidade,residencia,profissao,bi, foto + parse
     - [x] Apagar informacoes
     - [x] Adicionar ao SGE 
+  - [ ] GerirAR
   - [ ] MainEleitor
-    - [x] Nome eleitor (falta metodo no sge)
+    - [x] Nome eleitor
     - [x] Tipo eleicao
     - [x] Data eleicao
-    - [ ] Votar (butão nao faz nada ainda)
+    - [x] Votar
     - [ ] Historico eleicoes
-    - [ ] Ver resultados
+    - [x] Ver resultados
+  - [ ] MainAdmin
+    - [x] Parse eleicao ativa
+    - [x] Terminar eleicao ativa
+    - [x] Ver resultados
+    - [x] Iniciar eleicao
+    - [x] Criar eleicao
+    - [x] Inserir caderno
+    - [ ] Povoar tabelas
   - [ ] ResultadosAR
     - [x] Resultados globais
       - [x] Calculo votos brancos nulos e abstencao 
@@ -34,31 +53,43 @@ Coisas a considerar:
       - [x] Calculo percentagens votos brancos nulos e abstencao
     - [ ] Implementar selecao de colunas nas tabelas pra mostrar informacao
   - [ ] ResultadosPR
-    - [ ] Resultados globais
-      - [ ] Calculo votos brancos nulos e abstencao 
-      - [ ] Calculo percentagens votos brancos nulos e abstencao
-    - [ ] Resultados circulo
-      - [ ] Calculo votos brancos nulos e abstencao 
-      - [ ] Calculo percentagens votos brancos nulos e abstencao
+    - [x] Resultados globais
+      - [x] Calculo votos brancos nulos e abstencao 
+      - [x] Calculo percentagens votos brancos nulos e abstencao
+    - [x] Resultados circulo
+      - [x] Calculo votos brancos nulos e abstencao 
+      - [x] Calculo percentagens votos brancos nulos e abstencao
     - [ ] Implementar selecao de colunas nas tabelas pra mostrar informacao
-  - [ ] Votar
+  - [x] Votar
+    - [x] Parse nome eleitor
+    - [ ] Listagem das listas/candidatos
+    - [ ] Imagem
+    - [x] Limpar
+    - [x] Votar
+  - [x] Inserir caderno de recenseamento
+    - [x] Path parse
+    - [x] Ler ficheiro
+    - [x] Povoar table consoante circulo
+    - [ ] Escrever pra DB (funciona mas crasha ai a 60%)
+  - [x] Criar Eleição
+    - [x] Selecionar tipo
+    - [x] Selecionar data
+    - [x] Avançar pra eleicao respetiva
 
 # Cenas dos DAO's:
 
-- [ ] Por Fazer/A fazer
-  - [ ] EleiçãoARDAO
-  - [ ] ListaARDAO
-
 - [ ] Feitas/Testas
   - [X] AdminDAO
-  - [ ] PartidosDAO
+  - [X] PartidosDAO
   - [X] CirculoInfoDAO
   - [X] Connector
+  - [X] EleiçãoARDAO
   - [ ] EleiçãoPRDAO
   - [X] EleitoresDAO
-  - [ ] ListaPRDAO
+  - [X] ListaPRDAO
   - [ ] ResultadoCirculoPRDAO
   - [X] CirculoInfoDAO
-  - [ ] ColigaçãoDAO
+  - [X] ColigaçãoDAO
   - [X] CirculoDAO
-  - [ ] ResultadoCirculoARDAO
+  - [ ] ResultadoCirculoARDAO -> Falta testar com listas
+  - [ ] ListaARDAO

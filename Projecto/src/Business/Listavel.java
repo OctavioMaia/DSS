@@ -10,5 +10,5 @@ package Business;
  * @author Octávio Maia <octaviojmaia at gmail.com>
  */
 public interface Listavel {
-    
+	public abstract Object[] toTable();
 }

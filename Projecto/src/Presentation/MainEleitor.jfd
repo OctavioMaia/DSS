@@ -41,6 +41,9 @@ new FormModel {
 			add( new FormComponent( "javax.swing.JLabel" ) {
 				name: "labelNome"
 				"font": #Font0
+				auxiliary() {
+					"JavaCodeGenerator.preInitCode": "//labelNome.setText(sge.getEleitor().getNome());"
+				}
 			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
 				"width": 103
 				"height": 17
@@ -50,6 +53,9 @@ new FormModel {
 			add( new FormComponent( "javax.swing.JLabel" ) {
 				name: "labelEleicao"
 				"font": #Font0
+				auxiliary() {
+					"JavaCodeGenerator.preInitCode": "//if(sge.eleicaoAtiva().getClass().getSimpleName().equals(\"EleicaoAR\")) labelEleicao.setText(\"Eleição Assembleia República\");\n//else labelEleicao.setText(\"Eleição Presidência República\");"
+				}
 			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
 				"width": 103
 				"height": 17
@@ -59,6 +65,9 @@ new FormModel {
 			add( new FormComponent( "javax.swing.JLabel" ) {
 				name: "labelDataInicio"
 				"font": #Font0
+				auxiliary() {
+					"JavaCodeGenerator.preInitCode": "//labelDataInicio.setText(sge.eleicaoAtiva().getData().get(Calendar.DAY_OF_MONTH)+\"/\"+sge.eleicaoAtiva().getData().get(Calendar.MONTH)+\"/\"+sge.eleicaoAtiva().getData().get(Calendar.YEAR));"
+				}
 			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
 				"width": 103
 				"height": 17
@@ -69,6 +78,7 @@ new FormModel {
 				name: "buttonVotar"
 				"text": "Votar"
 				"font": new java.awt.Font( "Arial", 1, 14 )
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "buttonVotarActionPerformed", true ) )
 			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
 				"x": 285
 				"y": 25
@@ -94,6 +104,7 @@ new FormModel {
 			add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
 				name: "scrollPane1"
 				"font": new java.awt.Font( "Arial", 0, 12 )
+				addEvent( new FormEvent( "java.awt.event.MouseListener", "mouseClicked", "scrollPane1MouseClicked", true ) )
 				add( new FormComponent( "javax.swing.JTable" ) {
 					name: "tableEleicoes"
 					"model": new com.jformdesigner.model.SwingTableModel( new java.util.Vector {
@@ -102,30 +113,10 @@ new FormModel {
 							add( null )
 							add( null )
 						} )
-						add( new java.util.Vector {
-							add( null )
-							add( null )
-							add( null )
-						} )
-						add( new java.util.Vector {
-							add( null )
-							add( null )
-							add( null )
-						} )
-						add( new java.util.Vector {
-							add( null )
-							add( null )
-							add( "" )
-						} )
-						add( new java.util.Vector {
-							add( null )
-							add( null )
-							add( null )
-						} )
 					}, new java.util.Vector {
 						add( "Data de início" )
-						add( "Data de fim" )
 						add( "Tipo de Eleição" )
+						add( "id" )
 					}, new java.util.Vector {
 						add( class java.lang.String )
 						add( null )
@@ -140,6 +131,10 @@ new FormModel {
 						add( null )
 					} )
 					"font": new java.awt.Font( "Arial", 0, 12 )
+					auxiliary() {
+						"JavaCodeGenerator.postInitCode": "tableEleicoes.getColumnModel().getColumn(2).setPreferredWidth(0);\ntableEleicoes.getColumnModel().getColumn(2).setMinWidth(0);\ntableEleicoes.getColumnModel().getColumn(2).setWidth(0);\ntableEleicoes.getColumnModel().getColumn(2).setMaxWidth(0);"
+					}
+					addEvent( new FormEvent( "java.awt.event.MouseListener", "mouseClicked", "scrollPane1MouseClicked", true ) )
 				} )
 			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
 				"x": 15
@@ -152,6 +147,7 @@ new FormModel {
 				"text": "Ver resultados"
 				"font": new java.awt.Font( "Arial", 0, 14 )
 				"enabled": false
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "button1ActionPerformed", true ) )
 			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
 				"x": 15
 				"y": 345

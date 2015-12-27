@@ -4,9 +4,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Random;
@@ -22,35 +20,30 @@ public class EleicaoAR extends Eleicao {
 	private CirculoInfoDAO circulos;
 	private ResultadoCirculoARDAO resultado;
 	
-	public EleicaoAR(int idEleicao, Calendar data,Collection<Circulo> circulos,int mandatosAssembleia) {
+	public EleicaoAR(int idEleicao, Calendar data,int mandatosAssembleia) {
 		super(idEleicao, data);
 		this.mandatosAssembleia = mandatosAssembleia;
 		this.circulos = new CirculoInfoDAO(idEleicao);
 		this.resultado = new ResultadoCirculoARDAO(idEleicao);
-		Iterator<Circulo> it = circulos.iterator();
-		while(it.hasNext()){
-			Circulo circulo = it.next();
-			if (!this.circulos.containsKey(circulo.getId()))
-				this.circulos.put(circulo.getId(), new CirculoInfo(idEleicao,circulo));
-			if (!this.resultado.containsKey(circulo.getId()))
-				this.resultado.put(circulo.getId(), new ResultadoCirculoAR(circulo));
-			}
-		this.calcularMandatosCirculos();
 	}
 
-	public EleicaoAR(int idEleicao, Calendar data, Collection<Circulo> circulos, int estado,int mandatosAssembleia, boolean permitirVotar, Set<Integer> vot) {
+	public EleicaoAR(int idEleicao, Calendar data, int estado, boolean permitirVotar, Set<Integer> vot,int mandatosAssembleia) {
 		super(idEleicao, data,estado,permitirVotar,vot);
 		this.mandatosAssembleia = mandatosAssembleia;
 		this.circulos = new CirculoInfoDAO(idEleicao);
 		this.resultado = new ResultadoCirculoARDAO(idEleicao);
+	}
+	
+	public void inicializarCirculos(Collection<Circulo> circulos){
 		Iterator<Circulo> it = circulos.iterator();
 		while(it.hasNext()){
 			Circulo circulo = it.next();
 			if (!this.circulos.containsKey(circulo.getId()))
-				this.circulos.put(circulo.getId(), new CirculoInfo(idEleicao,circulo));
+				this.circulos.put(circulo.getId(), new CirculoInfo(super.getIdEleicao(),circulo));
 			if (!this.resultado.containsKey(circulo.getId()))
 				this.resultado.put(circulo.getId(), new ResultadoCirculoAR(circulo));
-		}
+			}
+		this.calcularMandatosCirculos();
 	}
 	
 	/*
@@ -142,7 +135,12 @@ public class EleicaoAR extends Eleicao {
 	}
 	
 	@Override
-	public void iniciar(){
+	public void iniciar() throws ExceptionIniciarEleicao{
+		for(CirculoInfo cinfo: this.circulos.values()){
+			if(cinfo.getListas().size() == 0){
+				throw new ExceptionIniciarEleicao("Existem círculos sem listas");
+			}
+		}
 		super.setEstado(0);
 		super.setPermitirVotar(true);
 		this.calcularMandatosCirculos();
@@ -152,10 +150,11 @@ public class EleicaoAR extends Eleicao {
 	public void terminar(){
 		super.setEstado(1);
 		super.setPermitirVotar(false);
+		this.geraBoletim();
 		this.atribuirMandatosListas();
 	}
 	
-	public void addCandidato(Lista lista,CandidatoAR candidato) throws ExceptionLimiteCandidatos{
+	public void addCandidato(Lista lista,CandidatoAR candidato) throws ExceptionLimiteCandidatos, ExceptionMandanteInvalido{
 		CirculoInfo cinfo = this.circulos.get(lista.getCirculo().getId());
 		cinfo.addCandidatoLista(lista,candidato);
 	}
@@ -168,24 +167,24 @@ public class EleicaoAR extends Eleicao {
 			for(int idListaCirculo: listasCirculo.keySet()){
 				Lista listaCirculo = listasCirculo.get(idListaCirculo);
 				if(!l.getMandante().equals(listaCirculo.getMandante())){
-					if(l.getMandante().getClass().getName().equals("Partido")){
+					if(l.getMandante().getClass().getSimpleName().equals("Partido")){
 						Partido partidoLista = (Partido)l.getMandante();
-						if(listaCirculo.getMandante().getClass().getName().equals("Coligacao")){
+						if(listaCirculo.getMandante().getClass().getSimpleName().equals("Coligacao")){
 							Coligacao coligacaoListaCirculo = (Coligacao)listaCirculo.getMandante();
 							if(coligacaoListaCirculo.getPartidos().contains(partidoLista)){
 								throw new ExceptionMandanteInvalido("Partido "+partidoLista.getNome()+" ja pertence a uma coligacao");
 							}
 						}
 					}
-					else if(l.getMandante().getClass().getName().equals("Coligacao")){
+					else if(l.getMandante().getClass().getSimpleName().equals("Coligacao")){
 						Coligacao coligacaoLista = (Coligacao)l.getMandante();
-						if(listaCirculo.getMandante().getClass().getName().equals("Partido")){
+						if(listaCirculo.getMandante().getClass().getSimpleName().equals("Partido")){
 							Partido partidoListaCirculo = (Partido)listaCirculo.getMandante();
 							if(coligacaoLista.getPartidos().contains(partidoListaCirculo)){
 								throw new ExceptionMandanteInvalido("Partidos da coligacao "+coligacaoLista.getNome()+" ja registados fora da coligacao");
 							}
 						}
-						else if(listaCirculo.getMandante().getClass().getName().equals("Coligacao")){
+						else if(listaCirculo.getMandante().getClass().getSimpleName().equals("Coligacao")){
 							Coligacao coligacaoListaCirculo = (Coligacao)listaCirculo.getMandante();
 							for(Partido partidoColigacao: coligacaoListaCirculo.getPartidos()){
 								if(coligacaoLista.getPartidos().contains(partidoColigacao)){
@@ -203,6 +202,11 @@ public class EleicaoAR extends Eleicao {
 			if(maxcirculo>=maxID) maxID = maxcirculo;
 		}
 		l.setID(maxID+1);
+		
+		/*
+		 * Atencao: nao e garantido que a lista seja adicionada aos circulos e aos resultados,
+		 * se acontecer um errro na base de dados
+		 */
 		this.circulos.get(l.getCirculo().getId()).addLista(l);
 		ResultadoCirculoAR resultadoCirculo = this.resultado.get(l.getCirculo().getId());
 		resultadoCirculo.addLista(l);
@@ -285,4 +289,21 @@ public class EleicaoAR extends Eleicao {
 		}
 	}
 	
+	public CandidatoAR getCandidato(int bi) {
+		CandidatoAR candidato = null;
+		for(CirculoInfo cinfo: this.circulos.values()){
+			candidato = cinfo.getCandidato(bi);
+			if(candidato != null) return candidato;
+		}
+		return candidato;
+	}
+
+	@Override
+	public Object[] toTable() {
+		Object[] lista = {super.getData().getTime(), "Assembleia da República", this};
+    	return lista;
+	}
+
+	
+
 }
