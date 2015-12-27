@@ -79,11 +79,22 @@ public class Coligacao implements Votavel {
 		this.partidos = partidos;
 	}
 
+	@Override
 	public boolean equals(Object obj) {
 		if (this.getClass() != obj.getClass())
 			return false;
 		Coligacao col = (Coligacao) obj;
 		return this.nome == col.getNome() && this.sigla == col.getSigla() && this.simbolo == col.getSimbolo();
+	}
+	
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((nome == null) ? 0 : nome.hashCode());
+		result = prime * result + ((sigla == null) ? 0 : sigla.hashCode());
+		result = prime * result + ((simbolo == null) ? 0 : simbolo.hashCode());
+		return result;
 	}
 
 	@Override
