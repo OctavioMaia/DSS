@@ -422,4 +422,10 @@ public class EleicaoPR extends Eleicao {
 		}
 		return nulos;
 	}
+
+	@Override
+	public Object[] toTable() {
+		Object[] lista = {super.getData().getTime(), "Presidência da República", this};
+	    return lista;
+	}
 }
