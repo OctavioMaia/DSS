@@ -4,7 +4,7 @@ new FormModel {
 	contentType: "form/swing"
 	root: new FormRoot {
 		add( new FormWindow( "javax.swing.JFrame", new FormLayoutManager( class com.jformdesigner.runtime.NullLayout ) ) {
-			name: "ResultadosAR"
+			name: "ResultadosPR"
 			"$locationPolicy": 1
 			"$sizePolicy": 1
 			"resizable": false
@@ -95,7 +95,7 @@ new FormModel {
 				name: "globaisBrancosN"
 				"font": #Font1
 				auxiliary() {
-					"JavaCodeGenerator.preInitCode": "//globaisBrancosN.setText(\"\"+sge.getResultadoGlobalPR(eleicao, voltaBox.getSelectedIndex()+1).getBrancos());"
+					"JavaCodeGenerator.preInitCode": "globaisBrancosN.setText(\"\"+sge.getResultadoGlobalPR(eleicao, voltaBox.getSelectedIndex()+1).getBrancos());"
 				}
 			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
 				"width": 75
@@ -107,7 +107,7 @@ new FormModel {
 				name: "globaisNulosN"
 				"font": #Font1
 				auxiliary() {
-					"JavaCodeGenerator.preInitCode": "//globaisNulosN.setText(\"\"+sge.getResultadoGlobalPR(eleicao, voltaBox.getSelectedIndex()+1).getNulos());"
+					"JavaCodeGenerator.preInitCode": "globaisNulosN.setText(\"\"+sge.getResultadoGlobalPR(eleicao, voltaBox.getSelectedIndex()+1).getNulos());"
 				}
 			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
 				"width": 75
@@ -119,7 +119,7 @@ new FormModel {
 				name: "globaisAbstencaoN"
 				"font": #Font1
 				auxiliary() {
-					"JavaCodeGenerator.preInitCode": "//globaisAbstencaoN.setText(\"\"+sge.getResultadoGlobalPR(eleicao, voltaBox.getSelectedIndex()+1).getAbstencao));"
+					"JavaCodeGenerator.preInitCode": "globaisAbstencaoN.setText(\"\"+sge.getResultadoGlobalPR(eleicao, voltaBox.getSelectedIndex()+1).getAbstencao());"
 				}
 			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
 				"width": 75
@@ -131,7 +131,7 @@ new FormModel {
 				name: "globaisAbstencaoP"
 				"font": #Font1
 				auxiliary() {
-					"JavaCodeGenerator.preInitCode": "//globaisAbstencaoP.setText(Math.round(100.0 / eleicao.numeroEleitores() * sge.getResultadoGlobalPR(eleicao,voltaBox.getSelectedIndex()+1).getAbstencao())+\"%\");"
+					"JavaCodeGenerator.preInitCode": "globaisAbstencaoP.setText(Math.round(100.0 / eleicao.numeroEleitores() * sge.getResultadoGlobalPR(eleicao,voltaBox.getSelectedIndex()+1).getAbstencao())+\"%\");"
 				}
 			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
 				"width": 55
@@ -143,7 +143,7 @@ new FormModel {
 				name: "globaisNulosP"
 				"font": #Font1
 				auxiliary() {
-					"JavaCodeGenerator.preInitCode": "//globaisNulosP.setText(Math.round(100.0 / eleicao.numeroEleitores() * sge.getResultadoGlobalPR(eleicao,voltaBox.getSelectedIndex()+1).getNulos())+\"%\");"
+					"JavaCodeGenerator.preInitCode": "globaisNulosP.setText(Math.round(100.0 / eleicao.numeroEleitores() * sge.getResultadoGlobalPR(eleicao,voltaBox.getSelectedIndex()+1).getNulos())+\"%\");"
 				}
 			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
 				"width": 55
@@ -155,7 +155,7 @@ new FormModel {
 				name: "globaisBrancosP"
 				"font": #Font1
 				auxiliary() {
-					"JavaCodeGenerator.preInitCode": "//globaisBrancosP.setText(Math.round(100.0 / eleicao.numeroEleitores() * sge.getResultadoGlobalPR(eleicao,voltaBox.getSelectedIndex()+1).getBrancos())+\"%\");"
+					"JavaCodeGenerator.preInitCode": "globaisBrancosP.setText(Math.round(100.0 / eleicao.numeroEleitores() * sge.getResultadoGlobalPR(eleicao,voltaBox.getSelectedIndex()+1).getBrancos())+\"%\");"
 				}
 			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
 				"width": 55
@@ -206,7 +206,7 @@ new FormModel {
 				name: "circuloBrancosN"
 				"font": #Font1
 				auxiliary() {
-					"JavaCodeGenerator.preInitCode": "//circuloBrancosN.setText(\"\"+sge.getResultadoCirculoPR(eleicao, voltaBox.getSelectedIndex()+1, (int) tableCirculo.getModel().getValueAt(tableCirculo.getSelectedRow(), 1)).getBrancos());"
+					"JavaCodeGenerator.preInitCode": "circuloBrancosN.setText(\"\"+sge.getResultadoCirculoPR(eleicao, voltaBox.getSelectedIndex()+1, (int) tableCirculo.getModel().getValueAt(tableCirculo.getSelectedRow(), 1)).getBrancos());"
 				}
 			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
 				"width": 75
@@ -218,7 +218,7 @@ new FormModel {
 				name: "circuloBrancosP"
 				"font": #Font1
 				auxiliary() {
-					"JavaCodeGenerator.preInitCode": "//circuloBrancosP.setText(Math.round(100.0 / eleicao.numeroEleitores() * sge.getResultadoCirculoPR(eleicao,voltaBox.getSelectedIndex()+1,(int) tableCirculo.getValueAt(tableCirculo.getSelectedRow(), 1)).getBrancos())+\"%\");"
+					"JavaCodeGenerator.preInitCode": "circuloBrancosP.setText(Math.round(100.0 / eleicao.numeroEleitores() * sge.getResultadoCirculoPR(eleicao,voltaBox.getSelectedIndex()+1,(int) tableCirculo.getValueAt(tableCirculo.getSelectedRow(), 1)).getBrancos())+\"%\");"
 				}
 			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
 				"width": 55
@@ -230,7 +230,7 @@ new FormModel {
 				name: "circuloNulosP"
 				"font": #Font1
 				auxiliary() {
-					"JavaCodeGenerator.preInitCode": "//circuloNulosP.setText(Math.round(100.0 / eleicao.numeroEleitores() * sge.getResultadoCirculoPR(eleicao,voltaBox.getSelectedIndex()+1,(int) tableCirculo.getValueAt(tableCirculo.getSelectedRow(), 1)).getNulos())+\"%\");"
+					"JavaCodeGenerator.preInitCode": "circuloNulosP.setText(Math.round(100.0 / eleicao.numeroEleitores() * sge.getResultadoCirculoPR(eleicao,voltaBox.getSelectedIndex()+1,(int) tableCirculo.getValueAt(tableCirculo.getSelectedRow(), 1)).getNulos())+\"%\");"
 				}
 			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
 				"width": 55
@@ -242,7 +242,7 @@ new FormModel {
 				name: "circuloAbstencaoP"
 				"font": #Font1
 				auxiliary() {
-					"JavaCodeGenerator.preInitCode": "//circuloAbstencaoP.setText(Math.round(100.0 / eleicao.numeroEleitores() * sge.getResultadoCirculoPR(eleicao,voltaBox.getSelectedIndex()+1,(int) tableCirculo.getValueAt(tableCirculo.getSelectedRow(), 1)).getAbstencao())+\"%\");"
+					"JavaCodeGenerator.preInitCode": "circuloAbstencaoP.setText(Math.round(100.0 / eleicao.numeroEleitores() * sge.getResultadoCirculoPR(eleicao,voltaBox.getSelectedIndex()+1,(int) tableCirculo.getValueAt(tableCirculo.getSelectedRow(), 1)).getAbstencao())+\"%\");"
 				}
 			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
 				"width": 55
@@ -254,7 +254,7 @@ new FormModel {
 				name: "circuloAbstencaoN"
 				"font": #Font1
 				auxiliary() {
-					"JavaCodeGenerator.preInitCode": "//circuloAbstencaoN.setText(\"\"+sge.getResultadoCirculoPR(eleicao, voltaBox.getSelectedIndex()+1, (int) tableCirculo.getModel().getValueAt(tableCirculo.getSelectedRow(), 1)).getAbstencao());"
+					"JavaCodeGenerator.preInitCode": "circuloAbstencaoN.setText(\"\"+sge.getResultadoCirculoPR(eleicao, voltaBox.getSelectedIndex()+1, (int) tableCirculo.getModel().getValueAt(tableCirculo.getSelectedRow(), 1)).getAbstencao());"
 				}
 			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
 				"width": 75
@@ -266,7 +266,7 @@ new FormModel {
 				name: "circuloNulosN"
 				"font": #Font1
 				auxiliary() {
-					"JavaCodeGenerator.preInitCode": "//circuloNulosN.setText(\"\"+sge.getResultadoCirculoPR(eleicao, voltaBox.getSelectedIndex()+1, (int) tableCirculo.getModel().getValueAt(tableCirculo.getSelectedRow(), 1)).getNulos());"
+					"JavaCodeGenerator.preInitCode": "circuloNulosN.setText(\"\"+sge.getResultadoCirculoPR(eleicao, voltaBox.getSelectedIndex()+1, (int) tableCirculo.getModel().getValueAt(tableCirculo.getSelectedRow(), 1)).getNulos());"
 				}
 			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
 				"width": 75
@@ -359,7 +359,7 @@ new FormModel {
 			} )
 			add( new FormComponent( "javax.swing.JLabel" ) {
 				name: "imagem"
-				"icon": new com.jformdesigner.model.SwingIcon( 0, "/img/PS.png" )
+				"icon": sfield com.jformdesigner.model.FormObject NULL_VALUE
 			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
 				"x": 335
 				"y": 160

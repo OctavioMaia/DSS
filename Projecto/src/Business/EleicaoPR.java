@@ -251,6 +251,7 @@ public class EleicaoPR extends Eleicao {
 	@Override
 	public void iniciar() throws ExceptionIniciarEleicao {
 		if (super.estado(-1)) {// iniciar depois da eleicao ter sido criada
+			super.setEstado(0);
 			Collection<ListaPR> list = this.listas.values();
 			this.geraBoletim(list);
 			for (ResultadoCirculoPR resC : this.voltaR1.values()) {
@@ -268,7 +269,7 @@ public class EleicaoPR extends Eleicao {
 					}
 				}
 			} else {
-				throw new ExceptionIniciarEleicao("Inpossivel iniciar Elicão;");
+				throw new ExceptionIniciarEleicao("Impossivel iniciar Eleicão");
 			}
 		}
 	}
@@ -278,16 +279,20 @@ public class EleicaoPR extends Eleicao {
 		if (super.estado(0) && this.volta2 == false) {
 			// terminar primeira volta
 			super.setPermitirVotar(false);
+			System.out.println("permitevotarfalse");
 			// verificar se ouve maioria absoluta
 			if (verifacarMaioria() == false) {
 				// criar segunda volta
 				this.volta2 = true;
+				System.out.println("volta2");
 			} else {
 				super.setEstado(1);
+				System.out.println("estado1");
 			}
 		} else {
 			// terminar segunda volta
 			if (volta2) {
+				System.out.println("volta2else");
 				super.setPermitirVotar(false);
 				super.setEstado(1);
 			}
@@ -297,7 +302,6 @@ public class EleicaoPR extends Eleicao {
 	private Calendar defData2(Calendar data1) {
 		Calendar data2aux = new GregorianCalendar();
 		data2aux.set(data1.get(Calendar.YEAR), data1.get(Calendar.MONTH), data1.get(Calendar.DAY_OF_YEAR));
-		;
 		data2aux.add(Calendar.DAY_OF_YEAR, 30);
 		while (data2aux.get(Calendar.DAY_OF_WEEK) != Calendar.SUNDAY) {
 			data2aux.add(Calendar.DAY_OF_YEAR, 1);
@@ -423,6 +427,10 @@ public class EleicaoPR extends Eleicao {
 		return nulos;
 	}
 
+	public Collection<ListaPR> getLista(){
+		return listas.values();
+	}
+	
 	@Override
 	public Object[] toTable() {
 		Object[] lista = {super.getData().getTime(), "Presidência da República", this};

@@ -16,7 +16,8 @@ new FormModel {
 				"font": &Font0 new java.awt.Font( "Arial", 0, 14 )
 			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
 				"x": 20
-				"y": 20
+				"y": 15
+				"height": 25
 			} )
 			add( new FormComponent( "javax.swing.JLabel" ) {
 				name: "label2"
@@ -24,9 +25,9 @@ new FormModel {
 				"font": #Font0
 			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
 				"width": 103
-				"height": 17
+				"height": 25
 				"x": 20
-				"y": 50
+				"y": 45
 			} )
 			add( new FormComponent( "javax.swing.JLabel" ) {
 				name: "label3"
@@ -34,9 +35,9 @@ new FormModel {
 				"font": #Font0
 			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
 				"width": 103
-				"height": 17
+				"height": 25
 				"x": 20
-				"y": 80
+				"y": 75
 			} )
 			add( new FormComponent( "javax.swing.JLabel" ) {
 				name: "labelNome"
@@ -45,10 +46,10 @@ new FormModel {
 					"JavaCodeGenerator.preInitCode": "labelNome.setText(sge.getEleitor().getNome());"
 				}
 			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
-				"width": 103
-				"height": 17
+				"width": 310
+				"height": 25
 				"x": 140
-				"y": 20
+				"y": 15
 			} )
 			add( new FormComponent( "javax.swing.JLabel" ) {
 				name: "labelEleicao"
@@ -57,10 +58,10 @@ new FormModel {
 					"JavaCodeGenerator.preInitCode": "if(sge.eleicaoAtiva().getClass().getSimpleName().equals(\"EleicaoAR\")) \n\tlabelEleicao.setText(\"Eleição Assembleia República\");\nelse \n\tlabelEleicao.setText(\"Eleição Presidência República\");"
 				}
 			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
-				"width": 103
-				"height": 17
+				"width": 310
+				"height": 25
 				"x": 140
-				"y": 50
+				"y": 45
 			} )
 			add( new FormComponent( "javax.swing.JLabel" ) {
 				name: "labelDataInicio"
@@ -69,10 +70,10 @@ new FormModel {
 					"JavaCodeGenerator.preInitCode": "labelDataInicio.setText(sge.eleicaoAtiva().getData().get(Calendar.DAY_OF_MONTH)+\"/\"+sge.eleicaoAtiva().getData().get(Calendar.MONTH)+\"/\"+sge.eleicaoAtiva().getData().get(Calendar.YEAR));"
 				}
 			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
-				"width": 103
-				"height": 17
+				"width": 310
+				"height": 25
 				"x": 140
-				"y": 80
+				"y": 75
 			} )
 			add( new FormComponent( "javax.swing.JButton" ) {
 				name: "buttonVotar"
@@ -80,7 +81,7 @@ new FormModel {
 				"font": new java.awt.Font( "Arial", 1, 14 )
 				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "buttonVotarActionPerformed", true ) )
 			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
-				"x": 285
+				"x": 480
 				"y": 25
 				"width": 85
 				"height": 55
@@ -88,8 +89,8 @@ new FormModel {
 			add( new FormComponent( "javax.swing.JSeparator" ) {
 				name: "separator2"
 			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
-				"width": 365
-				"height": 10
+				"width": 555
+				"height": 5
 				"x": 10
 				"y": 110
 			} )
@@ -98,8 +99,8 @@ new FormModel {
 				"text": "Histórico de Eleições"
 				"font": new java.awt.Font( "Arial", 0, 14 )
 			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
-				"x": 20
-				"y": 120
+				"x": 15
+				"y": 115
 			} )
 			add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
 				name: "scrollPane1"
@@ -134,7 +135,7 @@ new FormModel {
 			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
 				"x": 15
 				"y": 140
-				"width": 360
+				"width": 555
 				"height": 200
 			} )
 			add( new FormComponent( "javax.swing.JButton" ) {
@@ -146,11 +147,11 @@ new FormModel {
 			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
 				"x": 15
 				"y": 345
-				"width": 360
+				"width": 555
 			} )
 		}, new FormLayoutConstraints( null ) {
-			"location": new java.awt.Point( 0, 5 )
-			"size": new java.awt.Dimension( 400, 415 )
+			"location": new java.awt.Point( 5, 5 )
+			"size": new java.awt.Dimension( 600, 415 )
 		} )
 	}
 }

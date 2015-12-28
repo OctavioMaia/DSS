@@ -8,14 +8,23 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.GregorianCalendar;
+import java.util.Set;
 
 import javax.swing.*;
 import javax.swing.table.*;
 
 import Business.Candidato;
+import Business.Eleicao;
 import Business.EleicaoPR;
+import Business.ListaPR;
+import Business.Listavel;
 import Business.SGE;
+import Exception.ExceptionEleicaoEstado;
+import Exception.ExceptionLimiteCandidatos;
+import Exception.ExceptionListaExiste;
+import Exception.ExceptionMandanteInvalido;
 
 import com.jgoodies.forms.factories.*;
 import com.toedter.calendar.*;
@@ -63,8 +72,9 @@ public class GerirPR {
 		
 		try{
 			Candidato c = new Candidato(nome, bi, profissao, dataN, residencia, naturalidade, foto);
-			
 			sge.addCandidatoPR(eleicao,c);
+			
+			//reset tabelas
 			nomeCandidato.setText("");
 			this.naturalidade.setText("");
 			this.residencia.setText("");
@@ -72,8 +82,8 @@ public class GerirPR {
 			this.bi.setText("");
 			this.dataNascimento.setText("dd/mm/aa");
 			this.pathImagem.setText("");
-		}catch(Exception ex){
-			System.out.println("exception adicionar");
+		}catch(ExceptionListaExiste | ExceptionLimiteCandidatos|  ExceptionMandanteInvalido | ExceptionEleicaoEstado ex){
+			JOptionPane.showMessageDialog(null, ex.getMessage());
 		}
 	}
 
@@ -96,11 +106,12 @@ public class GerirPR {
 	private void buttonConfirmarDataActionPerformed(ActionEvent e) {
 		Calendar cal = calendar1.getCalendar();
 		int dia = cal.get(Calendar.DAY_OF_MONTH);
-		int mes = cal.get(Calendar.MONTH)+1;
+		int mes = cal.get(Calendar.MONTH);
 		int ano = cal.get(Calendar.YEAR);
-		dataInicioEleicao.setText(dia+"/"+mes+"/"+ano);
+		dataInicioEleicao.setText(dia+"/"+(mes+1)+"/"+ano);
 		
 		dataInicio = new GregorianCalendar(ano, mes, dia);
+		sge.alterarDataEleicao(eleicao,dataInicio);
 		//TODO implementar dataInicio
 		
 		dialogoCalendario.setVisible(false);
@@ -110,9 +121,9 @@ public class GerirPR {
 	private void buttonConfirmarDataNascimentoActionPerformed(ActionEvent e) {
 		Calendar cal = calendar2.getCalendar();
 		int dia = cal.get(Calendar.DAY_OF_MONTH);
-		int mes = cal.get(Calendar.MONTH)+1;
+		int mes = cal.get(Calendar.MONTH);
 		int ano = cal.get(Calendar.YEAR);
-		dataNascimento.setText(dia+"/"+mes+"/"+ano);
+		dataNascimento.setText(dia+"/"+(mes+1)+"/"+ano);
 		
 		dataNasc = new GregorianCalendar(ano, mes, dia);
 		//TODO implementar dataNascimento
@@ -137,8 +148,40 @@ public class GerirPR {
 	}
 
 	private void buttonEliminarCandidatoActionPerformed(ActionEvent e) {
-		//remover candidato
+		sge.removeLista(eleicao, (Listavel) tableCandidatos.getValueAt(tableCandidatos.getSelectedRow(), 2));
+		povoarTabela();
 	}
+	
+	private void povoarTabela() {
+		Collection<ListaPR> candidatos = eleicao.getLista();
+		Object[][] data = new Object[candidatos.size()][]; 
+		int i=0;
+		
+		if (tableCandidatos.getRowCount() > 0) {
+            for (int conta = tableCandidatos.getRowCount() - 1; conta > -1; conta--) {
+                ((DefaultTableModel) tableCandidatos.getModel()).removeRow(conta);;
+            }
+        }
+		
+		for(ListaPR el : candidatos){	
+			System.out.println("id" + el.getIdListaPR());
+			data[i] = el.toTable();
+			
+			DefaultTableModel model = (DefaultTableModel) tableCandidatos.getModel();
+			model.addRow(data[i]);
+
+			i++;
+		}
+	}
+
+	private void buttonAtualizarActionPerformed(ActionEvent e) {
+		povoarTabela();
+	}
+
+	private void tableCandidatosFocusGained(FocusEvent e) {
+		if(tableCandidatos.getSelectedColumnCount()==1) buttonEliminarCandidato.setEnabled(true);
+	}
+	
 	
 	private void initComponents(SGE sge,EleicaoPR eleicao) {
 		// JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
@@ -172,8 +215,8 @@ public class GerirPR {
 		scrollPane1 = new JScrollPane();
 		tableCandidatos = new JTable();
 		labelFoto = new JLabel();
-		separator3 = new JSeparator();
 		buttonEliminarCandidato = new JButton();
+		button1 = new JButton();
 		dialogoCalendario = new JDialog();
 		calendar1 = new JCalendar();
 		buttonConfirmarDataInicio = new JButton();
@@ -246,7 +289,7 @@ public class GerirPR {
 			buttonSair.setFont(new Font("Arial", Font.PLAIN, 14));
 			buttonSair.addActionListener(e -> buttonSairActionPerformed(e));
 			GerirPRContentPane.add(buttonSair);
-			buttonSair.setBounds(435, 590, 95, 25);
+			buttonSair.setBounds(375, 585, 155, 25);
 
 			//---- buttonData ----
 			buttonData.setText("Alterar");
@@ -260,7 +303,7 @@ public class GerirPR {
 			int dia = cal.get(Calendar.DAY_OF_MONTH);
 			int mes = cal.get(Calendar.MONTH)+1;
 			int ano = cal.get(Calendar.YEAR);
-			dataInicioEleicao.setText(Calendar.DAY_OF_MONTH+"/"+Calendar.MONTH+"/"+ano);
+			dataInicioEleicao.setText(dia+"/"+mes+"/"+ano);
 			dataInicioEleicao.setFont(new Font("Arial", Font.PLAIN, 14));
 			GerirPRContentPane.add(dataInicioEleicao);
 			dataInicioEleicao.setBounds(170, 25, 115, 17);
@@ -366,18 +409,26 @@ public class GerirPR {
 					TableColumnModel cm = tableCandidatos.getColumnModel();
 					cm.getColumn(2).setResizable(false);
 				}
+				tableCandidatos.addFocusListener(new FocusAdapter() {
+					@Override
+					public void focusGained(FocusEvent e) {
+						tableCandidatosFocusGained(e);
+					}
+				});
 				tableCandidatos.getColumnModel().getColumn(2).setPreferredWidth(0);
 				tableCandidatos.getColumnModel().getColumn(2).setMinWidth(0);
 				tableCandidatos.getColumnModel().getColumn(2).setWidth(0);
 				tableCandidatos.getColumnModel().getColumn(2).setMaxWidth(0);
+				povoarTabela();
 				scrollPane1.setViewportView(tableCandidatos);
 			}
 			GerirPRContentPane.add(scrollPane1);
 			scrollPane1.setBounds(15, 350, 335, 220);
+
+			//---- labelFoto ----
+			labelFoto.setText("Imagem");
 			GerirPRContentPane.add(labelFoto);
 			labelFoto.setBounds(375, 370, 150, 150);
-			GerirPRContentPane.add(separator3);
-			separator3.setBounds(10, 580, 520, 5);
 
 			//---- buttonEliminarCandidato ----
 			buttonEliminarCandidato.setText("Eliminar candidato");
@@ -386,6 +437,13 @@ public class GerirPR {
 			buttonEliminarCandidato.addActionListener(e -> buttonEliminarCandidatoActionPerformed(e));
 			GerirPRContentPane.add(buttonEliminarCandidato);
 			buttonEliminarCandidato.setBounds(375, 540, 154, buttonEliminarCandidato.getPreferredSize().height);
+
+			//---- button1 ----
+			button1.setText("Atualizar tabela");
+			button1.setFont(new Font("Arial", Font.PLAIN, 14));
+			button1.addActionListener(e -> buttonAtualizarActionPerformed(e));
+			GerirPRContentPane.add(button1);
+			button1.setBounds(15, 585, 335, 25);
 
 			{ // compute preferred size
 				Dimension preferredSize = new Dimension();
@@ -467,7 +525,6 @@ public class GerirPR {
 		// JFormDesigner - End of component initialization  //GEN-END:initComponents
 	}
 
-	
 	// JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables
 	// Generated using JFormDesigner Evaluation license - Octavio Maia
 	private JFrame GerirPR;
@@ -498,8 +555,8 @@ public class GerirPR {
 	private JScrollPane scrollPane1;
 	private JTable tableCandidatos;
 	private JLabel labelFoto;
-	private JSeparator separator3;
 	private JButton buttonEliminarCandidato;
+	private JButton button1;
 	private JDialog dialogoCalendario;
 	private JCalendar calendar1;
 	private JButton buttonConfirmarDataInicio;
