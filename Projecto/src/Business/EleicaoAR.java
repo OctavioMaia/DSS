@@ -129,7 +129,7 @@ public class EleicaoAR extends Eleicao {
 			ResultadoCirculoAR resultadoCirculo = this.resultado.get(circulo);
 			Map<Lista,Integer> votos = resultadoCirculo.getValidos();
 			@SuppressWarnings({ "unchecked", "static-access" })
-			Map<Lista,Integer> mandatos = (HashMap<Lista,Integer>)new Hondt().getMandatos(mandatosCirculo, votos);
+			Map<Lista,Integer> mandatos = (HashMap<Lista,Integer>)Hondt.getMandatos(mandatosCirculo, votos);
 			resultadoCirculo.setMandatos(mandatos);
 		}
 	}
