@@ -14,7 +14,7 @@ public class TesteInterfaces{
 		//CadernoRecenseamento i = new CadernoRecenseamento(s);
 		//CriarEleicao i = new CriarEleicao(null);
 		//GerirAR i = new GerirAR();
-		MainAdmin i = new MainAdmin();
+		MainAdmin i = new MainAdmin(null);
 	}
 	
 }

@@ -54,7 +54,7 @@ public class CriarEleicao extends JFrame {
 
 	private void buttonAvancarActionPerformed(ActionEvent e) {
 		if(comboBox1.getSelectedIndex()==0){
-			GerirAR gui = new GerirAR(); // TODO fazer gerirAR
+			GerirAR gui = new GerirAR(sge, null); // TODO fazer gerirAR
 		}else{
 			GerirPR gui = new GerirPR(sge, null); // TODO temos que substituir null por getCirculos
 		}
