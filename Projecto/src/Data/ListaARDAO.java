@@ -24,7 +24,7 @@ public class ListaARDAO implements Map<Integer,Lista>{
 	private int Eleicao;
 	private int circulo;
 	//Tabela das Listas
-	private static String TabName ="ListasAR";
+	private static String TabName ="listasAR";
 	private static String TabListID = "id";
 	private static String TabListSimb = "simbolo";
 	private static String TabListSig = "sigla";
@@ -35,7 +35,7 @@ public class ListaARDAO implements Map<Integer,Lista>{
 	private static String TabListCol = "idColigacao";
 	private static String TabListOrd = "ordem";
 	//Tabela de CandidatosAR
-	private static String TabCandid = "CandidatosPR";
+	private static String TabCandid = "candidatosAR";
 	private static String TabCandidID = "bi";
 	private static String TabCandidProf = "prof";
 	private static String TabCandidNasc = "dataNasc";
@@ -44,7 +44,7 @@ public class ListaARDAO implements Map<Integer,Lista>{
 	private static String TabCandidNome = "nome";
 	private static String TabCandidPart = "idPartido";
 	//TabelaCandidatosLista
-	private static String TabCanListName = "CandidatoAR_has_ListasAR";
+	private static String TabCanListName = "candidatoar_has_listasar";
 	private static String TabCanListIDCand = "biCandidatoAR";
 	private static String TabCanListTipo = "tipo";
 	private static String TabCanListOrd = "Numordem";
@@ -71,7 +71,7 @@ public class ListaARDAO implements Map<Integer,Lista>{
 	private int size_aux(Connection c) throws SQLException{
 		int ret =0;
 		PreparedStatement ps = c.prepareStatement("SELECT COUNT(*) FROM " + TabName
-				+ " WHERE " + TabListIDCirc + "=?, AND " + TabListIDElei + "=?");
+				+ " WHERE " + TabListIDCirc + "=? AND " + TabListIDElei + "=?");
 		ps.setInt(1, this.circulo);
 		ps.setInt(2, this.Eleicao);
 		ResultSet rs = ps.executeQuery();
@@ -257,16 +257,16 @@ public class ListaARDAO implements Map<Integer,Lista>{
 			Votavel mandante = null;
 			CirculoDAO cdao = new CirculoDAO();
 			Circulo ci  = cdao.get_aux(this.circulo, c);
-			String sigla = rs.getString(TabListSig);
-			String nome = rs.getString(TabListNome);
-			String simbolo = rs.getString(TabListSimb);
+			String sigla = rsL.getString(TabListSig);
+			String nome = rsL.getString(TabListNome);
+			String simbolo = rsL.getString(TabListSimb);
 			// irbuscar o votavel
 			//Ver aqui por causa de um deles ser NULL
 			//Pde dar muita merada
-			Object partido = rs.getObject(TabListPart);
-			Object coligacao = rs.getObject(TabListCol);
+			Object partido = rsL.getObject(TabListPart);
+			Object coligacao = rsL.getObject(TabListCol);
 			Object mandanteid =partido;
-			int ordem = rs.getInt(TabListOrd);
+			int ordem = rsL.getInt(TabListOrd);
 			if(mandanteid==null){
 				mandanteid =coligacao;
 				ColigacaoDAO coldao = new ColigacaoDAO();
@@ -309,9 +309,10 @@ public class ListaARDAO implements Map<Integer,Lista>{
 	private Set<Integer> keySet_aux(Connection c) throws SQLException{
 		Set<Integer> ret = new TreeSet<Integer>();
 		PreparedStatement ps  = c.prepareStatement("SELECT "+TabListID+" FROM " +TabName
-				+ " WHERE " + TabListIDCirc + "=?, "+ TabListIDElei + "=?");
+				+ " WHERE " + TabListIDCirc + "=? AND "+ TabListIDElei + "=?");
 		ps.setInt(1, this.circulo);
 		ps.setInt(2, this.Eleicao);
+		System.out.println(ps.toString());
 		ResultSet rs = ps.executeQuery();
 		while(rs.next()){
 			ret.add(rs.getInt(TabListID));
@@ -459,15 +460,15 @@ public class ListaARDAO implements Map<Integer,Lista>{
 			}else{
 				idColig = ((Coligacao)v).getId();
 			}
-			ps.setInt(8,idPartido);
-			ps.setInt(9,idColig);
-			ps.executeQuery();
+			ps.setObject(8,idPartido);
+			ps.setObject(9,idColig);
+			ps.executeUpdate();
 			ps.close();
 		}else{
 			PreparedStatement ps = c.prepareStatement("UPDATE " + TabName +
-					"SET "+TabListSimb+"=?,"+TabListSig+"=?,"+TabListNome+"=?,"+TabListOrd+"=?,"+
+					" SET "+TabListSimb+"=?,"+TabListSig+"=?,"+TabListNome+"=?,"+TabListOrd+"=?,"+
 					TabListPart+"=?,"+TabListCol+"=?"+
-					" WHERE "+ TabListID + "=? AND" + TabListIDCirc + "=? AND " + TabListIDElei +"=?"); 
+					" WHERE "+ TabListID + "=? AND " + TabListIDCirc + "=? AND " + TabListIDElei +"=?"); 
 
 			ps.setInt(7,key);
 			ps.setString(1,value.getSimbolo());
@@ -484,9 +485,9 @@ public class ListaARDAO implements Map<Integer,Lista>{
 			}else{
 				idColig = ((Coligacao)v).getId();
 			}
-			ps.setInt(5,idPartido);
-			ps.setInt(6,idColig);
-			ps.executeQuery();
+			ps.setObject(5,idPartido);
+			ps.setObject(6,idColig);
+			ps.executeUpdate();
 			ps.close();
 		}
 		this.insereCands(cands,key,c);
@@ -507,7 +508,9 @@ public class ListaARDAO implements Map<Integer,Lista>{
 			} catch (SQLException e1) {
 				e1.printStackTrace();
 				throw new RuntimeException(e1.getMessage());
-			}	
+			}
+			e.printStackTrace();
+			throw new RuntimeException(e.getMessage());
 		}catch (Exception e) {
 			e.printStackTrace();
 			throw new RuntimeException(e.getMessage());
@@ -545,7 +548,7 @@ public class ListaARDAO implements Map<Integer,Lista>{
 			ps.close();
 			//REMOVER A lista
 			PreparedStatement ps2 = c.prepareStatement("DELETE FROM " + TabName
-					+ " WHERE " + TabListID + " =? AND "+ TabListIDElei + "=? AND" 
+					+ " WHERE " + TabListID + " =? AND "+ TabListIDElei + "=? AND " 
 					+ TabListIDCirc +"=?" );
 			ps2.setInt(1, key);
 			ps2.setInt(2, this.Eleicao);
