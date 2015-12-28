@@ -172,6 +172,7 @@ public class SGE {
 	}
 
 	public void confirmarCadernoRecenciamento(Map<Integer, List<Eleitor>> listaEleitores) {
+		this.eleitores.clear();
 		for (Integer circulo : listaEleitores.keySet()) {
 			for (Eleitor el : listaEleitores.get(circulo)) {
 				this.eleitores.put(el.getnIdent(), el);
