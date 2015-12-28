@@ -129,7 +129,7 @@ public class EleicaoAR extends Eleicao {
 			ResultadoCirculoAR resultadoCirculo = this.resultado.get(circulo);
 			Map<Lista,Integer> votos = resultadoCirculo.getValidos();
 			@SuppressWarnings({ "unchecked", "static-access" })
-			Map<Lista,Integer> mandatos = (HashMap<Lista,Integer>)new Hondt().getMandatos(mandatosCirculo, votos);
+			Map<Lista,Integer> mandatos = (HashMap<Lista,Integer>)Hondt.getMandatos(mandatosCirculo, votos);
 			resultadoCirculo.setMandatos(mandatos);
 		}
 	}
@@ -143,6 +143,7 @@ public class EleicaoAR extends Eleicao {
 		}
 		super.setEstado(0);
 		super.setPermitirVotar(true);
+		this.geraBoletim();
 		this.calcularMandatosCirculos();
 	}
 	
@@ -150,7 +151,6 @@ public class EleicaoAR extends Eleicao {
 	public void terminar(){
 		super.setEstado(1);
 		super.setPermitirVotar(false);
-		this.geraBoletim();
 		this.atribuirMandatosListas();
 	}
 	
