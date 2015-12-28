@@ -85,4 +85,9 @@ public class ListaPR implements Listavel {
 		Object[] lista = {this.candidato.getNome(), this.candidato.getBi(),this};
     	return lista;
 	}
+
+	@Override
+	public String pathImage() {
+		return this.candidato.getFoto();
+	}
 }
