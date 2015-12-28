@@ -23,8 +23,8 @@ public class EleicaoAR extends Eleicao {
 	public EleicaoAR(int idEleicao, Calendar data,int mandatosAssembleia) {
 		super(idEleicao, data);
 		this.mandatosAssembleia = mandatosAssembleia;
-		this.circulos = new CirculoInfoDAO(idEleicao);
-		this.resultado = new ResultadoCirculoARDAO(idEleicao);
+		this.circulos = null;
+		this.resultado = null;
 	}
 
 	public EleicaoAR(int idEleicao, Calendar data, int estado, boolean permitirVotar, Set<Integer> vot,int mandatosAssembleia) {
@@ -34,7 +34,9 @@ public class EleicaoAR extends Eleicao {
 		this.resultado = new ResultadoCirculoARDAO(idEleicao);
 	}
 	
-	public void inicializarCirculos(Collection<Circulo> circulos){
+	public void inicializarCirculos(int idEleicao, Collection<Circulo> circulos){
+		this.circulos = new CirculoInfoDAO(idEleicao);
+		this.resultado = new ResultadoCirculoARDAO(idEleicao);
 		Iterator<Circulo> it = circulos.iterator();
 		while(it.hasNext()){
 			Circulo circulo = it.next();
