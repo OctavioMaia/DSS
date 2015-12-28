@@ -21,7 +21,7 @@ import Business.SGE;
  */
 public class CriarEleicao extends JFrame {
 	private SGE sge;
-	private GregorianCalendar dataEleicao;
+	private Calendar dataEleicao;
 	
 	public CriarEleicao(SGE s) {
 		sge=s;
@@ -39,8 +39,8 @@ public class CriarEleicao extends JFrame {
 		int mes = cal.get(Calendar.MONTH)+1;
 		int ano = cal.get(Calendar.YEAR);
 		data.setText(dia+"/"+mes+"/"+ano);
-		
-		dataEleicao = new GregorianCalendar(ano, mes, dia);
+		System.out.println(cal.getTime());
+		dataEleicao = cal;
 		
 		dialogoCalendar.setVisible(false);
 		buttonAvancar.setEnabled(true);
