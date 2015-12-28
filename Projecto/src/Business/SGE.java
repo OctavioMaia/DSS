@@ -457,6 +457,10 @@ public class SGE {
 		ar.addCandidato(lista, cand);
 		this.eleicoesAR.put(ar.getIdEleicao(), ar);
 	}
+	
+	public void removeCandidatoAR(EleicaoAR eleicao, Lista lista, CandidatoAR cand){
+		eleicao.removeCandidatoAR(lista, cand);
+	}
 
 	public Eleicao getEleicao(int idEleicao) {
 		Eleicao el;
@@ -513,10 +517,18 @@ public class SGE {
 	}
 
 	
-	Set<Votavel> getVotaveis(){
+	public Set<Votavel> getVotaveis(){
 		Set<Votavel> vot = new HashSet<>();
-		vot.addAll(this.partidos.values());
-		vot.addAll(this.coligacoes.values());
-		return vot;
+		for(Partido  p : this.partidos.values()){
+			if(p.isRemovido()){
+				vot.add(p);
+			}
+		}
+		for(Coligacao  c : this.coligacoes.values()){
+			if(c.isRemovido()){
+				vot.add(c);
+			}
+		}
+		return vot;	
 	}
 }
