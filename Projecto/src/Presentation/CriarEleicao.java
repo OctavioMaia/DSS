@@ -12,14 +12,16 @@ import java.util.GregorianCalendar;
 import javax.swing.*;
 import com.toedter.calendar.*;
 
+import Business.EleicaoAR;
+import Business.EleicaoPR;
 import Business.SGE;
 
 /**
  * @author Octavio Maia
  */
 public class CriarEleicao extends JFrame {
-	
 	private SGE sge;
+	private GregorianCalendar dataEleicao;
 	
 	public CriarEleicao(SGE s) {
 		sge=s;
@@ -38,7 +40,7 @@ public class CriarEleicao extends JFrame {
 		int ano = cal.get(Calendar.YEAR);
 		data.setText(dia+"/"+mes+"/"+ano);
 		
-		new GregorianCalendar(ano, mes, dia);
+		dataEleicao = new GregorianCalendar(ano, mes, dia);
 		
 		dialogoCalendar.setVisible(false);
 		buttonAvancar.setEnabled(true);
@@ -54,9 +56,13 @@ public class CriarEleicao extends JFrame {
 
 	private void buttonAvancarActionPerformed(ActionEvent e) {
 		if(comboBox1.getSelectedIndex()==0){
-			GerirAR gui = new GerirAR(sge, null); // TODO fazer gerirAR
+			EleicaoAR el = new EleicaoAR(0, dataEleicao, 230);
+			GerirAR gui = new GerirAR(sge, sge.criarEleicaoAR(el));
+			this.setVisible(false);
 		}else{
-			GerirPR gui = new GerirPR(sge, null); // TODO temos que substituir null por getCirculos
+			EleicaoPR el = new EleicaoPR(0, dataEleicao);
+			GerirPR gui = new GerirPR(sge, sge.criarEleicaoPR(el));
+			this.setVisible(false);
 		}
 	}
 
@@ -125,7 +131,7 @@ public class CriarEleicao extends JFrame {
 		buttonCancelar.setBounds(100, 90, 115, 25);
 
 		//---- buttonAvancar ----
-		buttonAvancar.setText("Avancar");
+		buttonAvancar.setText("Avan\u00e7ar");
 		buttonAvancar.setFont(new Font("Arial", Font.PLAIN, 14));
 		buttonAvancar.setEnabled(false);
 		buttonAvancar.addActionListener(e -> buttonAvancarActionPerformed(e));

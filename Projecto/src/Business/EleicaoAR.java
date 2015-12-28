@@ -297,4 +297,13 @@ public class EleicaoAR extends Eleicao {
 		}
 		return candidato;
 	}
+
+	@Override
+	public Object[] toTable() {
+		Object[] lista = {super.getData().getTime(), "Assembleia da República", this};
+    	return lista;
+	}
+
+	
+
 }

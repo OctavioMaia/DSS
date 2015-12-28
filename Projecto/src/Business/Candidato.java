@@ -116,8 +116,8 @@ public class Candidato {
 		return this.bi;
 	}
 
-	public String[] toTable(){
-		String[] lista = {this.nome, Integer.toString(this.bi)};
+	public Object[] toTable(){
+		Object[] lista = {this.nome, this.bi, this};
     	return lista;
 	}
 }

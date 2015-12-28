@@ -315,25 +315,27 @@ public class ResultadoCirculoPRDAO implements Map<Integer,ResultadoCirculoPR>{
 		return ret;
 	}
 
-	
+	//Esta funçao nao eleimina os registos da DB
 	private ResultadoCirculoPR remove_aux(Integer key,Connection c) throws SQLException{
 		ResultadoCirculoPR  ret = this.get_aux(key, c);
 		if(ret!=null){
 			//Remover a global
 			PreparedStatement psRGeral = c.prepareStatement("DELETE FROM "+ TabGlobal+
-					" WHERE "+IdCirculo+" = ? AND "+Volta+" = ? AND "+idEleicao+" = ? ");
+					" WHERE "+IdCirculo+" = ? AND "+Volta+" = ? AND "+Eleicao+" = ? ");
+			
 			psRGeral.setInt(1,key);
 			psRGeral.setInt(2,this.volta);
 			psRGeral.setInt(3,this.idEleicao);
-			psRGeral.execute();
+			psRGeral.executeUpdate();
 			psRGeral.close();
 			//RemoverOs resultados das listas
 			PreparedStatement psRLista = c.prepareStatement("DELETE FROM "+ TabLista + 
-					" WHERE "+IdCirculo+" = ? AND "+Volta+" = ? AND "+idEleicao+" = ? ");
+					" WHERE "+IdCirculo+" = ? AND "+Volta+" = ? AND "+Eleicao+" = ? ");
+			
 			psRLista.setInt(1,key);
 			psRLista.setInt(2,this.volta);
 			psRLista.setInt(3,this.idEleicao);
-			psRLista.execute();
+			psRLista.executeUpdate();
 			psRLista.close();
 		}
 		return ret;

@@ -25,7 +25,7 @@ public class Admin {
 	
 	
 	public boolean verificarPin(String pin){
-		return (this.pin==pin);
+		return (this.pin.equals(pin));
 	}
 
 }

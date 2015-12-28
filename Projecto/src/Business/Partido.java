@@ -96,8 +96,8 @@ public class Partido implements Votavel {
 	}
 
 	@Override
-	public String[] toTable() {
-		String[] partido = { this.sigla, this.nome, Integer.toString(this.id)};
+	public Object[] toTable() {
+		Object[] partido = { this.sigla, this.nome, this};
 		return partido;
 	}
 
