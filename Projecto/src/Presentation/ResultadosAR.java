@@ -16,14 +16,14 @@ import Business.SGE;
 /**
  * @author Octavio Maia
  */
-public class ResultadosAR {
+public class ResultadosAR extends JFrame{
 	
 	private EleicaoAR eleicao;
 	private SGE sge;
 	
-	public ResultadosAR(SGE s, int id){
-		//sge = s;
-		//eleicao = (EleicaoAR) sge.getEleicao(id);
+	public ResultadosAR(SGE s, EleicaoAR el){
+		sge = s;
+		eleicao = el;
 		initComponents(eleicao);
 		ResultadosAR.setVisible(true);
 	}

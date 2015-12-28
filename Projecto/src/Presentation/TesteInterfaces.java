@@ -15,6 +15,7 @@ public class TesteInterfaces{
 		//CriarEleicao i = new CriarEleicao(null);
 		//GerirAR i = new GerirAR();
 		MainAdmin i = new MainAdmin(null);
+		//Votar i = new Votar(null);
 	}
 	
 }
