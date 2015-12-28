@@ -5,7 +5,7 @@ import Business.SGE;
 public class TesteInterfaces{
 	
 	public static void main(String args[]){
-		SGE s = new SGE();
+		//SGE s = new SGE();
 		//GerirPR i = new GerirPR(null,null); //--nao acabado, ver git
 		//Login i = new Login(s); //--feito
 		//MainEleitor i = new MainEleitor(null);
