@@ -108,6 +108,7 @@ public class MainAdmin extends JFrame {
 	
 	private void table1FocusGained(FocusEvent e) {
 		if(panel1.isShowing()){
+			povoarTabelaCriadas();
 			buttonVerResultados.setEnabled(false);
 			buttonGerirEleicao.setEnabled(true);
 			buttonIniciarEleicao.setEnabled(true);
@@ -173,11 +174,17 @@ public class MainAdmin extends JFrame {
 	private void panel2FocusGained(FocusEvent e) {
 		povoarTabelaHistorico();
 	}
+
+	private void button1ActionPerformed(ActionEvent e) {
+		// TODO add your code here
+		povoarTabelaCriadas();
+		System.out.println("click");
+	}
 	
 
 	private void initComponents() {
 		// JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
-		// Generated using JFormDesigner Evaluation license - Octavio Maia
+		// Generated using JFormDesigner Evaluation license - Rui Freitas
 		label1 = new JLabel();
 		labelEleicaoAtiva = new JLabel();
 		tabbedPane1 = new JTabbedPane();
@@ -195,6 +202,7 @@ public class MainAdmin extends JFrame {
 		buttonSair = new JButton();
 		buttonTerminarEleicao = new JButton();
 		buttonCriarEleicao = new JButton();
+		button1 = new JButton();
 
 		//======== this ========
 		setTitle("Main Admin");
@@ -392,6 +400,12 @@ public class MainAdmin extends JFrame {
 		contentPane.add(buttonCriarEleicao);
 		buttonCriarEleicao.setBounds(590, 215, 155, buttonCriarEleicao.getPreferredSize().height);
 
+		//---- button1 ----
+		button1.setText("text");
+		button1.addActionListener(e -> button1ActionPerformed(e));
+		contentPane.add(button1);
+		button1.setBounds(new Rectangle(new Point(620, 375), button1.getPreferredSize()));
+
 		{ // compute preferred size
 			Dimension preferredSize = new Dimension();
 			for(int i = 0; i < contentPane.getComponentCount(); i++) {
@@ -411,7 +425,7 @@ public class MainAdmin extends JFrame {
 	}
 
 	// JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables
-	// Generated using JFormDesigner Evaluation license - Octavio Maia
+	// Generated using JFormDesigner Evaluation license - Rui Freitas
 	private JLabel label1;
 	private JLabel labelEleicaoAtiva;
 	private JTabbedPane tabbedPane1;
@@ -429,5 +443,6 @@ public class MainAdmin extends JFrame {
 	private JButton buttonSair;
 	private JButton buttonTerminarEleicao;
 	private JButton buttonCriarEleicao;
+	private JButton button1;
 	// JFormDesigner - End of variables declaration  //GEN-END:variables
 }

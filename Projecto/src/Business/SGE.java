@@ -113,14 +113,14 @@ public class SGE {
 		Iterator<EleicaoPR> itPR = this.eleicoesPR.values().iterator();
 		while (itPR.hasNext() && idEleicaoAtiva == -1) {
 			EleicaoPR pr = itPR.next();
-			if (itPR.next().estado(ATIVA)) {
+			if (pr.estado(ATIVA)) {
 				idEleicaoAtiva = pr.getIdEleicao();
 			}
 		}
 		Iterator<EleicaoAR> itAR = this.eleicoesAR.values().iterator();
 		while (itAR.hasNext() && idEleicaoAtiva == -1) {
 			EleicaoAR ar = itAR.next();
-			if (itAR.next().estado(ATIVA)) {
+			if (ar.estado(ATIVA)) {
 				idEleicaoAtiva = ar.getIdEleicao();
 			}
 		}
@@ -236,10 +236,12 @@ public class SGE {
 
 	public EleicaoPR criarEleicaoPR(EleicaoPR eleicao) {
 		eleicao.setIdEleicao(this.chaveEleicao());
-		eleicao.initResultadoCirculoPRDAO(eleicao.getIdEleicao(), 1, circulos.values());
-		eleicao.initResultadoCirculoPRDAO(eleicao.getIdEleicao(), 2, circulos.values());
 		this.eleicoesPR.put(eleicao.getIdEleicao(), eleicao);
-		return eleicao;
+		EleicaoPR l = this.eleicoesPR.get(eleicao.getIdEleicao());
+		l.initResultadoCirculoPRDAO(eleicao.getIdEleicao(), 1, circulos.values());
+		l.initResultadoCirculoPRDAO(eleicao.getIdEleicao(), 2, circulos.values());
+		this.eleicoesPR.put(l.getIdEleicao(), l);
+		return l;
 	}
 
 	public EleicaoAR criarEleicaoAR(EleicaoAR eleicao) {
