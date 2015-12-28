@@ -36,7 +36,7 @@ public class GerirAR extends JFrame {
 		//======== this ========
 		setTitle("Gerir Elei\u00e7\u00e3o Assembleia da Rep\u00fablica");
 		setResizable(false);
-		setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		Container contentPane = getContentPane();
 		contentPane.setLayout(null);
 
