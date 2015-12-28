@@ -305,5 +305,10 @@ public class EleicaoAR extends Eleicao {
 	}
 
 	
+	public void removeCandidatoAR(Lista lista, CandidatoAR cand) {
+		this.circulos.get(lista.getCirculo().getId()).removeCandidato(lista, cand);
+	}
+
+	
 
 }
