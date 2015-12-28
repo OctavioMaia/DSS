@@ -110,8 +110,10 @@ new FormModel {
 			} )
 			add( new FormComponent( "javax.swing.JLabel" ) {
 				name: "dataInicioEleicao"
-				"text": "dd/mm/aa"
 				"font": #Font0
+				auxiliary() {
+					"JavaCodeGenerator.preInitCode": "Calendar cal = eleicao.getData();\nint dia = cal.get(Calendar.DAY_OF_MONTH);\nint mes = cal.get(Calendar.MONTH)+1;\nint ano = cal.get(Calendar.YEAR);\ndataInicioEleicao.setText(Calendar.DAY_OF_MONTH+\"/\"+Calendar.MONTH+\"/\"+ano);"
+				}
 			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
 				"width": 115
 				"height": 17
