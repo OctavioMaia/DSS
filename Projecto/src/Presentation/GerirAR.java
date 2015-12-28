@@ -206,7 +206,7 @@ public class GerirAR extends JFrame {
 	}
 
 	private void buttonEliminarCandidatoActionPerformed(ActionEvent e) {
-		sge.removeCandidatoAR(eleicao, table2.getValueAt(table2.getSelectedRow(), 4));
+		sge.removeCandidatoAR(eleicao, (Lista) table1.getValueAt(table1.getSelectedRow(), 4), (CandidatoAR) table2.getValueAt(table2.getSelectedRow(), 4));
 		((DefaultTableModel) table2.getModel()).removeRow(table2.getSelectedRow());
 	}
 
