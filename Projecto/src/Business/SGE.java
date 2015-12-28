@@ -451,6 +451,12 @@ public class SGE {
 		this.eleicoesPR.put(pr.getIdEleicao(), pr);
 	}
 
+	public void addCandidatoAR(EleicaoAR eleicao, Lista lista, CandidatoAR cand) {
+		EleicaoAR ar = this.eleicoesAR.get(eleicao.getIdEleicao());
+		ar.addCandidato(lista, cand);
+		this.eleicoesAR.put(ar.getIdEleicao(), ar);
+	}
+
 	public Eleicao getEleicao(int idEleicao) {
 		Eleicao el;
 		if ((el = this.eleicoesPR.get(idEleicao)) == null) {
@@ -500,4 +506,5 @@ public class SGE {
 		}
 		return listasOrdenadas;
 	}
+
 }
