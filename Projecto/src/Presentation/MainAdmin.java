@@ -7,9 +7,15 @@ package Presentation;
 import java.awt.*;
 import java.awt.event.*;
 import java.beans.*;
+import java.util.Set;
+
 import javax.swing.*;
 import javax.swing.table.*;
 
+import Business.Eleicao;
+import Business.EleicaoAR;
+import Business.EleicaoPR;
+import Business.Eleitor;
 import Business.SGE;
 import Exception.ExceptionEleicaoAtiva;
 import Exception.ExceptionIniciarEleicao;
@@ -19,7 +25,6 @@ import Exception.ExceptionTerminarEleicao;
  * @author Octavio Maia
  */
 public class MainAdmin extends JFrame {
-	
 	private SGE sge;
 	
 	public MainAdmin(SGE s) {
@@ -30,6 +35,7 @@ public class MainAdmin extends JFrame {
 
 	private void buttonSairActionPerformed(ActionEvent e) {
 		this.setVisible(false);	
+		new Login(sge);
 	}
 
 	private void buttonIniciarEleicaoActionPerformed(ActionEvent e) {
@@ -57,7 +63,7 @@ public class MainAdmin extends JFrame {
 	}
 
 	private void buttonCriarEleicaoActionPerformed(ActionEvent e) {
-		new CriarEleicao(sge);
+		CriarEleicao teste = new CriarEleicao(sge);
 	}
 
 	private void buttonInserirCadernoActionPerformed(ActionEvent e) {
@@ -66,7 +72,7 @@ public class MainAdmin extends JFrame {
 
 	private void buttonGerirEleicaoActionPerformed(ActionEvent e) {
 		if(panel1.isShowing()){
-			if(table1.getValueAt(table1.getSelectedRow(), 1).equals("Assembleia da República")){
+			if(table1.getValueAt(table1.getSelectedRow(), 2).getClass().getSimpleName().equals("EleicaoAR")){
 				new GerirAR(sge, null);
 			}else{
 				new GerirPR(sge, null);
@@ -75,42 +81,12 @@ public class MainAdmin extends JFrame {
 	}
 
 	private void buttonVerResultadosActionPerformed(ActionEvent e) {
-		if(panel1.isShowing()){
-			if(table1.getValueAt(table1.getSelectedRow(), 1).equals("Assembleia da República")){
-				new ResultadosAR(sge, (int) table1.getValueAt(table1.getSelectedRow(), 2));
-			}else{
-				new ResultadosPR(sge, (int) table1.getValueAt(table1.getSelectedRow(), 2));
-			}
-		}else{
-			if(table2.getValueAt(table2.getSelectedRow(), 1).equals("Assembleia da República")){
-				new ResultadosAR(sge, (int) table2.getValueAt(table2.getSelectedRow(), 2));
-			}else{
-				new ResultadosPR(sge, (int) table2.getValueAt(table2.getSelectedRow(), 2));
-			}
-		}
-	}
-
-	private void table1FocusGained(FocusEvent e) {
-		if(panel1.isShowing()){
-			for (int i = 0; i < table1.getRowCount(); i++) {
-				if(table1.isRowSelected(i)){
-					buttonVerResultados.setEnabled(true);
-				}
-			}
-		}else{
-			buttonVerResultados.setEnabled(false);
-		}
-	}
-
-	private void scrollPane2FocusGained(FocusEvent e) {
 		if(panel2.isShowing()){
-			for (int i = 0; i < table2.getRowCount(); i++) {
-				if(table2.isRowSelected(i)){
-					buttonVerResultados.setEnabled(true);
-				}
+			if(table2.getValueAt(table2.getSelectedRow(), 2).getClass().getSimpleName().equals("EleicaoAR")){
+				new ResultadosAR(sge, (EleicaoAR) table2.getValueAt(table2.getSelectedRow(), 2));
+			}else{
+				new ResultadosPR(sge, (EleicaoPR) table2.getValueAt(table2.getSelectedRow(), 2));
 			}
-		}else{
-			buttonVerResultados.setEnabled(false);
 		}
 	}
 
@@ -125,9 +101,79 @@ public class MainAdmin extends JFrame {
 			e1.printStackTrace();
 		}
 	}
+
+	private void panel1FocusGained(FocusEvent e) {
+		povoarTabelaCriadas();
+	}
+	
+	private void table1FocusGained(FocusEvent e) {
+		if(panel1.isShowing()){
+			buttonVerResultados.setEnabled(false);
+			buttonGerirEleicao.setEnabled(true);
+			buttonIniciarEleicao.setEnabled(true);
+		}
+	}
+
+	private void table2FocusGained(FocusEvent e) {
+		if(panel2.isShowing()){
+			buttonGerirEleicao.setEnabled(false);
+			buttonIniciarEleicao.setEnabled(false);
+			for (int i = 0; i < table2.getRowCount(); i++) {
+				if(table2.isRowSelected(i)){
+					buttonVerResultados.setEnabled(true);
+					buttonGerirEleicao.setEnabled(false);
+					buttonIniciarEleicao.setEnabled(false);
+				}
+			}
+		}
+	}
+	
+	public void povoarTabelaCriadas() {
+		Set<Eleicao> criadas = sge.getEleicoesCriadas();
+		Object[][] data = new Object[criadas.size()][]; 
+		int i=0;
 		
+		if (table1.getRowCount() > 0) {
+            for (int conta = table1.getRowCount() - 1; conta > -1; conta--) {
+                ((DefaultTableModel) table1.getModel()).removeRow(conta);;
+            }
+        }
+		
+		for(Eleicao el : criadas){	
+			data[i] = el.toTable();
+			
+			DefaultTableModel model = (DefaultTableModel) table1.getModel();
+			model.addRow(data[i]);
 
+			i++;
+		}
+	}
 
+	private void povoarTabelaHistorico(){
+		Set<Eleicao> historico = sge.getEleicoesTerminadas();
+		Object[][] data = new Object[historico.size()][]; 
+		int i=0;
+		
+		if (table2.getRowCount() > 0) {
+            for (int conta = table2.getRowCount() - 1; conta > -1; conta--) {
+                ((DefaultTableModel) table2.getModel()).removeRow(conta);;
+            }
+        }
+		
+		for(Eleicao el : historico){	
+			data[i] = el.toTable();
+			
+			DefaultTableModel model = (DefaultTableModel) table2.getModel();
+			model.addRow(data[i]);
+
+			i++;
+		}
+	}
+
+	private void panel2FocusGained(FocusEvent e) {
+		povoarTabelaHistorico();
+	}
+	
 
 	private void initComponents() {
 		// JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
@@ -144,11 +190,11 @@ public class MainAdmin extends JFrame {
 		separator1 = new JSeparator();
 		buttonVerResultados = new JButton();
 		buttonIniciarEleicao = new JButton();
-		buttonCriarEleicao = new JButton();
 		buttonGerirEleicao = new JButton();
 		buttonInserirCaderno = new JButton();
 		buttonSair = new JButton();
 		buttonTerminarEleicao = new JButton();
+		buttonCriarEleicao = new JButton();
 
 		//======== this ========
 		setTitle("Main Admin");
@@ -177,6 +223,12 @@ public class MainAdmin extends JFrame {
 
 			//======== panel1 ========
 			{
+				panel1.addFocusListener(new FocusAdapter() {
+					@Override
+					public void focusGained(FocusEvent e) {
+						panel1FocusGained(e);
+					}
+				});
 
 				// JFormDesigner evaluation mark
 				panel1.setBorder(new javax.swing.border.CompoundBorder(
@@ -193,8 +245,6 @@ public class MainAdmin extends JFrame {
 					//---- table1 ----
 					table1.setModel(new DefaultTableModel(
 						new Object[][] {
-							{"teste1", "Presid\u00eancia da Rep\u00fablica", null},
-							{"teste2", "Assembleia da Rep\u00fablica", null},
 						},
 						new String[] {
 							"Data da elei\u00e7\u00e3o", "Tipo de elei\u00e7\u00e3o", "id"
@@ -234,16 +284,16 @@ public class MainAdmin extends JFrame {
 
 			//======== panel2 ========
 			{
+				panel2.addFocusListener(new FocusAdapter() {
+					@Override
+					public void focusGained(FocusEvent e) {
+						panel2FocusGained(e);
+					}
+				});
 				panel2.setLayout(null);
 
 				//======== scrollPane2 ========
 				{
-					scrollPane2.addFocusListener(new FocusAdapter() {
-						@Override
-						public void focusGained(FocusEvent e) {
-							scrollPane2FocusGained(e);
-						}
-					});
 
 					//---- table2 ----
 					table2.setModel(new DefaultTableModel(
@@ -254,6 +304,12 @@ public class MainAdmin extends JFrame {
 						}
 					));
 					table2.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+					table2.addFocusListener(new FocusAdapter() {
+						@Override
+						public void focusGained(FocusEvent e) {
+							table2FocusGained(e);
+						}
+					});
 					table2.getColumnModel().getColumn(2).setPreferredWidth(0);
 					table2.getColumnModel().getColumn(2).setMinWidth(0);
 					table2.getColumnModel().getColumn(2).setWidth(0);
@@ -290,35 +346,30 @@ public class MainAdmin extends JFrame {
 		buttonVerResultados.setEnabled(false);
 		buttonVerResultados.addActionListener(e -> buttonVerResultadosActionPerformed(e));
 		contentPane.add(buttonVerResultados);
-		buttonVerResultados.setBounds(590, 85, 155, 25);
+		buttonVerResultados.setBounds(590, 335, 155, 25);
 
 		//---- buttonIniciarEleicao ----
 		buttonIniciarEleicao.setText("Iniciar elei\u00e7\u00e3o");
 		buttonIniciarEleicao.setFont(new Font("Arial", Font.PLAIN, 14));
+		buttonIniciarEleicao.setEnabled(false);
 		buttonIniciarEleicao.addActionListener(e -> buttonIniciarEleicaoActionPerformed(e));
 		contentPane.add(buttonIniciarEleicao);
-		buttonIniciarEleicao.setBounds(590, 125, 155, 25);
-
-		//---- buttonCriarEleicao ----
-		buttonCriarEleicao.setText("Criar elei\u00e7\u00e3o");
-		buttonCriarEleicao.setFont(new Font("Arial", Font.PLAIN, 14));
-		buttonCriarEleicao.addActionListener(e -> buttonCriarEleicaoActionPerformed(e));
-		contentPane.add(buttonCriarEleicao);
-		buttonCriarEleicao.setBounds(590, 165, 155, 25);
+		buttonIniciarEleicao.setBounds(590, 255, 155, 25);
 
 		//---- buttonGerirEleicao ----
 		buttonGerirEleicao.setText("Gerir elei\u00e7\u00e3o");
 		buttonGerirEleicao.setFont(new Font("Arial", Font.PLAIN, 14));
+		buttonGerirEleicao.setEnabled(false);
 		buttonGerirEleicao.addActionListener(e -> buttonGerirEleicaoActionPerformed(e));
 		contentPane.add(buttonGerirEleicao);
-		buttonGerirEleicao.setBounds(590, 205, 155, 25);
+		buttonGerirEleicao.setBounds(590, 295, 155, 25);
 
 		//---- buttonInserirCaderno ----
 		buttonInserirCaderno.setText("<html><center>Inserir caderno<br />de recenseamento<center></html>");
 		buttonInserirCaderno.setFont(new Font("Arial", Font.PLAIN, 14));
 		buttonInserirCaderno.addActionListener(e -> buttonInserirCadernoActionPerformed(e));
 		contentPane.add(buttonInserirCaderno);
-		buttonInserirCaderno.setBounds(590, 245, 155, 85);
+		buttonInserirCaderno.setBounds(590, 115, 155, 85);
 
 		//---- buttonSair ----
 		buttonSair.setText("Sair");
@@ -333,6 +384,13 @@ public class MainAdmin extends JFrame {
 		buttonTerminarEleicao.addActionListener(e -> buttonTerminarEleicaoActionPerformed(e));
 		contentPane.add(buttonTerminarEleicao);
 		buttonTerminarEleicao.setBounds(590, 10, 155, 25);
+
+		//---- buttonCriarEleicao ----
+		buttonCriarEleicao.setText("Criar elei\u00e7\u00e3o");
+		buttonCriarEleicao.setFont(new Font("Arial", Font.PLAIN, 14));
+		buttonCriarEleicao.addActionListener(e -> buttonCriarEleicaoActionPerformed(e));
+		contentPane.add(buttonCriarEleicao);
+		buttonCriarEleicao.setBounds(590, 215, 155, buttonCriarEleicao.getPreferredSize().height);
 
 		{ // compute preferred size
 			Dimension preferredSize = new Dimension();
@@ -366,10 +424,10 @@ public class MainAdmin extends JFrame {
 	private JSeparator separator1;
 	private JButton buttonVerResultados;
 	private JButton buttonIniciarEleicao;
-	private JButton buttonCriarEleicao;
 	private JButton buttonGerirEleicao;
 	private JButton buttonInserirCaderno;
 	private JButton buttonSair;
 	private JButton buttonTerminarEleicao;
+	private JButton buttonCriarEleicao;
 	// JFormDesigner - End of variables declaration  //GEN-END:variables
 }

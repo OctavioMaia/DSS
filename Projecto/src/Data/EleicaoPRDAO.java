@@ -235,7 +235,6 @@ public class EleicaoPRDAO implements Map<Integer,EleicaoPR>{
 			psElei.setInt(2, value.getEstado());
 			psElei.setDate(3, new java.sql.Date(value.getData().getTimeInMillis()));
 			psElei.setBoolean(4, value.isPermitirVotar());
-			System.out.println(psElei.toString());
 			psElei.execute();
 			psElei.close();
 			//Insere na EleicoesPR
@@ -310,6 +309,10 @@ public class EleicaoPRDAO implements Map<Integer,EleicaoPR>{
 		EleicaoPR ret = this.get_aux(key,c);
 		if(ret==null) return null;
 		//Limpar DAO quem EleicaoTem com a  mesma conneccao
+		/*System.out.println("V1 " + key);
+		(new ResultadoCirculoPRDAO(key, 1)).clear_aux(c);
+		System.out.println("V2 " + key);
+		(new ResultadoCirculoPRDAO(key, 2)).clear_aux(c);*/
 		ret.getVoltaR1().clear_aux(c);
 		ret.getVoltaR2().clear_aux(c);
 		ret.getListas().clear_aux(c);
@@ -373,11 +376,10 @@ public class EleicaoPRDAO implements Map<Integer,EleicaoPR>{
 	}
 
 	protected void clear_aux(Connection c) throws SQLException{
-		Set<Integer> ks = this.keySet_aux(c);
-		if(ks==null || ks.isEmpty()) return;
-		Iterator<Integer> i = ks.iterator();
+		Iterator<Integer> i = this.keySet_aux(c).iterator();
 		while(i.hasNext()){
-			this.remove_aux(i.next(),c);
+			int idelei=i.next();
+			this.remove_aux(idelei,c);
 		}	
 	}
 	

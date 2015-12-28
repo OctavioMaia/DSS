@@ -42,7 +42,7 @@ new FormModel {
 				name: "labelNome"
 				"font": #Font0
 				auxiliary() {
-					"JavaCodeGenerator.preInitCode": "//labelNome.setText(sge.getEleitor().getNome());"
+					"JavaCodeGenerator.preInitCode": "labelNome.setText(sge.getEleitor().getNome());"
 				}
 			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
 				"width": 103
@@ -54,7 +54,7 @@ new FormModel {
 				name: "labelEleicao"
 				"font": #Font0
 				auxiliary() {
-					"JavaCodeGenerator.preInitCode": "//if(sge.eleicaoAtiva().getClass().getSimpleName().equals(\"EleicaoAR\")) labelEleicao.setText(\"Eleição Assembleia República\");\n//else labelEleicao.setText(\"Eleição Presidência República\");"
+					"JavaCodeGenerator.preInitCode": "if(sge.eleicaoAtiva().getClass().getSimpleName().equals(\"EleicaoAR\")) \n\tlabelEleicao.setText(\"Eleição Assembleia República\");\nelse \n\tlabelEleicao.setText(\"Eleição Presidência República\");"
 				}
 			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
 				"width": 103
@@ -66,7 +66,7 @@ new FormModel {
 				name: "labelDataInicio"
 				"font": #Font0
 				auxiliary() {
-					"JavaCodeGenerator.preInitCode": "//labelDataInicio.setText(sge.eleicaoAtiva().getData().get(Calendar.DAY_OF_MONTH)+\"/\"+sge.eleicaoAtiva().getData().get(Calendar.MONTH)+\"/\"+sge.eleicaoAtiva().getData().get(Calendar.YEAR));"
+					"JavaCodeGenerator.preInitCode": "labelDataInicio.setText(sge.eleicaoAtiva().getData().get(Calendar.DAY_OF_MONTH)+\"/\"+sge.eleicaoAtiva().getData().get(Calendar.MONTH)+\"/\"+sge.eleicaoAtiva().getData().get(Calendar.YEAR));"
 				}
 			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
 				"width": 103
@@ -107,13 +107,7 @@ new FormModel {
 				addEvent( new FormEvent( "java.awt.event.MouseListener", "mouseClicked", "scrollPane1MouseClicked", true ) )
 				add( new FormComponent( "javax.swing.JTable" ) {
 					name: "tableEleicoes"
-					"model": new com.jformdesigner.model.SwingTableModel( new java.util.Vector {
-						add( new java.util.Vector {
-							add( null )
-							add( null )
-							add( null )
-						} )
-					}, new java.util.Vector {
+					"model": new com.jformdesigner.model.SwingTableModel( new java.util.Vector, new java.util.Vector {
 						add( "Data de início" )
 						add( "Tipo de Eleição" )
 						add( "id" )
@@ -131,6 +125,7 @@ new FormModel {
 						add( null )
 					} )
 					"font": new java.awt.Font( "Arial", 0, 12 )
+					"selectionMode": 0
 					auxiliary() {
 						"JavaCodeGenerator.postInitCode": "tableEleicoes.getColumnModel().getColumn(2).setPreferredWidth(0);\ntableEleicoes.getColumnModel().getColumn(2).setMinWidth(0);\ntableEleicoes.getColumnModel().getColumn(2).setWidth(0);\ntableEleicoes.getColumnModel().getColumn(2).setMaxWidth(0);"
 					}
