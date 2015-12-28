@@ -91,6 +91,7 @@ public class CadernoRecenseamento extends JFrame {
 
 	private void buttonConfirmarActionPerformed(ActionEvent e) {
 		sge.confirmarCadernoRecenciamento(map);
+		JOptionPane.showConfirmDialog(null, "Caderno de recenseamento inserido com sucesso!");
 	}
 
 	private void initComponents() {
@@ -238,7 +239,7 @@ public class CadernoRecenseamento extends JFrame {
 		buttonConfirmar.setBounds(320, 435, 120, 25);
 
 		//---- buttonCancelar ----
-		buttonCancelar.setText("Cancelar");
+		buttonCancelar.setText("Sair");
 		buttonCancelar.setFont(new Font("Arial", Font.PLAIN, 14));
 		buttonCancelar.addActionListener(e -> buttonCancelarActionPerformed(e));
 		contentPane.add(buttonCancelar);

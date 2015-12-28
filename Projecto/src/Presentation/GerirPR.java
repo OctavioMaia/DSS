@@ -73,7 +73,7 @@ public class GerirPR {
 			this.dataNascimento.setText("dd/mm/aa");
 			this.pathImagem.setText("");
 		}catch(Exception ex){
-			//TODO handle excecao
+			System.out.println("exception adicionar");
 		}
 	}
 
@@ -256,7 +256,11 @@ public class GerirPR {
 			buttonData.setBounds(305, 20, 80, 25);
 
 			//---- dataInicioEleicao ----
-			dataInicioEleicao.setText("dd/mm/aa");
+			Calendar cal = eleicao.getData();
+			int dia = cal.get(Calendar.DAY_OF_MONTH);
+			int mes = cal.get(Calendar.MONTH)+1;
+			int ano = cal.get(Calendar.YEAR);
+			dataInicioEleicao.setText(Calendar.DAY_OF_MONTH+"/"+Calendar.MONTH+"/"+ano);
 			dataInicioEleicao.setFont(new Font("Arial", Font.PLAIN, 14));
 			GerirPRContentPane.add(dataInicioEleicao);
 			dataInicioEleicao.setBounds(170, 25, 115, 17);

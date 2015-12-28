@@ -9,7 +9,7 @@ new FormModel {
 			"$sizePolicy": 1
 			"title": "Gerir Eleição Assembleia da República"
 			"resizable": false
-			"defaultCloseOperation": 0
+			"defaultCloseOperation": 2
 			add( new FormComponent( "javax.swing.JLabel" ) {
 				name: "label1"
 				"text": "Circulo pertencente"
