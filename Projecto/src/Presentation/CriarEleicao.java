@@ -58,9 +58,11 @@ public class CriarEleicao extends JFrame {
 		if(comboBox1.getSelectedIndex()==0){
 			EleicaoAR el = new EleicaoAR(0, dataEleicao, 230);
 			GerirAR gui = new GerirAR(sge, sge.criarEleicaoAR(el));
+			this.setVisible(false);
 		}else{
 			EleicaoPR el = new EleicaoPR(0, dataEleicao);
 			GerirPR gui = new GerirPR(sge, sge.criarEleicaoPR(el));
+			this.setVisible(false);
 		}
 	}
 

@@ -108,6 +108,7 @@ public class MainAdmin extends JFrame {
 	
 	private void table1FocusGained(FocusEvent e) {
 		if(panel1.isShowing()){
+			povoarTabelaCriadas();
 			buttonVerResultados.setEnabled(false);
 			buttonGerirEleicao.setEnabled(true);
 			buttonIniciarEleicao.setEnabled(true);
