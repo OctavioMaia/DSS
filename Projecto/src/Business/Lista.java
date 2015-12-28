@@ -164,7 +164,7 @@ public class Lista implements Listavel{
 
 	@Override
 	public Object[] toTable() {
-		Object[] lista = {this.nome, this.sigla,this};
+		Object[] lista = {this.simbolo,this.sigla,this.nome,this};
     	return lista;
 	}
 
