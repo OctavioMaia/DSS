@@ -278,46 +278,16 @@ new FormModel {
 				"x": 410
 				"y": 480
 			} )
-			add( new FormComponent( "javax.swing.JLabel" ) {
-				name: "label11"
-				"text": "Foto"
-				"font": #Font2
-			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
-				"width": 35
-				"height": 22
-				"x": 10
-				"y": 515
-			} )
-			add( new FormComponent( "javax.swing.JButton" ) {
-				name: "buttonProcurar"
-				"text": "Procurar"
-				"font": &Font4 new java.awt.Font( "Arial", 0, 14 )
-				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "buttonProcurarActionPerformed", true ) )
-			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
-				"width": 95
-				"x": 50
-				"y": 515
-			} )
-			add( new FormComponent( "javax.swing.JTextField" ) {
-				name: "pathImagem2"
-				"editable": false
-				"font": new java.awt.Font( "Arial", 0, 14 )
-				"enabled": false
-			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
-				"width": 335
-				"height": 25
-				"x": 155
-				"y": 515
-			} )
 			add( new FormComponent( "javax.swing.JButton" ) {
 				name: "buttonAdicionarCandidato"
 				"text": "Adicionar"
-				"font": #Font4
+				"font": new java.awt.Font( "Arial", 0, 14 )
 				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "buttonAdicionarFotoActionPerformed", true ) )
 			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
 				"width": 95
-				"x": 680
-				"y": 505
+				"x": 670
+				"y": 520
+				"height": 25
 			} )
 			add( new FormComponent( "javax.swing.JButton" ) {
 				name: "buttonApagarInfo"
@@ -326,8 +296,9 @@ new FormModel {
 				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "buttonApagarInfoActionPerformed", true ) )
 			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
 				"width": 165
-				"x": 785
-				"y": 505
+				"x": 780
+				"y": 520
+				"height": 25
 			} )
 			add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
 				name: "scrollPane3"
@@ -397,6 +368,7 @@ new FormModel {
 				name: "buttonOK"
 				"text": "OK"
 				"font": new java.awt.Font( "Arial", 0, 14 )
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "button4ActionPerformed", true ) )
 			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
 				"x": 895
 				"y": 850
@@ -405,7 +377,8 @@ new FormModel {
 			add( new FormComponent( "javax.swing.JButton" ) {
 				name: "button4"
 				"text": "Cancelar"
-				"font": &Font5 new java.awt.Font( "Arial", 0, 14 )
+				"font": &Font4 new java.awt.Font( "Arial", 0, 14 )
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "button4ActionPerformed", true ) )
 			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
 				"x": 795
 				"y": 850
@@ -414,7 +387,8 @@ new FormModel {
 			add( new FormComponent( "javax.swing.JButton" ) {
 				name: "buttonEliminarCandidato"
 				"text": "Eliminar candidato"
-				"font": #Font5
+				"font": #Font4
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "buttonEliminarCandidatoActionPerformed", true ) )
 			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
 				"x": 795
 				"y": 810
@@ -488,6 +462,7 @@ new FormModel {
 			} )
 			add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
 				name: "scrollPane2"
+				addEvent( new FormEvent( "java.awt.event.MouseListener", "mouseClicked", "scrollPane2MouseClicked", true ) )
 				add( new FormComponent( "javax.swing.JTable" ) {
 					name: "table3"
 					"selectionMode": 0
@@ -511,12 +486,55 @@ new FormModel {
 					auxiliary() {
 						"JavaCodeGenerator.postInitCode": "table3.getColumnModel().getColumn(2).setPreferredWidth(0);\ntable3.getColumnModel().getColumn(2).setMinWidth(0);\ntable3.getColumnModel().getColumn(2).setWidth(0);\ntable3.getColumnModel().getColumn(2).setMaxWidth(0);\npovoarVotavel();"
 					}
+					addEvent( new FormEvent( "java.awt.event.MouseListener", "mouseClicked", "scrollPane2MouseClicked", true ) )
 				} )
 			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
 				"x": 620
 				"y": 75
 				"width": 325
 				"height": 110
+			} )
+			add( new FormComponent( "javax.swing.JComboBox" ) {
+				name: "comboBox2"
+				"font": new java.awt.Font( "Arial", 0, 14 )
+				"model": new javax.swing.DefaultComboBoxModel {
+					selectedItem: "Primario"
+					addElement( "Primario" )
+					addElement( "Secundario" )
+				}
+			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
+				"x": 385
+				"y": 515
+				"height": 25
+				"width": 105
+			} )
+			add( new FormComponent( "javax.swing.JComboBox" ) {
+				name: "comboBox3"
+				"font": new java.awt.Font( "Arial", 0, 14 )
+			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
+				"x": 80
+				"y": 515
+				"height": 25
+				"width": 145
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label12"
+				"text": "Partido:"
+				"font": new java.awt.Font( "Arial", 0, 14 )
+			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
+				"x": 10
+				"y": 515
+				"height": 25
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label13"
+				"text": "Tipo:"
+				"font": new java.awt.Font( "Arial", 0, 14 )
+			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
+				"x": 330
+				"y": 515
+				"height": 25
+				"width": 40
 			} )
 		}, new FormLayoutConstraints( null ) {
 			"location": new java.awt.Point( 10, 10 )
@@ -548,7 +566,7 @@ new FormModel {
 			add( new FormComponent( "javax.swing.JButton" ) {
 				name: "buttonConfirmarDataInicio"
 				"text": "Confirmar"
-				"font": &Font6 new java.awt.Font( "Arial", 0, 12 )
+				"font": &Font5 new java.awt.Font( "Arial", 0, 12 )
 				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "buttonConfirmarDataActionPerformed", true ) )
 			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
 				"x": 5
@@ -559,7 +577,7 @@ new FormModel {
 			add( new FormComponent( "javax.swing.JButton" ) {
 				name: "buttonCancelarData"
 				"text": "Cancelar"
-				"font": #Font6
+				"font": #Font5
 				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "buttonCancelarDataActionPerformed", true ) )
 			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
 				"width": 90

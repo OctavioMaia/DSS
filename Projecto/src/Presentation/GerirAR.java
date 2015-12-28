@@ -32,6 +32,7 @@ public class GerirAR extends JFrame {
 	private SGE sge;
 	private EleicaoAR eleicao;
 	private GregorianCalendar dataNasc;
+	private ArrayList<Partido> listaPartidos;
 	
 	public GerirAR(SGE s, Eleicao e) {
 		eleicao=(EleicaoAR) e;
@@ -55,16 +56,6 @@ public class GerirAR extends JFrame {
 		dialogoCalendario.setVisible(true);
 	}
 
-	private void buttonProcurarActionPerformed(ActionEvent e) {
-		fileChooser1.setVisible(true);
-		int result = fileChooser1.showOpenDialog(fileChooser1);
-		if (result == JFileChooser.APPROVE_OPTION) {
-		    File selectedFile = fileChooser1.getSelectedFile();
-		    pathImagem2.setText(selectedFile.getAbsolutePath());
-		    fileChooser1.setVisible(false);
-		}else
-			fileChooser1.setVisible(false);
-	}
 
 	private void buttonAdicionarFotoActionPerformed(ActionEvent e) {
 		String nome = nomeCandidato.getText();
@@ -73,11 +64,11 @@ public class GerirAR extends JFrame {
 		String profissao = this.profissao.getText();
 		int bi = Integer.parseInt(this.bi.getText());
 		String foto = this.pathImagem.getText();
-		GregorianCalendar dataN = this.dataNasc;
+		Calendar dataN = this.dataNasc;
 		
-		//try{
-			Candidato c = new Candidato(nome, bi, profissao, dataN, residencia, naturalidade, foto);
-			//sge.addCandidatoAR(eleicao,c);
+		try{
+			CandidatoAR c = new CandidatoAR(nome, bi, profissao, dataN, residencia, naturalidade, listaPartidos.get(comboBox3.getSelectedIndex()), ((String) comboBox2.getSelectedItem()).charAt(0));
+			sge.addCandidatoAR(eleicao,(Lista) table1.getValueAt(table1.getSelectedRow(), 3), c);
 			
 			//reset tabelas
 			nomeCandidato.setText("");
@@ -87,9 +78,9 @@ public class GerirAR extends JFrame {
 			this.bi.setText("");
 			this.dataNascimento.setText("dd/mm/aa");
 			this.pathImagem.setText("");
-		//}catch(ExceptionListaExiste | ExceptionLimiteCandidatos|  ExceptionMandanteInvalido | ExceptionEleicaoEstado ex){
-		//	JOptionPane.showMessageDialog(null, ex.getMessage());
-		//}
+		}catch(ExceptionLimiteCandidatos|  ExceptionMandanteInvalido ex){
+			JOptionPane.showMessageDialog(null, ex.getMessage());
+		}
 	}
 
 	private void buttonApagarInfoActionPerformed(ActionEvent e) {
@@ -99,7 +90,6 @@ public class GerirAR extends JFrame {
 		this.profissao.setText("");
 		this.bi.setText("");
 		this.dataNascimento.setText("dd/mm/aa");
-		this.pathImagem2.setText("");
 	}
 
 	private void buttonConfirmarDataActionPerformed(ActionEvent e) {
@@ -181,6 +171,17 @@ public class GerirAR extends JFrame {
 
 	private void button3ActionPerformed(ActionEvent e) {
 		Lista lista = new Lista(0, sge.getCirculo(comboBox1.getSelectedIndex()+1), sigla.getText(), nomeLista.getText(), pathImagem.getText(), (Votavel) table3.getValueAt(table3.getSelectedRow(), 2));
+		try {
+			sge.addLista(eleicao, lista);
+		} catch (ExceptionListaExiste e1) {
+			JOptionPane.showMessageDialog(null, e1.getMessage());
+		} catch (ExceptionLimiteCandidatos e1) {
+			JOptionPane.showMessageDialog(null, e1.getMessage());
+		} catch (ExceptionMandanteInvalido e1) {
+			JOptionPane.showMessageDialog(null, e1.getMessage());
+		} catch (ExceptionEleicaoEstado e1) {
+			JOptionPane.showMessageDialog(null, e1.getMessage());
+		}
 	}
 	
 	private void povoarVotavel() {
@@ -201,6 +202,23 @@ public class GerirAR extends JFrame {
 			model.addRow(data[i]);
 
 			i++;
+		}
+	}
+
+	private void buttonEliminarCandidatoActionPerformed(ActionEvent e) {
+		sge.removeCandidatoAR(eleicao, table2.getValueAt(table2.getSelectedRow(), 4));
+		((DefaultTableModel) table2.getModel()).removeRow(table2.getSelectedRow());
+	}
+
+	private void button4ActionPerformed(ActionEvent e) {
+		this.setVisible(false);
+	}
+
+	private void scrollPane2MouseClicked(MouseEvent e) {
+		listaPartidos = sge.partCandidato((Votavel) table3.getValueAt(table3.getSelectedRow(), 2));
+		
+		for(Partido p : listaPartidos){
+			comboBox3.addItem(p.getSigla());
 		}
 	}
 
@@ -233,9 +251,6 @@ public class GerirAR extends JFrame {
 		label10 = new JLabel();
 		dataNascimento = new JLabel();
 		buttonDataNascimento = new JButton();
-		label11 = new JLabel();
-		buttonProcurar = new JButton();
-		pathImagem2 = new JTextField();
 		buttonAdicionarCandidato = new JButton();
 		buttonApagarInfo = new JButton();
 		scrollPane3 = new JScrollPane();
@@ -253,6 +268,10 @@ public class GerirAR extends JFrame {
 		button5 = new JButton();
 		scrollPane2 = new JScrollPane();
 		table3 = new JTable();
+		comboBox2 = new JComboBox<>();
+		comboBox3 = new JComboBox();
+		label12 = new JLabel();
+		label13 = new JLabel();
 		fileChooser1 = new JFileChooser();
 		dialogoCalendario = new JDialog();
 		calendar1 = new JCalendar();
@@ -437,39 +456,19 @@ public class GerirAR extends JFrame {
 		contentPane.add(buttonDataNascimento);
 		buttonDataNascimento.setBounds(410, 480, 80, 25);
 
-		//---- label11 ----
-		label11.setText("Foto");
-		label11.setFont(new Font("Arial", Font.PLAIN, 14));
-		contentPane.add(label11);
-		label11.setBounds(10, 515, 35, 22);
-
-		//---- buttonProcurar ----
-		buttonProcurar.setText("Procurar");
-		buttonProcurar.setFont(new Font("Arial", Font.PLAIN, 14));
-		buttonProcurar.addActionListener(e -> buttonProcurarActionPerformed(e));
-		contentPane.add(buttonProcurar);
-		buttonProcurar.setBounds(50, 515, 95, buttonProcurar.getPreferredSize().height);
-
-		//---- pathImagem2 ----
-		pathImagem2.setEditable(false);
-		pathImagem2.setFont(new Font("Arial", Font.PLAIN, 14));
-		pathImagem2.setEnabled(false);
-		contentPane.add(pathImagem2);
-		pathImagem2.setBounds(155, 515, 335, 25);
-
 		//---- buttonAdicionarCandidato ----
 		buttonAdicionarCandidato.setText("Adicionar");
 		buttonAdicionarCandidato.setFont(new Font("Arial", Font.PLAIN, 14));
 		buttonAdicionarCandidato.addActionListener(e -> buttonAdicionarFotoActionPerformed(e));
 		contentPane.add(buttonAdicionarCandidato);
-		buttonAdicionarCandidato.setBounds(680, 505, 95, buttonAdicionarCandidato.getPreferredSize().height);
+		buttonAdicionarCandidato.setBounds(670, 520, 95, 25);
 
 		//---- buttonApagarInfo ----
 		buttonApagarInfo.setText("Apagar informa\u00e7\u00f5es");
 		buttonApagarInfo.setFont(new Font("Arial", Font.PLAIN, 14));
 		buttonApagarInfo.addActionListener(e -> buttonApagarInfoActionPerformed(e));
 		contentPane.add(buttonApagarInfo);
-		buttonApagarInfo.setBounds(785, 505, 165, buttonApagarInfo.getPreferredSize().height);
+		buttonApagarInfo.setBounds(780, 520, 165, 25);
 
 		//======== scrollPane3 ========
 		{
@@ -501,18 +500,21 @@ public class GerirAR extends JFrame {
 		//---- buttonOK ----
 		buttonOK.setText("OK");
 		buttonOK.setFont(new Font("Arial", Font.PLAIN, 14));
+		buttonOK.addActionListener(e -> button4ActionPerformed(e));
 		contentPane.add(buttonOK);
 		buttonOK.setBounds(895, 850, buttonOK.getPreferredSize().width, 25);
 
 		//---- button4 ----
 		button4.setText("Cancelar");
 		button4.setFont(new Font("Arial", Font.PLAIN, 14));
+		button4.addActionListener(e -> button4ActionPerformed(e));
 		contentPane.add(button4);
 		button4.setBounds(795, 850, button4.getPreferredSize().width, 25);
 
 		//---- buttonEliminarCandidato ----
 		buttonEliminarCandidato.setText("Eliminar candidato");
 		buttonEliminarCandidato.setFont(new Font("Arial", Font.PLAIN, 14));
+		buttonEliminarCandidato.addActionListener(e -> buttonEliminarCandidatoActionPerformed(e));
 		contentPane.add(buttonEliminarCandidato);
 		buttonEliminarCandidato.setBounds(795, 810, buttonEliminarCandidato.getPreferredSize().width, 25);
 		contentPane.add(separator6);
@@ -557,6 +559,12 @@ public class GerirAR extends JFrame {
 
 		//======== scrollPane2 ========
 		{
+			scrollPane2.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseClicked(MouseEvent e) {
+					scrollPane2MouseClicked(e);
+				}
+			});
 
 			//---- table3 ----
 			table3.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -567,6 +575,12 @@ public class GerirAR extends JFrame {
 					"Sigla", "Nome", null
 				}
 			));
+			table3.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseClicked(MouseEvent e) {
+					scrollPane2MouseClicked(e);
+				}
+			});
 			table3.getColumnModel().getColumn(2).setPreferredWidth(0);
 			table3.getColumnModel().getColumn(2).setMinWidth(0);
 			table3.getColumnModel().getColumn(2).setWidth(0);
@@ -576,6 +590,32 @@ public class GerirAR extends JFrame {
 		}
 		contentPane.add(scrollPane2);
 		scrollPane2.setBounds(620, 75, 325, 110);
+
+		//---- comboBox2 ----
+		comboBox2.setFont(new Font("Arial", Font.PLAIN, 14));
+		comboBox2.setModel(new DefaultComboBoxModel<>(new String[] {
+			"Primario",
+			"Secundario"
+		}));
+		contentPane.add(comboBox2);
+		comboBox2.setBounds(385, 515, 105, 25);
+
+		//---- comboBox3 ----
+		comboBox3.setFont(new Font("Arial", Font.PLAIN, 14));
+		contentPane.add(comboBox3);
+		comboBox3.setBounds(80, 515, 145, 25);
+
+		//---- label12 ----
+		label12.setText("Partido:");
+		label12.setFont(new Font("Arial", Font.PLAIN, 14));
+		contentPane.add(label12);
+		label12.setBounds(10, 515, label12.getPreferredSize().width, 25);
+
+		//---- label13 ----
+		label13.setText("Tipo:");
+		label13.setFont(new Font("Arial", Font.PLAIN, 14));
+		contentPane.add(label13);
+		label13.setBounds(330, 515, 40, 25);
 
 		{ // compute preferred size
 			Dimension preferredSize = new Dimension();
@@ -652,9 +692,6 @@ public class GerirAR extends JFrame {
 	private JLabel label10;
 	private JLabel dataNascimento;
 	private JButton buttonDataNascimento;
-	private JLabel label11;
-	private JButton buttonProcurar;
-	private JTextField pathImagem2;
 	private JButton buttonAdicionarCandidato;
 	private JButton buttonApagarInfo;
 	private JScrollPane scrollPane3;
@@ -672,6 +709,10 @@ public class GerirAR extends JFrame {
 	private JButton button5;
 	private JScrollPane scrollPane2;
 	private JTable table3;
+	private JComboBox<String> comboBox2;
+	private JComboBox comboBox3;
+	private JLabel label12;
+	private JLabel label13;
 	private JFileChooser fileChooser1;
 	private JDialog dialogoCalendario;
 	private JCalendar calendar1;

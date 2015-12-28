@@ -72,7 +72,7 @@ new FormModel {
 						"height": 355
 					} )
 				}, new FormLayoutConstraints( null ) {
-					"title": "Eleições criadas"
+					"title": "Eleições não iniciadas"
 				} )
 				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jformdesigner.runtime.NullLayout ) ) {
 					name: "panel2"

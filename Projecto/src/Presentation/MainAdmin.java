@@ -260,7 +260,7 @@ public class MainAdmin extends JFrame {
 					panel1.setPreferredSize(preferredSize);
 				}
 			}
-			tabbedPane1.addTab("Elei\u00e7\u00f5es criadas", panel1);
+			tabbedPane1.addTab("Elei\u00e7\u00f5es n\u00e3o iniciadas", panel1);
 
 			//======== panel2 ========
 			{
