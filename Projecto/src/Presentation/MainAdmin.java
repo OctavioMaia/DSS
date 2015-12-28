@@ -25,7 +25,6 @@ import Exception.ExceptionTerminarEleicao;
  * @author Octavio Maia
  */
 public class MainAdmin extends JFrame {
-	
 	private SGE sge;
 	
 	public MainAdmin(SGE s) {
@@ -36,6 +35,7 @@ public class MainAdmin extends JFrame {
 
 	private void buttonSairActionPerformed(ActionEvent e) {
 		this.setVisible(false);	
+		new Login(sge);
 	}
 
 	private void buttonIniciarEleicaoActionPerformed(ActionEvent e) {

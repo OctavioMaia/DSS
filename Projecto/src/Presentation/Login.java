@@ -19,7 +19,7 @@ public class Login  {
 	private SGE local;
 	
 	public Login(SGE sge){
-		sge=local;
+		local=sge;
 		initComponents(local);
 		frameLogin.setVisible(true);
 	}
@@ -29,8 +29,18 @@ public class Login  {
 			String pw = new String(textPassword.getPassword());
 			int numeroEleitor = Integer.parseInt(textUsername.getText());
 
-			if(local.login(numeroEleitor, pw)) 
+			if(local.login(numeroEleitor, pw)){
 				boolean_erro = false;
+				
+				if(local.getEleitor()==null){
+					frameLogin.setVisible(false);
+					new MainAdmin(local);
+				}
+				else{
+					frameLogin.setVisible(false);
+					new MainEleitor(local);
+				}
+			}
 			else 
 				boolean_erro = true;
 			
@@ -73,7 +83,7 @@ public class Login  {
 				// JFormDesigner evaluation mark
 				panel1.setBorder(new javax.swing.border.CompoundBorder(
 					new javax.swing.border.TitledBorder(new javax.swing.border.EmptyBorder(0, 0, 0, 0),
-						"JFormDesigner Evaluation", javax.swing.border.TitledBorder.CENTER,
+						"", javax.swing.border.TitledBorder.CENTER,
 						javax.swing.border.TitledBorder.BOTTOM, new java.awt.Font("Dialog", java.awt.Font.BOLD, 12),
 						java.awt.Color.red), panel1.getBorder())); panel1.addPropertyChangeListener(new java.beans.PropertyChangeListener(){public void propertyChange(java.beans.PropertyChangeEvent e){if("border".equals(e.getPropertyName()))throw new RuntimeException();}});
 
