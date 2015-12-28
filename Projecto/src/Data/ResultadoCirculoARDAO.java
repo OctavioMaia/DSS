@@ -98,19 +98,7 @@ public class ResultadoCirculoARDAO implements Map<Integer,ResultadoCirculoAR>{
         	}
         	rs.close();
         	ps.close();
-        	PreparedStatement ps2 = c.prepareStatement(" SELECT  EXISTS (SELECT * FROM " + TabResLista+ 
-                    " WHERE "+TabResListaIDElei+" = ? and "+TabResListaIDCirc+" = ?)");
-        	ps2.setInt(1,this.idEleicao);
-            ps2.setInt(2,key );
-            ResultSet rs2 = ps2.executeQuery();
-        	if(rs2.next()){
-        		ret= ret && (rs.getInt(1)!=0);
-        	}else{
-        		ret = false;
-        	}
-        	rs2.close();
-        	ps2.close();
-		return ret;
+        	return ret;
 	}
 	
 	@Override
@@ -160,7 +148,6 @@ public class ResultadoCirculoARDAO implements Map<Integer,ResultadoCirculoAR>{
 			Lista l = daoListas.get_aux(lista,c);
 			listasvotos.put(l, votos);
 			mandatos.put(l, mandan);
-			
 		}
 		rsLista.close();
 		psLista.close();
@@ -275,13 +262,14 @@ public class ResultadoCirculoARDAO implements Map<Integer,ResultadoCirculoAR>{
 				private static String TabResGeralIDElei = "idEleicao";
 			 */
 			PreparedStatement ps = c.prepareStatement("UPDATE " + TabResGeral +
-					" SET "+TabResGeralNulo+"=?,"+TabResGeralBranc+"=?,"+TabResGeralTotEleit+"=?,"+
+					" SET "+TabResGeralNulo+"=?,"+TabResGeralBranc+"=?,"+TabResGeralTotEleit+"=?"+
 					" WHERE " + TabResGeralIDElei + "=? AND " +TabResGeralIDCirc +"=?");
 			ps.setInt(1, value.getNulos());
 			ps.setInt(2, value.getBrancos());
 			ps.setInt(3, value.getTotEleitores());
 			ps.setInt(4, this.idEleicao);
 			ps.setInt(5, key);
+			System.out.println(ps.toString());
 			ps.execute();
 			ps.close();
 		}else{//novo
@@ -315,7 +303,9 @@ public class ResultadoCirculoARDAO implements Map<Integer,ResultadoCirculoAR>{
 			} catch (SQLException e1) {
 				e1.printStackTrace();
 				throw new RuntimeException(e1.getMessage());
-			}	
+			}
+			e.printStackTrace();
+			throw new RuntimeException(e.getMessage());
 		}catch (Exception e) {
 			e.printStackTrace();
 			throw new RuntimeException(e.getMessage());
@@ -376,6 +366,8 @@ public class ResultadoCirculoARDAO implements Map<Integer,ResultadoCirculoAR>{
 				e1.printStackTrace();
 				throw new RuntimeException(e1.getMessage());
 			}
+			e.printStackTrace();
+			throw new RuntimeException(e.getMessage());
 		}catch(Exception e){
 			e.printStackTrace();
 			throw new RuntimeException(e.getMessage());
