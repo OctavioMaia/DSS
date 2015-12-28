@@ -92,4 +92,4 @@ Coisas a considerar:
   - [X] ColigaçãoDAO
   - [X] CirculoDAO
   - [ ] ResultadoCirculoARDAO -> Falta testar com listas
-  - [ ] ListaARDAO
+  - [X] ListaARDAO
