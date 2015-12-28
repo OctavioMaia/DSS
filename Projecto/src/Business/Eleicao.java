@@ -117,4 +117,8 @@ public abstract class Eleicao {
 	public abstract void addVotoBranco(Eleitor eleitor);
 	
 	public abstract Object[] toTable();
+
+	public void alterarData(Calendar dataInicio) {
+		data=dataInicio;
+	}
 }

@@ -39,31 +39,18 @@ public class MainAdmin extends JFrame {
 	}
 
 	private void buttonIniciarEleicaoActionPerformed(ActionEvent e) {
-		if(panel1.isShowing()){
-			try {
-				sge.iniciarEleicao(sge.getEleicao((int) table1.getValueAt(table1.getSelectedRow(), 2)));
-			} catch (ExceptionEleicaoAtiva e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			} catch (ExceptionIniciarEleicao e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-		}else{
-			try {
-				sge.iniciarEleicao(sge.getEleicao((int) table2.getValueAt(table2.getSelectedRow(), 2)));
-			} catch (ExceptionEleicaoAtiva e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			} catch (ExceptionIniciarEleicao e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
+		try {
+			sge.iniciarEleicao((Eleicao) table1.getValueAt(table1.getSelectedRow(), 2));
+		} catch (ExceptionEleicaoAtiva e1) {
+			JOptionPane.showMessageDialog(null, e1.getMessage());
+		} catch (ExceptionIniciarEleicao e1) {
+			JOptionPane.showMessageDialog(null, e1.getMessage());
 		}
+		labelEleicaoAtiva.setText(sge.eleicaoAtivaString());
 	}
 
 	private void buttonCriarEleicaoActionPerformed(ActionEvent e) {
-		CriarEleicao teste = new CriarEleicao(sge);
+		new CriarEleicao(sge);
 	}
 
 	private void buttonInserirCadernoActionPerformed(ActionEvent e) {
@@ -73,9 +60,9 @@ public class MainAdmin extends JFrame {
 	private void buttonGerirEleicaoActionPerformed(ActionEvent e) {
 		if(panel1.isShowing()){
 			if(table1.getValueAt(table1.getSelectedRow(), 2).getClass().getSimpleName().equals("EleicaoAR")){
-				new GerirAR(sge, null);
+				new GerirAR(sge, (Eleicao) table1.getValueAt(table1.getSelectedRow(), 2));
 			}else{
-				new GerirPR(sge, null);
+				new GerirPR(sge, (EleicaoPR) table1.getValueAt(table1.getSelectedRow(), 2));
 			}
 		}
 	}
@@ -94,21 +81,15 @@ public class MainAdmin extends JFrame {
 		try {
 			sge.terminarEleicao(sge.eleicaoAtiva());
 		} catch (ExceptionEleicaoAtiva e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
+			JOptionPane.showMessageDialog(null, e1.getMessage());
 		} catch (ExceptionTerminarEleicao e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
+			JOptionPane.showMessageDialog(null, e1.getMessage());
 		}
+		labelEleicaoAtiva.setText(sge.eleicaoAtivaString());
 	}
 
-	private void panel1FocusGained(FocusEvent e) {
-		povoarTabelaCriadas();
-	}
-	
 	private void table1FocusGained(FocusEvent e) {
 		if(panel1.isShowing()){
-			povoarTabelaCriadas();
 			buttonVerResultados.setEnabled(false);
 			buttonGerirEleicao.setEnabled(true);
 			buttonIniciarEleicao.setEnabled(true);
@@ -171,20 +152,20 @@ public class MainAdmin extends JFrame {
 		}
 	}
 
-	private void panel2FocusGained(FocusEvent e) {
-		povoarTabelaHistorico();
+	private void button1ActionPerformed(ActionEvent e) {
+		if(panel1.isShowing())
+			povoarTabelaCriadas();
+		else 
+			povoarTabelaHistorico();
 	}
 
-	private void button1ActionPerformed(ActionEvent e) {
+	private void panel2FocusGained(FocusEvent e) {
 		// TODO add your code here
-		povoarTabelaCriadas();
-		System.out.println("click");
 	}
-	
 
 	private void initComponents() {
 		// JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
-		// Generated using JFormDesigner Evaluation license - Rui Freitas
+		// Generated using JFormDesigner Evaluation license - Octavio Maia
 		label1 = new JLabel();
 		labelEleicaoAtiva = new JLabel();
 		tabbedPane1 = new JTabbedPane();
@@ -219,9 +200,9 @@ public class MainAdmin extends JFrame {
 		label1.setBounds(10, 10, label1.getPreferredSize().width, 25);
 
 		//---- labelEleicaoAtiva ----
-		//labelEleicaoAtiva.setText(sge.eleicaoAtiva().toString());
 		labelEleicaoAtiva.setEnabled(false);
 		labelEleicaoAtiva.setFont(new Font("Arial", Font.PLAIN, 14));
+		labelEleicaoAtiva.setText(sge.eleicaoAtivaString());
 		contentPane.add(labelEleicaoAtiva);
 		labelEleicaoAtiva.setBounds(105, 10, 480, 25);
 
@@ -231,12 +212,6 @@ public class MainAdmin extends JFrame {
 
 			//======== panel1 ========
 			{
-				panel1.addFocusListener(new FocusAdapter() {
-					@Override
-					public void focusGained(FocusEvent e) {
-						panel1FocusGained(e);
-					}
-				});
 
 				// JFormDesigner evaluation mark
 				panel1.setBorder(new javax.swing.border.CompoundBorder(
@@ -269,6 +244,7 @@ public class MainAdmin extends JFrame {
 					table1.getColumnModel().getColumn(2).setMinWidth(0);
 					table1.getColumnModel().getColumn(2).setWidth(0);
 					table1.getColumnModel().getColumn(2).setMaxWidth(0);
+					povoarTabelaCriadas();
 					scrollPane1.setViewportView(table1);
 				}
 				panel1.add(scrollPane1);
@@ -292,12 +268,6 @@ public class MainAdmin extends JFrame {
 
 			//======== panel2 ========
 			{
-				panel2.addFocusListener(new FocusAdapter() {
-					@Override
-					public void focusGained(FocusEvent e) {
-						panel2FocusGained(e);
-					}
-				});
 				panel2.setLayout(null);
 
 				//======== scrollPane2 ========
@@ -322,6 +292,7 @@ public class MainAdmin extends JFrame {
 					table2.getColumnModel().getColumn(2).setMinWidth(0);
 					table2.getColumnModel().getColumn(2).setWidth(0);
 					table2.getColumnModel().getColumn(2).setMaxWidth(0);
+					povoarTabelaHistorico();
 					scrollPane2.setViewportView(table2);
 				}
 				panel2.add(scrollPane2);
@@ -401,10 +372,11 @@ public class MainAdmin extends JFrame {
 		buttonCriarEleicao.setBounds(590, 215, 155, buttonCriarEleicao.getPreferredSize().height);
 
 		//---- button1 ----
-		button1.setText("text");
+		button1.setText("Atualizar tabelas");
+		button1.setFont(new Font("Arial", Font.PLAIN, 14));
 		button1.addActionListener(e -> button1ActionPerformed(e));
 		contentPane.add(button1);
-		button1.setBounds(new Rectangle(new Point(620, 375), button1.getPreferredSize()));
+		button1.setBounds(590, 370, 155, 25);
 
 		{ // compute preferred size
 			Dimension preferredSize = new Dimension();
@@ -425,7 +397,7 @@ public class MainAdmin extends JFrame {
 	}
 
 	// JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables
-	// Generated using JFormDesigner Evaluation license - Rui Freitas
+	// Generated using JFormDesigner Evaluation license - Octavio Maia
 	private JLabel label1;
 	private JLabel labelEleicaoAtiva;
 	private JTabbedPane tabbedPane1;

@@ -1,4 +1,4 @@
-JFDML JFormDesigner: "5.2.2.2.228" Java: "1.8.0_51" encoding: "UTF-8"
+JFDML JFormDesigner: "5.2.2.2.228" Java: "1.8.0_65" encoding: "UTF-8"
 
 new FormModel {
 	contentType: "form/swing"
@@ -25,7 +25,7 @@ new FormModel {
 				"enabled": false
 				"font": new java.awt.Font( "Arial", 0, 14 )
 				auxiliary() {
-					"JavaCodeGenerator.preInitCode": "//labelEleicaoAtiva.setText(sge.eleicaoAtiva().toString());"
+					"JavaCodeGenerator.postInitCode": "labelEleicaoAtiva.setText(sge.eleicaoAtivaString());"
 				}
 			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
 				"x": 105
@@ -38,7 +38,6 @@ new FormModel {
 				"font": new java.awt.Font( "Arial", 0, 14 )
 				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jformdesigner.runtime.NullLayout ) ) {
 					name: "panel1"
-					addEvent( new FormEvent( "java.awt.event.FocusListener", "focusGained", "panel1FocusGained", true ) )
 					add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
 						name: "scrollPane1"
 						add( new FormComponent( "javax.swing.JTable" ) {
@@ -62,7 +61,7 @@ new FormModel {
 							} )
 							"selectionMode": 0
 							auxiliary() {
-								"JavaCodeGenerator.postInitCode": "table1.getColumnModel().getColumn(2).setPreferredWidth(0);\ntable1.getColumnModel().getColumn(2).setMinWidth(0);\ntable1.getColumnModel().getColumn(2).setWidth(0);\ntable1.getColumnModel().getColumn(2).setMaxWidth(0);"
+								"JavaCodeGenerator.postInitCode": "table1.getColumnModel().getColumn(2).setPreferredWidth(0);\ntable1.getColumnModel().getColumn(2).setMinWidth(0);\ntable1.getColumnModel().getColumn(2).setWidth(0);\ntable1.getColumnModel().getColumn(2).setMaxWidth(0);\npovoarTabelaCriadas();"
 							}
 							addEvent( new FormEvent( "java.awt.event.FocusListener", "focusGained", "table1FocusGained", true ) )
 						} )
@@ -77,7 +76,6 @@ new FormModel {
 				} )
 				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jformdesigner.runtime.NullLayout ) ) {
 					name: "panel2"
-					addEvent( new FormEvent( "java.awt.event.FocusListener", "focusGained", "panel2FocusGained", true ) )
 					add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
 						name: "scrollPane2"
 						add( new FormComponent( "javax.swing.JTable" ) {
@@ -101,7 +99,7 @@ new FormModel {
 							} )
 							"selectionMode": 0
 							auxiliary() {
-								"JavaCodeGenerator.postInitCode": "table2.getColumnModel().getColumn(2).setPreferredWidth(0);\ntable2.getColumnModel().getColumn(2).setMinWidth(0);\ntable2.getColumnModel().getColumn(2).setWidth(0);\ntable2.getColumnModel().getColumn(2).setMaxWidth(0);"
+								"JavaCodeGenerator.postInitCode": "table2.getColumnModel().getColumn(2).setPreferredWidth(0);\ntable2.getColumnModel().getColumn(2).setMinWidth(0);\ntable2.getColumnModel().getColumn(2).setWidth(0);\ntable2.getColumnModel().getColumn(2).setMaxWidth(0);\npovoarTabelaHistorico();"
 							}
 							addEvent( new FormEvent( "java.awt.event.FocusListener", "focusGained", "table2FocusGained", true ) )
 						} )
@@ -211,11 +209,14 @@ new FormModel {
 			} )
 			add( new FormComponent( "javax.swing.JButton" ) {
 				name: "button1"
-				"text": "text"
+				"text": "Atualizar tabelas"
+				"font": new java.awt.Font( "Arial", 0, 14 )
 				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "button1ActionPerformed", true ) )
 			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
-				"x": 620
-				"y": 375
+				"x": 590
+				"y": 370
+				"height": 25
+				"width": 155
 			} )
 		}, new FormLayoutConstraints( null ) {
 			"location": new java.awt.Point( 0, 0 )

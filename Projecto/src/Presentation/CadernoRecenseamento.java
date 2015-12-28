@@ -91,7 +91,7 @@ public class CadernoRecenseamento extends JFrame {
 
 	private void buttonConfirmarActionPerformed(ActionEvent e) {
 		sge.confirmarCadernoRecenciamento(map);
-		JOptionPane.showConfirmDialog(null, "Caderno de recenseamento inserido com sucesso!");
+		JOptionPane.showMessageDialog(null, "Caderno de recenseamento inserido com sucesso!");
 	}
 
 	private void initComponents() {
