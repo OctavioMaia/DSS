@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Scanner;
 
 import Business.Candidato;
 import Business.Circulo;
@@ -25,6 +26,11 @@ public class testesJMS {
 	public static void main(String[] args) {
 		EleicaoPRDAO elidao = new EleicaoPRDAO();
 		CirculoDAO cd = new CirculoDAO();
+		Scanner s = new Scanner(System.in);
+		elidao.clear();
+		//cd.clear();
+		System.out.println("Carregue em algo");
+		s.next();
 		for (int i = 1; i <23; i++) {
 			Circulo c = new Circulo(i, "Circulo " +i, 0);
 			cd.put(i, c);
@@ -33,7 +39,7 @@ public class testesJMS {
 			
 		}
 		
-		EleicaoPR epr = new EleicaoPR(1, new GregorianCalendar(2017,0,2),cd.values()); 
+		EleicaoPR epr = new EleicaoPR(1, new GregorianCalendar(2017,0,2)); 
 		elidao.put(1, epr);
 		for (int i = 1; i < 11; i++) {
 			Candidato c = new Candidato("NUNO PANELEIRO"+i, 12345679+i, "Come CONAS VELHAS " +i, new GregorianCalendar(1969,0,2), "Braga"+i, "Lisboa"+i, "A tua prima " +i);
@@ -47,6 +53,8 @@ public class testesJMS {
 				}else{
 					System.out.println("novo");
 				}
+				System.out.println("Carregue em algo");
+				//s.next();
 			}	
 		}
 
@@ -73,7 +81,7 @@ public class testesJMS {
 		}
 		
 		System.out.println("Size:" + rcprdao.size());
-		rcprdao.clear();
+		//rcprdao.clear();
 		System.out.println("CLEAR\nSize:" + rcprdao.size());
 		//System.out.println("Exiete a lista:" + lpdao.containsValue(lp));
 		//elidao.remove(1);
