@@ -168,4 +168,9 @@ public class Lista implements Listavel{
     	return lista;
 	}
 
+	@Override
+	public String pathImage() {
+		return this.simbolo;
+	}
+
 }
