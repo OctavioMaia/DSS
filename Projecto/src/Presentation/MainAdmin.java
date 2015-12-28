@@ -158,11 +158,7 @@ public class MainAdmin extends JFrame {
 		else 
 			povoarTabelaHistorico();
 	}
-
-	private void panel2FocusGained(FocusEvent e) {
-		// TODO add your code here
-	}
-
+	
 	private void initComponents() {
 		// JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
 		// Generated using JFormDesigner Evaluation license - Octavio Maia
