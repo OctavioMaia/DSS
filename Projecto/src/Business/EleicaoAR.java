@@ -143,6 +143,7 @@ public class EleicaoAR extends Eleicao {
 		}
 		super.setEstado(0);
 		super.setPermitirVotar(true);
+		this.geraBoletim();
 		this.calcularMandatosCirculos();
 	}
 	
@@ -150,7 +151,6 @@ public class EleicaoAR extends Eleicao {
 	public void terminar(){
 		super.setEstado(1);
 		super.setPermitirVotar(false);
-		this.geraBoletim();
 		this.atribuirMandatosListas();
 	}
 	
