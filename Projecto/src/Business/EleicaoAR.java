@@ -50,12 +50,12 @@ public class EleicaoAR extends Eleicao {
 	 * Chamar esta funcao apos a alteracao dos cadernos de recenseamento
 	 */
 	public void atualizarCirculos(){
-		this.calcularMandatosCirculos();
 		for(int circulo: this.resultado.keySet()){
 			ResultadoCirculoAR resCirc = this.resultado.get(circulo);
 			resCirc.atualizarTotEleitores();
 			this.resultado.put(circulo, resCirc);
 		}
+		this.calcularMandatosCirculos();
 	}
 	
 	public int getMandatosAssembleia() {
