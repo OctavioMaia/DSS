@@ -11,4 +11,5 @@ package Business;
  */
 public interface Listavel {
 	public abstract Object[] toTable();
+	public abstract String pathImage();
 }
