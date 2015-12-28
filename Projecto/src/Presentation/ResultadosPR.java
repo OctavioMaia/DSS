@@ -5,13 +5,9 @@
 package Presentation;
 
 import java.awt.*;
-import java.awt.image.BufferedImage;
-
 import javax.swing.*;
 import javax.swing.border.*;
 import javax.swing.table.*;
-import com.jgoodies.forms.layout.*;
-
 import Business.EleicaoPR;
 import Business.SGE;
 
@@ -23,9 +19,9 @@ public class ResultadosPR extends JFrame {
 	private SGE sge;
 	private EleicaoPR eleicao;
 	
-	public ResultadosPR(SGE s, int id) {
+	public ResultadosPR(SGE s, EleicaoPR el) {
 		sge=s;
-		eleicao = (EleicaoPR) sge.getEleicao(id);
+		eleicao = el;
 		initComponents();
 	}
 	
