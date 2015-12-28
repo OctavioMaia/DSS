@@ -27,7 +27,9 @@ import Data.EleicaoARDAO;
 import Data.EleicaoPRDAO;
 import Data.EleitoresDAO;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -68,28 +70,30 @@ public class SGE {
 	}
 	
 	private void initCirculos(){
-		this.circulos.put(1, new Circulo(1, "Aveiro", 0));
-		this.circulos.put(2, new Circulo(2, "Beja", 0));
-		this.circulos.put(3, new Circulo(3, "Braga", 0));
-		this.circulos.put(4, new Circulo(4, "Braganca", 0));
-		this.circulos.put(5, new Circulo(5, "Castelo Branco", 0));
-		this.circulos.put(6, new Circulo(6, "Coimbra", 0));
-		this.circulos.put(7, new Circulo(7, "Evora", 0));
-		this.circulos.put(8, new Circulo(8, "Faro", 0));
-		this.circulos.put(9, new Circulo(9, "Guarda", 0));
-		this.circulos.put(10, new Circulo(10, "Leiria", 0));
-		this.circulos.put(11, new Circulo(11, "Lisboa", 0));
-		this.circulos.put(12, new Circulo(12, "Portalegre", 0));
-		this.circulos.put(13, new Circulo(13, "Porto", 0));
-		this.circulos.put(14, new Circulo(14, "Santarem", 0));
-		this.circulos.put(15, new Circulo(15, "Setubal", 0));
-		this.circulos.put(16, new Circulo(16, "Viana do Castelo", 0));
-		this.circulos.put(17, new Circulo(17, "Vila Real", 0));
-		this.circulos.put(18, new Circulo(18, "Viseu", 0));
-		this.circulos.put(19, new Circulo(19, "Acores", 0));
-		this.circulos.put(20, new Circulo(20, "Madeira", 0));
-		this.circulos.put(21, new Circulo(21, "Europa", 0));
-		this.circulos.put(22, new Circulo(22, "Fora da Europa", 0));
+		if(this.circulos.size()==0){
+			this.circulos.put(1, new Circulo(1, "Aveiro", 0));
+			this.circulos.put(2, new Circulo(2, "Beja", 0));
+			this.circulos.put(3, new Circulo(3, "Braga", 0));
+			this.circulos.put(4, new Circulo(4, "Braganca", 0));
+			this.circulos.put(5, new Circulo(5, "Castelo Branco", 0));
+			this.circulos.put(6, new Circulo(6, "Coimbra", 0));
+			this.circulos.put(7, new Circulo(7, "Evora", 0));
+			this.circulos.put(8, new Circulo(8, "Faro", 0));
+			this.circulos.put(9, new Circulo(9, "Guarda", 0));
+			this.circulos.put(10, new Circulo(10, "Leiria", 0));
+			this.circulos.put(11, new Circulo(11, "Lisboa", 0));
+			this.circulos.put(12, new Circulo(12, "Portalegre", 0));
+			this.circulos.put(13, new Circulo(13, "Porto", 0));
+			this.circulos.put(14, new Circulo(14, "Santarem", 0));
+			this.circulos.put(15, new Circulo(15, "Setubal", 0));
+			this.circulos.put(16, new Circulo(16, "Viana do Castelo", 0));
+			this.circulos.put(17, new Circulo(17, "Vila Real", 0));
+			this.circulos.put(18, new Circulo(18, "Viseu", 0));
+			this.circulos.put(19, new Circulo(19, "Acores", 0));
+			this.circulos.put(20, new Circulo(20, "Madeira", 0));
+			this.circulos.put(21, new Circulo(21, "Europa", 0));
+			this.circulos.put(22, new Circulo(22, "Fora da Europa", 0));
+		}
 	}
 
 	public static Admin getAdmin() {
@@ -124,7 +128,20 @@ public class SGE {
 				idEleicaoAtiva = ar.getIdEleicao();
 			}
 		}
+		
+		System.out.println("id ativa inicial "+idEleicaoAtiva);
+		
 		return idEleicaoAtiva;
+	}
+	
+	public void alterarDataEleicao(Eleicao eleicao, Calendar dataInicio) {
+		eleicao.alterarData(dataInicio);
+		
+		if(eleicao.getClass().getSimpleName().equals("EleicaoPR")){
+			this.eleicoesPR.put(eleicao.getIdEleicao(), (EleicaoPR) eleicao);
+		}else{
+			this.eleicoesAR.put(eleicao.getIdEleicao(), (EleicaoAR) eleicao);
+		}
 	}
 
 	public Map<Integer, List<Eleitor>> lerCadernoRecenciamento(String path) {
@@ -172,6 +189,7 @@ public class SGE {
 	}
 
 	public void confirmarCadernoRecenciamento(Map<Integer, List<Eleitor>> listaEleitores) {
+		this.eleitores.clear();
 		for (Integer circulo : listaEleitores.keySet()) {
 			for (Eleitor el : listaEleitores.get(circulo)) {
 				this.eleitores.put(el.getnIdent(), el);
@@ -204,9 +222,12 @@ public class SGE {
 		if (this.ativa != -1) {
 			throw new ExceptionEleicaoAtiva("Já existe uma eleição ativa");
 		} else {
-			if (getClass().getSimpleName() == "EleicaoPR") {
+			this.ativa = e.getIdEleicao();
+			System.out.println("ativa id:"+ativa);
+			if (e.getClass().getSimpleName().equals("EleicaoPR")) {
 				el = this.eleicoesPR.get(e.getIdEleicao());
 				el.iniciar();
+				System.out.println("added");
 				this.eleicoesPR.put(el.getIdEleicao(), (EleicaoPR) el);
 			} else {
 				el = this.eleicoesAR.get(e.getIdEleicao());
@@ -221,13 +242,15 @@ public class SGE {
 		if (this.ativa == -1) {
 			throw new ExceptionEleicaoAtiva("Não existe eleição ativa");
 		} else {
-			if (getClass().getSimpleName() == "EleicaoPR") {
+			if (e.getClass().getSimpleName().equals("EleicaoPR")) {
 				el = this.eleicoesPR.get(e.getIdEleicao());
 				el.terminar();
+				if(el.estado(TERMINADA)) this.ativa=-1;
 				this.eleicoesPR.put(el.getIdEleicao(), (EleicaoPR) el);
 			} else {
 				el = this.eleicoesAR.get(e.getIdEleicao());
 				el.terminar();
+				this.ativa=-1;
 				this.eleicoesAR.put(el.getIdEleicao(), (EleicaoAR) el);
 			}
 		}
@@ -256,6 +279,11 @@ public class SGE {
 			ativa = this.eleicoesPR.get(this.ativa);
 		}
 		return ativa;
+	}
+	
+	public String eleicaoAtivaString(){
+		if(eleicaoAtiva()!=null) return eleicaoAtiva().getIdEleicao()+"";
+		else return "";
 	}
 
 	public Set<Eleicao> getEleicoesCriadas() {
@@ -416,8 +444,7 @@ public class SGE {
 		return max + 1;
 	}
 
-	public void addCandidatoPR(EleicaoPR eleicao, Candidato cand)
-			throws ExceptionListaExiste, ExceptionLimiteCandidatos, ExceptionMandanteInvalido, ExceptionEleicaoEstado {
+	public void addCandidatoPR(EleicaoPR eleicao, Candidato cand) throws ExceptionListaExiste, ExceptionLimiteCandidatos, ExceptionMandanteInvalido, ExceptionEleicaoEstado {
 		EleicaoPR pr = this.eleicoesPR.get(eleicao.getIdEleicao());
 		ListaPR lista = new ListaPR(0, 0, cand);
 		pr.addLista(lista);
