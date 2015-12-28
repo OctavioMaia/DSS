@@ -531,4 +531,16 @@ public class SGE {
 		}
 		return vot;	
 	}
+
+	public ArrayList<Partido> partCandidato(Votavel vot){
+		ArrayList<Partido> part = new ArrayList<>();
+		if(vot.getClass().getSimpleName().equals("Coligacao")){
+			for (Partido partido : ((Coligacao)vot).getPartidos()) {
+				part.add(partido);
+			}
+		}else{
+			part.add((Partido)vot);
+		}
+		return part;
+	}
 }
