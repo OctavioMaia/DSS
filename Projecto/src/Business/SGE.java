@@ -31,6 +31,7 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -451,7 +452,7 @@ public class SGE {
 		this.eleicoesPR.put(pr.getIdEleicao(), pr);
 	}
 
-	public void addCandidatoAR(EleicaoAR eleicao, Lista lista, CandidatoAR cand) {
+	public void addCandidatoAR(EleicaoAR eleicao, Lista lista, CandidatoAR cand) throws ExceptionLimiteCandidatos, ExceptionMandanteInvalido {
 		EleicaoAR ar = this.eleicoesAR.get(eleicao.getIdEleicao());
 		ar.addCandidato(lista, cand);
 		this.eleicoesAR.put(ar.getIdEleicao(), ar);
@@ -506,5 +507,16 @@ public class SGE {
 		}
 		return listasOrdenadas;
 	}
+	
+	public Circulo getCirculo(int num){
+		return this.circulos.get(num);
+	}
 
+	
+	Set<Votavel> getVotaveis(){
+		Set<Votavel> vot = new HashSet<>();
+		vot.addAll(this.partidos.values());
+		vot.addAll(this.coligacoes.values());
+		return vot;
+	}
 }
