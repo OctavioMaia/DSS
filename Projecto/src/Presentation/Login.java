@@ -25,6 +25,7 @@ public class Login  {
 	
 	private void buttonAutenticarActionPerformed(ActionEvent e) {		
 		try{
+			local.setEleitor(null);
 			String pw = new String(textPassword.getPassword());
 			int numeroEleitor = Integer.parseInt(textUsername.getText());
 
@@ -43,6 +44,8 @@ public class Login  {
 		}catch(NumberFormatException ex){
 			labelPasswordErrada.setVisible(true);
 			JOptionPane.showMessageDialog(null, "Introduza o seu número de eleitor correto!");
+		}catch(NullPointerException ex){
+			
 		}
 	}
 

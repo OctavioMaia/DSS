@@ -6,12 +6,25 @@ package Presentation;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+
 import javax.swing.*;
 import javax.swing.border.*;
 import javax.swing.table.*;
 
+import Business.CandidatoAR;
+import Business.Eleicao;
 import Business.EleicaoAR;
+import Business.Lista;
+import Business.Listavel;
+import Business.ListavelVotos;
+import Business.ResultadoCirculoAR;
+import Business.ResultadoGlobalAR;
 import Business.SGE;
+import Business.VotavelVotos;
 
 /**
  * @author Octavio Maia
@@ -20,15 +33,106 @@ public class ResultadosAR extends JFrame{
 	
 	private EleicaoAR eleicao;
 	private SGE sge;
+	private ResultadoGlobalAR resultado_global;
 	
 	public ResultadosAR(SGE s, EleicaoAR el){
 		sge = s;
 		eleicao = el;
+		resultado_global= eleicao.getResultadoGlobal();
 		initComponents(eleicao);
 		ResultadosAR.setVisible(true);
 	}
+	
+	private void povoarGlobais() {
+		ResultadoGlobalAR historico = resultado_global;
+		Set<VotavelVotos> set = sge.ordenarVotavel(historico.getMandatos());
+		Object[][] data = new Object[set.size()][]; 
+		int i=0;
+		
+		if (tableResultadosGlobais.getRowCount() > 0) {
+            for (int conta = tableResultadosGlobais.getRowCount() - 1; conta > -1; conta--) {
+                ((DefaultTableModel) tableResultadosGlobais.getModel()).removeRow(conta);
+            }
+        }
+		
+		for(VotavelVotos el : set){	
+			data[i] = el.toTable(historico.getTotEleitores());
+			
+			DefaultTableModel model = (DefaultTableModel) tableResultadosGlobais.getModel();
+			model.addRow(data[i]);
 
-	private void initComponents(EleicaoAR e) {
+			i++;
+		}
+	}
+
+	private void comboBox1ItemStateChanged(ItemEvent e) {
+		if (tableResultadosCirculo2.getRowCount() > 0) {
+            for (int conta = tableResultadosCirculo2.getRowCount() - 1; conta > -1; conta--) {
+                ((DefaultTableModel) tableResultadosCirculo2.getModel()).removeRow(conta);
+            }
+        }
+		povoarResultadosCirculo();
+		
+		ResultadoCirculoAR r = eleicao.getResultadoCirculo(comboBox1.getSelectedIndex()+1);
+		circuloBrancosN.setText(String.valueOf(r.getBrancos()));
+		circuloBrancosP.setText(String.valueOf((int)Math.round(100.0 / r.getTotEleitores() * r.getBrancos())));
+		circuloNulosP.setText(String.valueOf((int)Math.round(100.0 / r.getTotEleitores() * r.getNulos())));
+		circuloAbstencaoP.setText(String.valueOf((int)Math.round(100.0 / r.getTotEleitores() * r.getAbstencao())));
+		circuloAbstencaoN.setText(String.valueOf(r.getAbstencao()));
+		circuloNulosN.setText(String.valueOf(r.getNulos()));
+
+	}
+	
+	private void povoarResultadosCirculo(){
+		ResultadoCirculoAR historico = sge.getResultadoCirculoAR(eleicao, comboBox1.getSelectedIndex()+1);
+		Set<Lista> setkeys = historico.getValidos().keySet();
+		Object[][] data = new Object[setkeys.size()][]; 
+		Map<Lista,Integer> validos = historico.getValidos();
+		Map<Lista,Integer> mandatos = historico.getMandatos();
+		
+		int i=0;
+		
+		if (tableResultadosCirculo.getRowCount() > 0) {
+            for (int conta = tableResultadosCirculo.getRowCount() - 1; conta > -1; conta--) {
+                ((DefaultTableModel) tableResultadosCirculo.getModel()).removeRow(conta);
+            }
+        }
+		
+		for(Lista lista : setkeys){			
+			float percentagem=0;
+			
+			try{
+				percentagem = (validos.get(lista)/historico.getTotEleitores())*100;
+			}catch(Exception ex){}
+			Object[] dataAux = {percentagem,lista.getNome(),mandatos.get(lista),validos.get(lista),lista};
+			data[i] = dataAux;
+			
+			DefaultTableModel model = (DefaultTableModel) tableResultadosCirculo.getModel();
+			model.addRow(data[i]);
+
+			i++;
+		}
+	}
+
+	private void scrollCirculoExpandedMouseEntered(MouseEvent e) {
+		if(tableResultadosCirculo.getSelectedRowCount()==1){
+			ArrayList<CandidatoAR> array = ((Lista) tableResultadosCirculo.getValueAt(tableResultadosCirculo.getSelectedRow(), 4)).getCandidatos();
+			int mandatos = (sge.getResultadoCirculoAR(eleicao, comboBox1.getSelectedIndex()+1).getMandatos().get(tableResultadosCirculo.getValueAt(tableResultadosCirculo.getSelectedRow(), 4)));
+			
+			if (tableResultadosCirculo2.getRowCount() > 0) {
+	            for (int conta = tableResultadosCirculo2.getRowCount() - 1; conta > -1; conta--) {
+	                ((DefaultTableModel) tableResultadosCirculo2.getModel()).removeRow(conta);
+	            }
+	        }
+			
+			for(int i=0; i< mandatos;i++){
+				DefaultTableModel model = (DefaultTableModel) tableResultadosCirculo.getModel();
+				model.addRow(array.get(i).toTable());
+			}
+		}
+	}
+
+	private void initComponents(EleicaoAR el) {
 		// JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
 		// Generated using JFormDesigner Evaluation license - Octavio Maia
 		ResultadosAR = new JFrame();
@@ -46,8 +150,6 @@ public class ResultadosAR extends JFrame{
 		globaisAbstencaoP = new JLabel();
 		globaisNulosP = new JLabel();
 		globaisBrancosP = new JLabel();
-		scrollCirculo = new JScrollPane();
-		tableCirculo = new JTable();
 		label12 = new JLabel();
 		circuloBrancosN = new JLabel();
 		circuloBrancosP = new JLabel();
@@ -67,6 +169,7 @@ public class ResultadosAR extends JFrame{
 		globaisBrancosN2 = new JLabel();
 		globaisNulosN2 = new JLabel();
 		globaisAbstencaoN2 = new JLabel();
+		comboBox1 = new JComboBox<>();
 
 		//======== ResultadosAR ========
 		{
@@ -110,14 +213,14 @@ public class ResultadosAR extends JFrame{
 					new Object[][] {
 					},
 					new String[] {
-						"Lista", "Percentagem", "Mandatos"
+						"Lista", "Tipo", "Percentagem", "Mandatos"
 					}
 				) {
 					Class<?>[] columnTypes = new Class<?>[] {
-						Object.class, String.class, Object.class
+						Object.class, Object.class, String.class, Object.class
 					};
 					boolean[] columnEditable = new boolean[] {
-						false, false, false
+						false, true, false, false
 					};
 					@Override
 					public Class<?> getColumnClass(int columnIndex) {
@@ -130,9 +233,12 @@ public class ResultadosAR extends JFrame{
 				});
 				{
 					TableColumnModel cm = tableResultadosGlobais.getColumnModel();
-					cm.getColumn(1).setResizable(false);
+					cm.getColumn(2).setResizable(false);
 				}
 				tableResultadosGlobais.setFont(new Font("Arial", Font.PLAIN, 12));
+				tableResultadosGlobais.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+				tableResultadosGlobais.setRowSelectionAllowed(false);
+				povoarGlobais();
 				scrollGlobais.setViewportView(tableResultadosGlobais);
 			}
 			ResultadosARContentPane.add(scrollGlobais);
@@ -145,82 +251,40 @@ public class ResultadosAR extends JFrame{
 			label5.setBounds(15, 215, 134, 17);
 
 			//---- globaisBrancosN ----
-			//globaisBrancosN.setText(String.valueOf(e.getResultadoGlobal().getBrancos()));
+			globaisBrancosN.setText(String.valueOf(el.getResultadoGlobal().getBrancos()));
 			globaisBrancosN.setFont(new Font("Arial", Font.PLAIN, 14));
 			ResultadosARContentPane.add(globaisBrancosN);
 			globaisBrancosN.setBounds(385, 10, 75, 17);
 
 			//---- globaisNulosN ----
-			//globaisNulosN.setText(String.valueOf(e.getResultadoGlobal().getNulos()));
+			globaisNulosN.setText(String.valueOf(el.getResultadoGlobal().getNulos()));
 			globaisNulosN.setFont(new Font("Arial", Font.PLAIN, 14));
 			ResultadosARContentPane.add(globaisNulosN);
 			globaisNulosN.setBounds(385, 35, 75, 17);
 
 			//---- globaisAbstencaoN ----
-			//globaisAbstencaoN.setText(String.valueOf(e.getResultadoGlobal().getAbstencao()));
+			globaisAbstencaoN.setText(String.valueOf(el.getResultadoGlobal().getAbstencao()));
 			globaisAbstencaoN.setFont(new Font("Arial", Font.PLAIN, 14));
 			ResultadosARContentPane.add(globaisAbstencaoN);
 			globaisAbstencaoN.setBounds(385, 60, 75, 17);
 
 			//---- globaisAbstencaoP ----
-			//globaisAbstencaoP.setText(String.valueOf((int)Math.round(100.0 / e.getResultadoGlobal().getTotEleitores() * e.getResultadoGlobal().getAbstencao())));
+			globaisAbstencaoP.setText(String.valueOf((int)Math.round(100.0 / el.getResultadoGlobal().getTotEleitores() * el.getResultadoGlobal().getAbstencao())));
 			globaisAbstencaoP.setFont(new Font("Arial", Font.PLAIN, 14));
 			ResultadosARContentPane.add(globaisAbstencaoP);
 			globaisAbstencaoP.setBounds(470, 60, 55, 17);
 
 			//---- globaisNulosP ----
-			//globaisNulosP.setText(String.valueOf((int)Math.round(100.0 / e.getResultadoGlobal().getTotEleitores() * e.getResultadoGlobal().getNulos())));
+			globaisNulosP.setText(String.valueOf((int)Math.round(100.0 / el.getResultadoGlobal().getTotEleitores() * el.getResultadoGlobal().getNulos())));
 			globaisNulosP.setFont(new Font("Arial", Font.PLAIN, 14));
 			ResultadosARContentPane.add(globaisNulosP);
 			globaisNulosP.setBounds(470, 35, 55, 17);
 
 			//---- globaisBrancosP ----
-			//globaisBrancosP.setText(String.valueOf((int)Math.round(100.0 / e.getResultadoGlobal().getTotEleitores() * e.getResultadoGlobal().getBrancos())));
+			globaisBrancosP.setText(String.valueOf((int)Math.round(100.0 / el.getResultadoGlobal().getTotEleitores() * el.getResultadoGlobal().getBrancos())));
 			globaisBrancosP.setFont(new Font("Arial", Font.PLAIN, 14));
 			ResultadosARContentPane.add(globaisBrancosP);
 			globaisBrancosP.setBounds(470, 10, 55, 17);
-
-			//======== scrollCirculo ========
-			{
-				scrollCirculo.setFont(new Font("Arial", Font.PLAIN, 12));
-
-				//---- tableCirculo ----
-				tableCirculo.setFont(new Font("Arial", Font.PLAIN, 12));
-				tableCirculo.setModel(new DefaultTableModel(
-					new Object[][] {
-					},
-					new String[] {
-						"C\u00edrculo", null
-					}
-				) {
-					Class<?>[] columnTypes = new Class<?>[] {
-						Object.class, String.class
-					};
-					boolean[] columnEditable = new boolean[] {
-						false, false
-					};
-					@Override
-					public Class<?> getColumnClass(int columnIndex) {
-						return columnTypes[columnIndex];
-					}
-					@Override
-					public boolean isCellEditable(int rowIndex, int columnIndex) {
-						return columnEditable[columnIndex];
-					}
-				});
-				{
-					TableColumnModel cm = tableCirculo.getColumnModel();
-					cm.getColumn(0).setResizable(false);
-					cm.getColumn(1).setResizable(false);
-				}
-				tableCirculo.getColumnModel().getColumn(1).setPreferredWidth(0);
-				tableCirculo.getColumnModel().getColumn(1).setMinWidth(0);
-				tableCirculo.getColumnModel().getColumn(1).setWidth(0);
-				tableCirculo.getColumnModel().getColumn(1).setMaxWidth(0);
-				scrollCirculo.setViewportView(tableCirculo);
-			}
-			ResultadosARContentPane.add(scrollCirculo);
-			scrollCirculo.setBounds(15, 240, 130, 190);
 
 			//---- label12 ----
 			label12.setText("Votos brancos:");
@@ -229,37 +293,37 @@ public class ResultadosAR extends JFrame{
 			label12.setBounds(265, 215, 100, 17);
 
 			//---- circuloBrancosN ----
-			//circuloBrancosN.setText(String.valueOf(e.getResultadoCirculo((int) tableCirculo.getModel().getValueAt(tableCirculo.getSelectedRow(), 1)).getBrancos()));
+			circuloBrancosN.setText(String.valueOf(el.getResultadoCirculo(1).getBrancos()));
 			circuloBrancosN.setFont(new Font("Arial", Font.PLAIN, 14));
 			ResultadosARContentPane.add(circuloBrancosN);
 			circuloBrancosN.setBounds(385, 215, 80, 17);
 
 			//---- circuloBrancosP ----
-			//circuloBrancosP.setText(String.valueOf((int)Math.round(100.0 / e.getResultadoCirculo((int) tableCirculo.getModel().getValueAt(tableCirculo.getSelectedRow(), 1)).getTotEleitores() * e.getResultadoGlobal().getBrancos())));
+			circuloBrancosP.setText(String.valueOf((int)Math.round(100.0 / el.getResultadoCirculo(1).getTotEleitores() * el.getResultadoCirculo(1).getBrancos())));
 			circuloBrancosP.setFont(new Font("Arial", Font.PLAIN, 14));
 			ResultadosARContentPane.add(circuloBrancosP);
 			circuloBrancosP.setBounds(480, 215, 60, 17);
 
 			//---- circuloNulosP ----
-			//circuloNulosP.setText(String.valueOf((int)Math.round(100.0 / e.getResultadoCirculo((int) tableCirculo.getModel().getValueAt(tableCirculo.getSelectedRow(), 1)).getTotEleitores() * e.getResultadoGlobal().getNulos())));
+			circuloNulosP.setText(String.valueOf((int)Math.round(100.0 / el.getResultadoCirculo(1).getTotEleitores() * el.getResultadoCirculo(1).getNulos())));
 			circuloNulosP.setFont(new Font("Arial", Font.PLAIN, 14));
 			ResultadosARContentPane.add(circuloNulosP);
 			circuloNulosP.setBounds(480, 240, 60, 17);
 
 			//---- circuloAbstencaoP ----
-			//circuloAbstencaoP.setText(String.valueOf((int)Math.round(100.0 / e.getResultadoCirculo((int) tableCirculo.getModel().getValueAt(tableCirculo.getSelectedRow(), 1)).getTotEleitores() * e.getResultadoGlobal().getAbstencao())));
+			circuloAbstencaoP.setText(String.valueOf((int)Math.round(100.0 / el.getResultadoCirculo(1).getTotEleitores() * el.getResultadoCirculo(1).getAbstencao())));
 			circuloAbstencaoP.setFont(new Font("Arial", Font.PLAIN, 14));
 			ResultadosARContentPane.add(circuloAbstencaoP);
 			circuloAbstencaoP.setBounds(480, 265, 60, 17);
 
 			//---- circuloAbstencaoN ----
-			//circuloAbstencaoN.setText(String.valueOf(e.getResultadoCirculo((int) tableCirculo.getModel().getValueAt(tableCirculo.getSelectedRow(), 1)).getAbstencao()));
+			circuloAbstencaoN.setText(String.valueOf(el.getResultadoCirculo(1).getAbstencao()));
 			circuloAbstencaoN.setFont(new Font("Arial", Font.PLAIN, 14));
 			ResultadosARContentPane.add(circuloAbstencaoN);
 			circuloAbstencaoN.setBounds(385, 265, 80, 17);
 
 			//---- circuloNulosN ----
-			//circuloNulosN.setText(String.valueOf(e.getResultadoCirculo((int) tableCirculo.getModel().getValueAt(tableCirculo.getSelectedRow(), 1)).getNulos()));
+			circuloNulosN.setText(String.valueOf(el.getResultadoCirculo(1).getNulos()));
 			circuloNulosN.setFont(new Font("Arial", Font.PLAIN, 14));
 			ResultadosARContentPane.add(circuloNulosN);
 			circuloNulosN.setBounds(385, 240, 80, 17);
@@ -279,6 +343,12 @@ public class ResultadosAR extends JFrame{
 			//======== scrollCirculoExpanded ========
 			{
 				scrollCirculoExpanded.setFont(new Font("Arial", Font.PLAIN, 12));
+				scrollCirculoExpanded.addMouseListener(new MouseAdapter() {
+					@Override
+					public void mouseEntered(MouseEvent e) {
+						scrollCirculoExpandedMouseEntered(e);
+					}
+				});
 
 				//---- tableResultadosCirculo ----
 				tableResultadosCirculo.setModel(new DefaultTableModel(
@@ -309,6 +379,7 @@ public class ResultadosAR extends JFrame{
 					cm.getColumn(4).setResizable(false);
 				}
 				tableResultadosCirculo.setFont(new Font("Arial", Font.PLAIN, 12));
+				tableResultadosCirculo.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 				tableResultadosCirculo.getColumnModel().getColumn(4).setPreferredWidth(0);
 				tableResultadosCirculo.getColumnModel().getColumn(4).setMinWidth(0);
 				tableResultadosCirculo.getColumnModel().getColumn(4).setWidth(0);
@@ -316,7 +387,7 @@ public class ResultadosAR extends JFrame{
 				scrollCirculoExpanded.setViewportView(tableResultadosCirculo);
 			}
 			ResultadosARContentPane.add(scrollCirculoExpanded);
-			scrollCirculoExpanded.setBounds(155, 295, 420, 135);
+			scrollCirculoExpanded.setBounds(15, 295, 560, 135);
 			ResultadosARContentPane.add(separator2);
 			separator2.setBounds(new Rectangle(new Point(195, 40), separator2.getPreferredSize()));
 
@@ -345,22 +416,23 @@ public class ResultadosAR extends JFrame{
 					new Object[][] {
 					},
 					new String[] {
-						"N\u00famero de ordem", "Nome do candidato"
+						"Nome do candidato", "B.I./C.C.", "Sigla", "Tipo", null
 					}
 				) {
 					boolean[] columnEditable = new boolean[] {
-						false, false
+						false, true, true, true, true
 					};
 					@Override
 					public boolean isCellEditable(int rowIndex, int columnIndex) {
 						return columnEditable[columnIndex];
 					}
 				});
-				{
-					TableColumnModel cm = tableResultadosCirculo2.getColumnModel();
-					cm.getColumn(0).setResizable(false);
-				}
 				tableResultadosCirculo2.setFont(new Font("Arial", Font.PLAIN, 12));
+				tableResultadosCirculo2.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+				tableResultadosCirculo2.getColumnModel().getColumn(4).setPreferredWidth(0);
+				tableResultadosCirculo2.getColumnModel().getColumn(4).setMinWidth(0);
+				tableResultadosCirculo2.getColumnModel().getColumn(4).setWidth(0);
+				tableResultadosCirculo2.getColumnModel().getColumn(4).setMaxWidth(0);
 				scrollCirculoExpanded2.setViewportView(tableResultadosCirculo2);
 			}
 			ResultadosARContentPane.add(scrollCirculoExpanded2);
@@ -380,6 +452,36 @@ public class ResultadosAR extends JFrame{
 			globaisAbstencaoN2.setFont(new Font("Arial", Font.PLAIN, 14));
 			ResultadosARContentPane.add(globaisAbstencaoN2);
 			globaisAbstencaoN2.setBounds(385, 60, 60, 17);
+
+			//---- comboBox1 ----
+			comboBox1.setFont(new Font("Arial", Font.PLAIN, 14));
+			comboBox1.setModel(new DefaultComboBoxModel<>(new String[] {
+				"Aveiro",
+				"Beja",
+				"Braga",
+				"Braganca",
+				"Castelo Branco",
+				"Coimbra",
+				"Evora",
+				"Faro",
+				"Guarda",
+				"Leiria",
+				"Lisboa",
+				"Portalegre",
+				"Porto",
+				"Santarem",
+				"Setubal",
+				"Viana do Castelo",
+				"Vila Real",
+				"Viseu",
+				"Acores",
+				"Madeira",
+				"Europa",
+				"Fora da Europa"
+			}));
+			comboBox1.addItemListener(e -> comboBox1ItemStateChanged(e));
+			ResultadosARContentPane.add(comboBox1);
+			comboBox1.setBounds(15, 245, 185, 25);
 
 			{ // compute preferred size
 				Dimension preferredSize = new Dimension();
@@ -417,8 +519,6 @@ public class ResultadosAR extends JFrame{
 	private JLabel globaisAbstencaoP;
 	private JLabel globaisNulosP;
 	private JLabel globaisBrancosP;
-	private JScrollPane scrollCirculo;
-	private JTable tableCirculo;
 	private JLabel label12;
 	private JLabel circuloBrancosN;
 	private JLabel circuloBrancosP;
@@ -438,5 +538,6 @@ public class ResultadosAR extends JFrame{
 	private JLabel globaisBrancosN2;
 	private JLabel globaisNulosN2;
 	private JLabel globaisAbstencaoN2;
+	private JComboBox<String> comboBox1;
 	// JFormDesigner - End of variables declaration  //GEN-END:variables
 }

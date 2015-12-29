@@ -115,7 +115,11 @@ public class ResultadoCirculoAR {
 	}
 
 	public void addVoto(Lista lista) {
-		this.validos.put(lista, this.validos.get(lista) + 1);
+		if(this.validos.get(lista)==null){
+			this.validos.put(lista, 1);
+		}else{
+			this.validos.put(lista, this.validos.get(lista) + 1);	
+		}
 	}
 
 	public void addVotoBranco() {

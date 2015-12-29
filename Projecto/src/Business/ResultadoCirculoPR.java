@@ -94,14 +94,20 @@ public class ResultadoCirculoPR {
 	}
 
 	public void addVoto(ListaPR l) {
-		this.validos.put(l, this.validos.get(l) + 1);
+		if(this.validos.get(l)!=null){
+			this.validos.put(l, this.validos.get(l) + 1);
+		}else{
+			this.validos.put(l, 0 + 1);
+		}
 	}
 
 	public void addVotoBranco() {
+		System.out.println("B:"+brancos);
 		this.brancos++;
 	}
 
 	public void addVotoNulo() {
+		System.out.println("N:"+nulos);
 		this.nulos++;
 	}
 
