@@ -125,10 +125,12 @@ public class EleicaoPR extends Eleicao {
 		if (volta2 == false) {
 			resPR = this.voltaR1.get(eleitor.getCirculo());
 			resPR.addVotoNulo();
+			super.addVotante(eleitor);
 			this.voltaR1.put(eleitor.getCirculo(), resPR);
 		} else {
 			resPR = this.voltaR2.get(eleitor.getCirculo());
 			resPR.addVotoNulo();
+			this.addVotante(eleitor);
 			this.voltaR2.put(eleitor.getCirculo(), resPR);
 		}
 	}
@@ -139,10 +141,12 @@ public class EleicaoPR extends Eleicao {
 		if (volta2 == false) {
 			resPR = this.voltaR1.get(eleitor.getCirculo());
 			resPR.addVotoBranco();
+			super.addVotante(eleitor);
 			this.voltaR1.put(eleitor.getCirculo(), resPR);
 		} else {
 			resPR = this.voltaR2.get(eleitor.getCirculo());
 			resPR.addVotoBranco();
+			this.addVotante(eleitor);
 			this.voltaR2.put(eleitor.getCirculo(), resPR);
 		}
 	}

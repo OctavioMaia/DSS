@@ -360,6 +360,7 @@ new FormModel {
 			add( new FormComponent( "javax.swing.JLabel" ) {
 				name: "imagem"
 				"icon": sfield com.jformdesigner.model.FormObject NULL_VALUE
+				"text": "imagem"
 			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
 				"x": 335
 				"y": 160
@@ -380,7 +381,7 @@ new FormModel {
 				"font": #Font0
 			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
 				"width": 134
-				"height": 17
+				"height": 25
 				"x": 20
 				"y": 15
 			} )
@@ -396,6 +397,7 @@ new FormModel {
 				"x": 165
 				"y": 15
 				"width": 135
+				"height": 25
 			} )
 		}, new FormLayoutConstraints( null ) {
 			"size": new java.awt.Dimension( 605, 625 )

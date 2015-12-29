@@ -326,6 +326,7 @@ public class ResultadosPR extends JFrame {
 
 			//---- imagem ----
 			imagem.setIcon(null);
+			imagem.setText("imagem");
 			ResultadosPRContentPane.add(imagem);
 			imagem.setBounds(335, 160, 165, 170);
 			ResultadosPRContentPane.add(separator3);
@@ -335,7 +336,7 @@ public class ResultadosPR extends JFrame {
 			label6.setText("Selecione a volta:");
 			label6.setFont(new Font("Arial", Font.BOLD, 14));
 			ResultadosPRContentPane.add(label6);
-			label6.setBounds(20, 15, 134, 17);
+			label6.setBounds(20, 15, 134, 25);
 
 			//---- voltaBox ----
 			voltaBox.setFont(new Font("Arial", Font.PLAIN, 14));
@@ -344,7 +345,7 @@ public class ResultadosPR extends JFrame {
 				"Segunda Volta"
 			}));
 			ResultadosPRContentPane.add(voltaBox);
-			voltaBox.setBounds(165, 15, 135, voltaBox.getPreferredSize().height);
+			voltaBox.setBounds(165, 15, 135, 25);
 
 			{ // compute preferred size
 				Dimension preferredSize = new Dimension();
