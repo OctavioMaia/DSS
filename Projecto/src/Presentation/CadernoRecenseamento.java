@@ -147,40 +147,40 @@ public class CadernoRecenseamento extends JFrame {
 		separator1.setBounds(10, 100, 535, 5);
 
 		//---- label2 ----
-		label2.setText("C\u00edrculo n\u00ba:");
+		label2.setText("C\u00edrculo");
 		label2.setFont(new Font("Arial", Font.PLAIN, 14));
 		contentPane.add(label2);
-		label2.setBounds(10, 125, 75, 25);
+		label2.setBounds(10, 125, 60, 25);
 
 		//---- comboBox1 ----
 		comboBox1.setFont(new Font("Arial", Font.PLAIN, 14));
 		comboBox1.setModel(new DefaultComboBoxModel<>(new String[] {
-			"1",
-			"2",
-			"3",
-			"4",
-			"5",
-			"6",
-			"7",
-			"8",
-			"9",
-			"10",
-			"11",
-			"12",
-			"13",
-			"14",
-			"15",
-			"16",
-			"17",
-			"18",
-			"19",
-			"20",
-			"21",
-			"22"
+			"Aveiro",
+			"Beja",
+			"Braga",
+			"Braganca",
+			"Castelo Branco",
+			"Coimbra",
+			"Evora",
+			"Faro",
+			"Guarda",
+			"Leiria",
+			"Lisboa",
+			"Portalegre",
+			"Porto",
+			"Santarem",
+			"Setubal",
+			"Viana do Castelo",
+			"Vila Real",
+			"Viseu",
+			"Acores",
+			"Madeira",
+			"Europa",
+			"Fora da Europa"
 		}));
 		comboBox1.addItemListener(e -> comboBox1ItemStateChanged(e));
 		contentPane.add(comboBox1);
-		comboBox1.setBounds(95, 125, 75, 25);
+		comboBox1.setBounds(80, 125, 115, 25);
 
 		//---- label3 ----
 		label3.setText("Total de eleitores:");
