@@ -160,11 +160,11 @@ public class MainAdmin extends JFrame {
 	}
 
 	private void buttonGerirPartidosActionPerformed(ActionEvent e) {
-		// TODO add your code here
+		new PartidosInterface(sge);
 	}
 
 	private void buttonGerirPartidos2ActionPerformed(ActionEvent e) {
-		// TODO add your code here
+		new ColigacaoInterface(sge);
 	}
 	
 	private void initComponents() {

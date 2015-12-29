@@ -331,12 +331,6 @@ public class SGE {
 	}
 
 	public void addPartido(Partido part) throws ExceptionPartidoExiste {
-		Iterator<Partido> itPart = this.partidos.values().iterator();
-		while (itPart.hasNext()) {
-			if (!itPart.next().equals(part)) {
-				throw new ExceptionPartidoExiste("O partido já se encontram registado");
-			}
-		}
 		part.setId(this.chavePartido());
 		this.partidos.put(part.getId(), part);
 	}
