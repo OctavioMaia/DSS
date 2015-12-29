@@ -41,12 +41,12 @@ public class MainAdmin extends JFrame {
 	private void buttonIniciarEleicaoActionPerformed(ActionEvent e) {
 		try {
 			sge.iniciarEleicao((Eleicao) table1.getValueAt(table1.getSelectedRow(), 2));
+			labelEleicaoAtiva.setText(sge.eleicaoAtivaString());
 		} catch (ExceptionEleicaoAtiva e1) {
 			JOptionPane.showMessageDialog(null, e1.getMessage());
 		} catch (ExceptionIniciarEleicao e1) {
 			JOptionPane.showMessageDialog(null, e1.getMessage());
 		}
-		labelEleicaoAtiva.setText(sge.eleicaoAtivaString());
 	}
 
 	private void buttonCriarEleicaoActionPerformed(ActionEvent e) {
@@ -79,13 +79,19 @@ public class MainAdmin extends JFrame {
 
 	private void buttonTerminarEleicaoActionPerformed(ActionEvent e) {
 		try {
+			if(sge.eleicaoAtiva()!=null){
+				if(sge.eleicaoAtiva().getClass().getSimpleName().equals("EleicaoPR")) 
+					labelEleicaoAtiva.setText(sge.eleicaoAtivaString() + " (2ª volta)");
+				else 
+					labelEleicaoAtiva.setText(sge.eleicaoAtivaString());
+			}
 			sge.terminarEleicao(sge.eleicaoAtiva());
+			if(sge.eleicaoAtiva()==null) labelEleicaoAtiva.setText("");
 		} catch (ExceptionEleicaoAtiva e1) {
 			JOptionPane.showMessageDialog(null, e1.getMessage());
 		} catch (ExceptionTerminarEleicao e1) {
 			JOptionPane.showMessageDialog(null, e1.getMessage());
 		}
-		labelEleicaoAtiva.setText(sge.eleicaoAtivaString());
 	}
 
 	private void table1FocusGained(FocusEvent e) {
@@ -160,11 +166,11 @@ public class MainAdmin extends JFrame {
 	}
 
 	private void buttonGerirPartidosActionPerformed(ActionEvent e) {
-		// TODO add your code here
+		new PartidosInterface(sge);
 	}
 
 	private void buttonGerirPartidos2ActionPerformed(ActionEvent e) {
-		// TODO add your code here
+		new ColigacaoInterface(sge);
 	}
 	
 	private void initComponents() {

@@ -57,29 +57,34 @@ public class GerirAR extends JFrame {
 	}
 
 
-	private void buttonAdicionarFotoActionPerformed(ActionEvent e) {
-		String nome = nomeCandidato.getText();
-		String naturalidade = this.naturalidade.getText();
-		String residencia = this.residencia.getText();
-		String profissao = this.profissao.getText();
-		int bi = Integer.parseInt(this.bi.getText());
-		Calendar dataN = this.dataNasc;
-		
+	private void buttonAdicionarFotoActionPerformed(ActionEvent e) {		
 		try{
-			CandidatoAR c = new CandidatoAR(nome, bi, profissao, dataN, residencia, naturalidade, listaPartidos.get(comboBox3.getSelectedIndex()), ((String) comboBox2.getSelectedItem()).charAt(0));
-			sge.addCandidatoAR(eleicao,(Lista) table1.getValueAt(table1.getSelectedRow(), 3), c);
-			povoarTabelaCandidato();
-			
-			//reset tabelas
-			nomeCandidato.setText("");
-			this.naturalidade.setText("");
-			this.residencia.setText("");
-			this.profissao.setText("");
-			this.bi.setText("");
-			this.dataNascimento.setText("dd/mm/aa");
-			this.pathImagem.setText("");
+			if(table1.getSelectedRowCount()==1){
+				String nome = nomeCandidato.getText();
+				String naturalidade = this.naturalidade.getText();
+				String residencia = this.residencia.getText();
+				String profissao = this.profissao.getText();
+				int bi = Integer.parseInt(this.bi.getText());
+				Calendar dataN = this.dataNasc;
+				CandidatoAR c = new CandidatoAR(nome, bi, profissao, dataN, residencia, naturalidade, listaPartidos.get(comboBox3.getSelectedIndex()), ((String) comboBox2.getSelectedItem()).charAt(0));
+				sge.addCandidatoAR(eleicao,(Lista) table1.getValueAt(table1.getSelectedRow(), 3), c);
+				povoarTabelaCandidato();
+				
+				//reset tabelas
+				nomeCandidato.setText("");
+				this.naturalidade.setText("");
+				this.residencia.setText("");
+				this.profissao.setText("");
+				this.bi.setText("");
+				this.dataNascimento.setText("dd/mm/aa");
+				this.pathImagem.setText("");
+			}else{
+				JOptionPane.showMessageDialog(null, "Por favor selecione uma lista.");
+			}
 		}catch(ExceptionLimiteCandidatos|  ExceptionMandanteInvalido ex){
-			JOptionPane.showMessageDialog(null, ex.getMessage());
+			ex.printStackTrace();
+		}catch(NumberFormatException ex){
+			JOptionPane.showMessageDialog(null, "Por favor introduza os campos necessários");
 		}
 	}
 
@@ -111,7 +116,7 @@ public class GerirAR extends JFrame {
 
 	private void comboBox1ItemStateChanged(ItemEvent e) {
 		povoarTabelaListas();
-	}
+	}	
 
 	private void povoarTabelaListas() {
 		Set<Lista> set = eleicao.getListasCirculo(comboBox1.getSelectedIndex() + 1);
@@ -121,7 +126,6 @@ public class GerirAR extends JFrame {
 		if (table1.getRowCount() > 0) {
 			for (int conta = table1.getRowCount() - 1; conta > -1; conta--) {
 				((DefaultTableModel) table1.getModel()).removeRow(conta);
-				;
 			}
 		}
 
@@ -137,25 +141,26 @@ public class GerirAR extends JFrame {
 	}
 	
 	private void povoarTabelaCandidato() {
-		Lista l = (Lista) table1.getValueAt(table1.getSelectedRow(), 3);
-		ArrayList<CandidatoAR> set = l.getCandidatos();
-		Object[][] data = new Object[set.size()][];
-		int i = 0;
-
-		if (table2.getRowCount() > 0) {
-			for (int conta = table2.getRowCount() - 1; conta > -1; conta--) {
-				((DefaultTableModel) table2.getModel()).removeRow(conta);
-				;
+		if(table1.getSelectedRowCount()==1){
+			Lista l = (Lista) table1.getValueAt(table1.getSelectedRow(), 3);
+			ArrayList<CandidatoAR> set = l.getCandidatos();
+			Object[][] data = new Object[set.size()][];
+			int i = 0;
+	
+			if (table2.getRowCount() > 0) {
+				for (int conta = table2.getRowCount() - 1; conta > -1; conta--) {
+					((DefaultTableModel) table2.getModel()).removeRow(conta);
+				}
 			}
-		}
-
-		for (CandidatoAR el : set) {
-			data[i] = el.toTable();
-
-			DefaultTableModel model = (DefaultTableModel) table2.getModel();
-			model.addRow(data[i]);
-
-			i++;
+	
+			for (CandidatoAR el : set) {
+				data[i] = el.toTable();
+	
+				DefaultTableModel model = (DefaultTableModel) table2.getModel();
+				model.addRow(data[i]);
+	
+				i++;
+			}
 		}
 	}
 	
@@ -164,16 +169,8 @@ public class GerirAR extends JFrame {
 		((DefaultTableModel) table1.getModel()).removeRow(table1.getSelectedRow());
 	}
 
-	private void buttonAtualizarCandidatosActionPerformed(ActionEvent e) {
-		povoarTabelaCandidato();
-	}
-
-	private void button5ActionPerformed(ActionEvent e) {
-		povoarTabelaListas();
-	}
-
 	private void button3ActionPerformed(ActionEvent e) {
-		Lista lista = new Lista(0, sge.getCirculo(comboBox1.getSelectedIndex()+1), sigla.getText(), nomeLista.getText(), pathImagem.getText(), (Votavel) table3.getValueAt(table3.getSelectedRow(), 2));
+		Lista lista = new Lista(0, sge.getCirculo(comboBox1.getSelectedIndex()+1), sigla.getText(), nomeLista.getText(), pathImagem.getText(), (Votavel) table3.getValueAt(table3.getSelectedRow(), 3));
 		try {
 			sge.addLista(eleicao, lista);
 			povoarTabelaListas();
@@ -182,7 +179,7 @@ public class GerirAR extends JFrame {
 		} catch (ExceptionLimiteCandidatos e1) {
 			JOptionPane.showMessageDialog(null, e1.getMessage());
 		} catch (ExceptionMandanteInvalido e1) {
-			JOptionPane.showMessageDialog(null, e1.getMessage());
+			e1.printStackTrace();
 		} catch (ExceptionEleicaoEstado e1) {
 			JOptionPane.showMessageDialog(null, e1.getMessage());
 		}
@@ -213,19 +210,31 @@ public class GerirAR extends JFrame {
 
 	private void buttonEliminarCandidatoActionPerformed(ActionEvent e) {
 		sge.removeCandidatoAR(eleicao, (Lista) table1.getValueAt(table1.getSelectedRow(), 4), (CandidatoAR) table2.getValueAt(table2.getSelectedRow(), 4));
-		((DefaultTableModel) table2.getModel()).removeRow(table2.getSelectedRow());
+		povoarTabelaCandidato();
 	}
 
 	private void button4ActionPerformed(ActionEvent e) {
 		this.setVisible(false);
 	}
 
-	private void scrollPane2MouseClicked(MouseEvent e) {
-		listaPartidos = sge.partCandidato((Votavel) table3.getValueAt(table3.getSelectedRow(), 2));
-		
-		for(Partido p : listaPartidos){
-			comboBox3.addItem(p.getSigla());
+
+	private void scrollPane1MouseEntered(MouseEvent e) {
+		if(table1.getSelectedRowCount()==1){
+			Lista l = (Lista) table1.getValueAt(table1.getSelectedRow(), 3);
+			listaPartidos = sge.partCandidato(l.getMandante());
+			comboBox3.removeAllItems();
+			
+			for(Partido p : listaPartidos){
+				comboBox3.addItem(p.getSigla());
+			}
 		}
+		
+		povoarTabelaCandidato();
+		
+	}
+
+	private void scrollPane2MouseClicked(MouseEvent e) {
+		// TODO add your code here
 	}
 
 	private void initComponents() {
@@ -264,14 +273,11 @@ public class GerirAR extends JFrame {
 		separator4 = new JSeparator();
 		separator5 = new JSeparator();
 		separator2 = compFactory.createSeparator("Candidatos", SwingConstants.CENTER);
-		buttonOK = new JButton();
 		button4 = new JButton();
 		buttonEliminarCandidato = new JButton();
 		separator6 = new JSeparator();
 		scrollPane1 = new JScrollPane();
 		table1 = new JTable();
-		buttonAtualizarCandidatos = new JButton();
-		button5 = new JButton();
 		scrollPane2 = new JScrollPane();
 		table3 = new JTable();
 		comboBox2 = new JComboBox<>();
@@ -312,32 +318,32 @@ public class GerirAR extends JFrame {
 		//---- comboBox1 ----
 		comboBox1.setFont(new Font("Arial", Font.PLAIN, 14));
 		comboBox1.setModel(new DefaultComboBoxModel<>(new String[] {
-			"1",
-			"2",
-			"3",
-			"4",
-			"5",
-			"6",
-			"7",
-			"8",
-			"9",
-			"10",
-			"11",
-			"12",
-			"13",
-			"14",
-			"15",
-			"16",
-			"17",
-			"18",
-			"19",
-			"20",
-			"21",
-			"22"
+			"Aveiro",
+			"Beja",
+			"Braga",
+			"Braganca",
+			"Castelo Branco",
+			"Coimbra",
+			"Evora",
+			"Faro",
+			"Guarda",
+			"Leiria",
+			"Lisboa",
+			"Portalegre",
+			"Porto",
+			"Santarem",
+			"Setubal",
+			"Viana do Castelo",
+			"Vila Real",
+			"Viseu",
+			"Acores",
+			"Madeira",
+			"Europa",
+			"Fora da Europa"
 		}));
 		comboBox1.addItemListener(e -> comboBox1ItemStateChanged(e));
 		contentPane.add(comboBox1);
-		comboBox1.setBounds(155, 20, 130, 25);
+		comboBox1.setBounds(155, 20, 185, 25);
 
 		//---- separator1 ----
 		separator1.setFont(new Font("Arial", Font.PLAIN, 14));
@@ -503,19 +509,12 @@ public class GerirAR extends JFrame {
 		contentPane.add(separator2);
 		separator2.setBounds(15, 390, 930, separator2.getPreferredSize().height);
 
-		//---- buttonOK ----
-		buttonOK.setText("OK");
-		buttonOK.setFont(new Font("Arial", Font.PLAIN, 14));
-		buttonOK.addActionListener(e -> button4ActionPerformed(e));
-		contentPane.add(buttonOK);
-		buttonOK.setBounds(895, 850, buttonOK.getPreferredSize().width, 25);
-
 		//---- button4 ----
-		button4.setText("Cancelar");
+		button4.setText("Sair");
 		button4.setFont(new Font("Arial", Font.PLAIN, 14));
 		button4.addActionListener(e -> button4ActionPerformed(e));
 		contentPane.add(button4);
-		button4.setBounds(795, 850, button4.getPreferredSize().width, 25);
+		button4.setBounds(800, 850, 145, 25);
 
 		//---- buttonEliminarCandidato ----
 		buttonEliminarCandidato.setText("Eliminar candidato");
@@ -528,6 +527,12 @@ public class GerirAR extends JFrame {
 
 		//======== scrollPane1 ========
 		{
+			scrollPane1.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseEntered(MouseEvent e) {
+					scrollPane1MouseEntered(e);
+				}
+			});
 
 			//---- table1 ----
 			table1.setFont(new Font("Arial", Font.PLAIN, 14));
@@ -549,20 +554,6 @@ public class GerirAR extends JFrame {
 		contentPane.add(scrollPane1);
 		scrollPane1.setBounds(15, 200, 930, 145);
 
-		//---- buttonAtualizarCandidatos ----
-		buttonAtualizarCandidatos.setText("Atualizar tabela candidatos");
-		buttonAtualizarCandidatos.setFont(new Font("Arial", Font.PLAIN, 14));
-		buttonAtualizarCandidatos.addActionListener(e -> buttonAtualizarCandidatosActionPerformed(e));
-		contentPane.add(buttonAtualizarCandidatos);
-		buttonAtualizarCandidatos.setBounds(565, 810, 220, 25);
-
-		//---- button5 ----
-		button5.setText("Atualizar tabela listas");
-		button5.setFont(new Font("Arial", Font.PLAIN, 14));
-		button5.addActionListener(e -> button5ActionPerformed(e));
-		contentPane.add(button5);
-		button5.setBounds(345, 355, button5.getPreferredSize().width, 25);
-
 		//======== scrollPane2 ========
 		{
 			scrollPane2.addMouseListener(new MouseAdapter() {
@@ -578,19 +569,13 @@ public class GerirAR extends JFrame {
 				new Object[][] {
 				},
 				new String[] {
-					"Sigla", "Nome", null
+					"Nome", "Sigla", "Tipo", null
 				}
 			));
-			table3.addMouseListener(new MouseAdapter() {
-				@Override
-				public void mouseClicked(MouseEvent e) {
-					scrollPane2MouseClicked(e);
-				}
-			});
-			table3.getColumnModel().getColumn(2).setPreferredWidth(0);
-			table3.getColumnModel().getColumn(2).setMinWidth(0);
-			table3.getColumnModel().getColumn(2).setWidth(0);
-			table3.getColumnModel().getColumn(2).setMaxWidth(0);
+			table3.getColumnModel().getColumn(3).setPreferredWidth(0);
+			table3.getColumnModel().getColumn(3).setMinWidth(0);
+			table3.getColumnModel().getColumn(3).setWidth(0);
+			table3.getColumnModel().getColumn(3).setMaxWidth(0);
 			povoarVotavel();
 			scrollPane2.setViewportView(table3);
 		}
@@ -705,14 +690,11 @@ public class GerirAR extends JFrame {
 	private JSeparator separator4;
 	private JSeparator separator5;
 	private JComponent separator2;
-	private JButton buttonOK;
 	private JButton button4;
 	private JButton buttonEliminarCandidato;
 	private JSeparator separator6;
 	private JScrollPane scrollPane1;
 	private JTable table1;
-	private JButton buttonAtualizarCandidatos;
-	private JButton button5;
 	private JScrollPane scrollPane2;
 	private JTable table3;
 	private JComboBox<String> comboBox2;

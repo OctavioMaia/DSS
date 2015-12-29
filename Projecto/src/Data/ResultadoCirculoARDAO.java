@@ -226,7 +226,7 @@ public class ResultadoCirculoARDAO implements Map<Integer,ResultadoCirculoAR>{
 		PreparedStatement psI = c.prepareStatement("INSERT INTO " + TabResLista + " "
 				+ "("+TabResListaIDLista+","+TabResListaIDCirc+","+TabResListaIDElei+","
 				+TabResListaMandatos+","+TabResListaVotos+") "
-				+ "VALEUS "
+				+ "VALUES "
 				+ "(?,?,?,?,?)");
 		psI.setInt(2, key);
 		psI.setInt(3, this.idEleicao);

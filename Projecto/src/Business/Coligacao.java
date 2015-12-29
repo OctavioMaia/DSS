@@ -99,7 +99,7 @@ public class Coligacao implements Votavel {
 
 	@Override
 	public Object[] toTable() {
-		Object[] partido = { this.sigla, this.nome, this};
+		Object[] partido = { this.nome,this.sigla, "Coligação", this};
 		return partido;
 	}
 

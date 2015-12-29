@@ -223,18 +223,25 @@ public class SGE {
 		if (this.ativa != -1) {
 			throw new ExceptionEleicaoAtiva("Já existe uma eleição ativa");
 		} else {
-			this.ativa = e.getIdEleicao();
 			System.out.println("ativa id:"+ativa);
 			if (e.getClass().getSimpleName().equals("EleicaoPR")) {
+				System.out.println("debug1");
 				el = this.eleicoesPR.get(e.getIdEleicao());
+				System.out.println("debug2");
 				el.iniciar();
 				System.out.println("added");
 				this.eleicoesPR.put(el.getIdEleicao(), (EleicaoPR) el);
+				System.out.println("debug3");
 			} else {
+				System.out.println("debug4");
 				el = this.eleicoesAR.get(e.getIdEleicao());
+				System.out.println("debug5");
 				el.iniciar();
+				System.out.println("debug6");
 				this.eleicoesAR.put(el.getIdEleicao(), (EleicaoAR) el);
+				System.out.println("debug7");
 			}
+			this.ativa = e.getIdEleicao();
 		}
 	}
 
@@ -331,12 +338,6 @@ public class SGE {
 	}
 
 	public void addPartido(Partido part) throws ExceptionPartidoExiste {
-		Iterator<Partido> itPart = this.partidos.values().iterator();
-		while (itPart.hasNext()) {
-			if (!itPart.next().equals(part)) {
-				throw new ExceptionPartidoExiste("O partido já se encontram registado");
-			}
-		}
 		part.setId(this.chavePartido());
 		this.partidos.put(part.getId(), part);
 	}
@@ -430,11 +431,14 @@ public class SGE {
 		int maxAR = 0;
 		if (this.eleicoesAR.size() > 0) {
 			maxAR = Collections.max(this.eleicoesAR.keySet());
+			//System.out.println("ar:"+maxAR);
 		}
 		if (this.eleicoesPR.size() > 0) {
-			maxAR = Collections.max(this.eleicoesPR.keySet());
+			maxPR = Collections.max(this.eleicoesPR.keySet());
+			//System.out.println("pr:"+maxAR);
 		}
-		return Math.max(maxPR, maxAR) + 1;
+		//System.out.println("max"+(Math.max(maxPR, maxAR) + 1));
+		return (Math.max(maxPR, maxAR) + 1);
 	}
 
 	private int chaveColigacoes() {
@@ -520,12 +524,12 @@ public class SGE {
 	public Set<Votavel> getVotaveis(){
 		Set<Votavel> vot = new HashSet<>();
 		for(Partido  p : this.partidos.values()){
-			if(p.isRemovido()){
+			if(!p.isRemovido()){
 				vot.add(p);
 			}
 		}
 		for(Coligacao  c : this.coligacoes.values()){
-			if(c.isRemovido()){
+			if(!c.isRemovido()){
 				vot.add(c);
 			}
 		}
