@@ -114,48 +114,51 @@ public class GerirAR extends JFrame {
 	}
 
 	private void povoarTabelaListas() {
-		Set<Lista> set = eleicao.getListasCirculo(comboBox1.getSelectedIndex()+1);
-		Object[][] data = new Object[set.size()][]; 
-		int i=0;
-		
+		Set<Lista> set = eleicao.getListasCirculo(comboBox1.getSelectedIndex() + 1);
+		Object[][] data = new Object[set.size()][];
+		int i = 0;
+
 		if (table1.getRowCount() > 0) {
-            for (int conta = table1.getRowCount() - 1; conta > -1; conta--) {
-                ((DefaultTableModel) table1.getModel()).removeRow(conta);;
-            }
-        }
-		
-		for(Lista el : set){	
+			for (int conta = table1.getRowCount() - 1; conta > -1; conta--) {
+				((DefaultTableModel) table1.getModel()).removeRow(conta);
+				;
+			}
+		}
+
+		for (Lista el : set) {
 			data[i] = el.toTable();
-			
+
 			DefaultTableModel model = (DefaultTableModel) table1.getModel();
 			model.addRow(data[i]);
 
 			i++;
 		}
+
 	}
 	
 	private void povoarTabelaCandidato() {
 		Lista l = (Lista) table1.getValueAt(table1.getSelectedRow(), 3);
 		ArrayList<CandidatoAR> set = l.getCandidatos();
-		Object[][] data = new Object[set.size()][]; 
-		int i=0;
-		
+		Object[][] data = new Object[set.size()][];
+		int i = 0;
+
 		if (table2.getRowCount() > 0) {
-            for (int conta = table2.getRowCount() - 1; conta > -1; conta--) {
-                ((DefaultTableModel) table2.getModel()).removeRow(conta);;
-            }
-        }
-		
-		for(CandidatoAR el : set){	
+			for (int conta = table2.getRowCount() - 1; conta > -1; conta--) {
+				((DefaultTableModel) table2.getModel()).removeRow(conta);
+				;
+			}
+		}
+
+		for (CandidatoAR el : set) {
 			data[i] = el.toTable();
-			
+
 			DefaultTableModel model = (DefaultTableModel) table2.getModel();
 			model.addRow(data[i]);
 
 			i++;
 		}
 	}
-
+	
 	private void button2ActionPerformed(ActionEvent e) {
 		sge.removeLista(eleicao, (Listavel) table1.getValueAt(table1.getSelectedRow(), 3));
 		((DefaultTableModel) table1.getModel()).removeRow(table1.getSelectedRow());
@@ -185,28 +188,30 @@ public class GerirAR extends JFrame {
 	}
 	
 	private void povoarVotavel() {
-		Set<Votavel> set = sge.getVotaveis();
-		Object[][] data = new Object[set.size()][]; 
-		int i=0;
-		
-		if (table3.getRowCount() > 0) {
-            for (int conta = table3.getRowCount() - 1; conta > -1; conta--) {
-                ((DefaultTableModel) table3.getModel()).removeRow(conta);;
-            }
-        }
-		
-		for(Votavel el : set){	
-			data[i] = el.toTable();
+		if(sge.getVotaveis()!=null){
+			Set<Votavel> set = sge.getVotaveis();
+			Object[][] data = new Object[set.size()][]; 
+			int i=0;
 			
-			DefaultTableModel model = (DefaultTableModel) table3.getModel();
-			model.addRow(data[i]);
-
-			i++;
+			if (table3.getRowCount() > 0) {
+	            for (int conta = table3.getRowCount() - 1; conta > -1; conta--) {
+	                ((DefaultTableModel) table3.getModel()).removeRow(conta);;
+	            }
+	        }
+			
+			for(Votavel el : set){	
+				data[i] = el.toTable();
+				
+				DefaultTableModel model = (DefaultTableModel) table3.getModel();
+				model.addRow(data[i]);
+	
+				i++;
+			}
 		}
 	}
 
 	private void buttonEliminarCandidatoActionPerformed(ActionEvent e) {
-		sge.removeCandidatoAR(eleicao, table2.getValueAt(table2.getSelectedRow(), 4));
+		sge.removeCandidatoAR(eleicao, (Lista) table1.getValueAt(table1.getSelectedRow(), 4), (CandidatoAR) table2.getValueAt(table2.getSelectedRow(), 4));
 		((DefaultTableModel) table2.getModel()).removeRow(table2.getSelectedRow());
 	}
 
@@ -485,7 +490,6 @@ public class GerirAR extends JFrame {
 			table2.getColumnModel().getColumn(4).setMinWidth(0);
 			table2.getColumnModel().getColumn(4).setWidth(0);
 			table2.getColumnModel().getColumn(4).setMaxWidth(0);
-			povoarTabelaCandidato();
 			scrollPane3.setViewportView(table2);
 		}
 		contentPane.add(scrollPane3);
