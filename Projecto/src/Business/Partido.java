@@ -82,7 +82,7 @@ public class Partido implements Votavel {
     public boolean equals(Object obj) {
 		if(this.getClass() != obj.getClass()) return false;
 		Partido part = (Partido) obj;
-		return this.nome==part.getNome() && this.sigla==part.getSigla() && this.simbolo==part.getSimbolo();
+		return this.nome.equals(part.getNome()) && this.sigla.equals(part.getSigla()) && this.simbolo.equals(part.getSimbolo());
 	}
 	
 	@Override
