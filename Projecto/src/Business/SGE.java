@@ -543,4 +543,25 @@ public class SGE {
 		}
 		return part;
 	}
+
+	public Set<Partido> getPartidos(){
+		Set<Partido> part = new HashSet<Partido>();
+		for(Partido p : this.partidos.values()){
+			if(!p.isRemovido()){
+				part.add(p);
+			}
+		}
+		return part;
+	}
+	
+	public Set<Coligacao> getColigacoes(){
+		Set<Coligacao> col = new HashSet<Coligacao>();
+		for(Coligacao c : this.coligacoes.values()){
+			if(!c.isRemovido()){
+				col.add(c);
+			}
+		}
+		return col;
+	}
+	
 }
