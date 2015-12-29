@@ -1,5 +1,5 @@
 /*
- * Created by JFormDesigner on Tue Dec 29 09:20:15 GMT 2015
+ * Created by JFormDesigner on Tue Dec 29 09:37:33 GMT 2015
  */
 
 package Presentation;
@@ -7,27 +7,31 @@ package Presentation;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.swing.*;
 import javax.swing.table.*;
 
-import Business.Lista;
+import Business.Coligacao;
 import Business.Partido;
 import Business.SGE;
+import Exception.ExceptionColigacaoExiste;
 import Exception.ExceptionPartidoExiste;
 import Exception.ExceptionPartidoNaoExiste;
+import com.jgoodies.forms.factories.*;
 
 /**
  * @author Octavio Maia
  */
-public class Partidos extends JFrame {
+public class ColigacaoInterface extends JFrame {
 	
 	private SGE sge;
 	
-	public Partidos(SGE s) {
+	public ColigacaoInterface(SGE s) {
 		sge = s;
 		initComponents();
+		this.setVisible(true);
 	}
 
 	private void button1ActionPerformed(ActionEvent e) {
@@ -40,54 +44,86 @@ public class Partidos extends JFrame {
 		}else
 			fileChooser1.setVisible(false);
 	}
-	
-	private void povoarTabela() {
-		Set<Partido> set = sge.getPartidos();
-		Object[][] data = new Object[set.size()][];
-		int i = 0;
-
-		if (table1.getRowCount() > 0) {
-			for (int conta = table1.getRowCount() - 1; conta > -1; conta--) {
-				((DefaultTableModel) table1.getModel()).removeRow(conta);
-			}
-		}
-
-		for (Partido el : set) {
-			data[i] = el.toTable();
-
-			DefaultTableModel model = (DefaultTableModel) table1.getModel();
-			model.addRow(data[i]);
-
-			i++;
-		}
-
-	}
-
-	private void buttonAtualizarActionPerformed(ActionEvent e) {
-		povoarTabela();
-	}
 
 	private void buttonEliminarActionPerformed(ActionEvent e) {
 		try {
-			sge.eliminarPartido((Partido) table1.getValueAt(table1.getSelectedRow(), 2));
+			sge.eliminarPartido((Partido) tableColigacao.getValueAt(tableColigacao.getSelectedRow(), 2));
+			povoarTabelaColigacao();
 		} catch (ExceptionPartidoNaoExiste e1) {
 			JOptionPane.showMessageDialog(null, e1.getMessage());
 		}
 	}
 
 	private void buttonAdicionarActionPerformed(ActionEvent e) {
-		try {
-			sge.addPartido(new Partido(0, sigla.getText(), nomeCandidato.getText(), pathImagem.getText()));
-			povoarTabela();
-		} catch (ExceptionPartidoExiste e1) {
-			JOptionPane.showMessageDialog(null, e1.getMessage());
+		Set<Partido> partidos = new HashSet<>();
+		int[] selecionadas;
+		
+		if (tablePartidos.getSelectedRowCount() >= 2) {
+			selecionadas = tablePartidos.getSelectedRows();
+		
+			for(Integer i : selecionadas){
+				partidos.add((Partido) tablePartidos.getValueAt(i, 2));
+			}
+		
+			try {
+				sge.addColigacao(new Business.Coligacao(0, sigla.getText(), nomeCandidato.getText(), pathImagem.getText(), partidos));
+				povoarTabelaColigacao();
+			} catch (ExceptionColigacaoExiste e1) {
+				JOptionPane.showMessageDialog(null, e1.getMessage());
+			}
+			
+		}else{
+			JOptionPane.showMessageDialog(null, "Seleciona no minimo dois partidos para criar uma coligação");
+		}
+	}
+	
+	private void povoarTabelaPartidos() {
+		Set<Partido> set = sge.getPartidos();
+		Object[][] data = new Object[set.size()][];
+		int i = 0;
+
+		if (tablePartidos.getRowCount() > 0) {
+			for (int conta = tablePartidos.getRowCount() - 1; conta > -1; conta--) {
+				((DefaultTableModel) tablePartidos.getModel()).removeRow(conta);
+			}
+		}
+
+		for (Partido el : set) {
+			data[i] = el.toTable();
+
+			DefaultTableModel model = (DefaultTableModel) tablePartidos.getModel();
+			model.addRow(data[i]);
+
+			i++;
 		}
 	}
 
+	private void povoarTabelaColigacao() {
+		Set<Coligacao> set = sge.getColigacoes();
+		Object[][] data = new Object[set.size()][];
+		int i = 0;
+
+		if (tableColigacao.getRowCount() > 0) {
+			for (int conta = tableColigacao.getRowCount() - 1; conta > -1; conta--) {
+				((DefaultTableModel) tableColigacao.getModel()).removeRow(conta);
+			}
+		}
+
+		for (Coligacao el : set) {
+			data[i] = el.toTable();
+
+			DefaultTableModel model = (DefaultTableModel) tableColigacao.getModel();
+			model.addRow(data[i]);
+
+			i++;
+		}
+	}
 
 	private void initComponents() {
 		// JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
 		// Generated using JFormDesigner Evaluation license - Octavio Maia
+		DefaultComponentFactory compFactory = DefaultComponentFactory.getInstance();
+		fileChooser1 = new JFileChooser();
 		label1 = new JLabel();
 		label2 = new JLabel();
 		label3 = new JLabel();
@@ -96,14 +132,16 @@ public class Partidos extends JFrame {
 		nomeCandidato = new JTextField();
 		pathImagem = new JTextField();
 		scrollPane1 = new JScrollPane();
-		table1 = new JTable();
-		buttonAtualizar = new JButton();
+		tableColigacao = new JTable();
 		buttonEliminar = new JButton();
 		buttonAdicionar = new JButton();
-		fileChooser1 = new JFileChooser();
+		scrollPane2 = new JScrollPane();
+		tablePartidos = new JTable();
+		separator1 = compFactory.createSeparator("Coliga\u00e7\u00f5es", SwingConstants.CENTER);
+		separator2 = compFactory.createSeparator("Partidos", SwingConstants.CENTER);
 
 		//======== this ========
-		setTitle("Gest\u00e3o de partidos");
+		setTitle("Gest\u00e3o de coliga\u00e7\u00f5es");
 		setResizable(false);
 		Container contentPane = getContentPane();
 		contentPane.setLayout(null);
@@ -153,45 +191,65 @@ public class Partidos extends JFrame {
 		//======== scrollPane1 ========
 		{
 
-			//---- table1 ----
-			table1.setModel(new DefaultTableModel(
+			//---- tableColigacao ----
+			tableColigacao.setModel(new DefaultTableModel(
 				new Object[][] {
 				},
 				new String[] {
 					"Nome", "Sigla", null
 				}
 			));
-			table1.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-			table1.getColumnModel().getColumn(2).setPreferredWidth(0);
-			table1.getColumnModel().getColumn(2).setMinWidth(0);
-			table1.getColumnModel().getColumn(2).setWidth(0);
-			table1.getColumnModel().getColumn(2).setMaxWidth(0);
-			povoarTabela();
-			scrollPane1.setViewportView(table1);
+			tableColigacao.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+			tableColigacao.getColumnModel().getColumn(2).setPreferredWidth(0);
+			tableColigacao.getColumnModel().getColumn(2).setMinWidth(0);
+			tableColigacao.getColumnModel().getColumn(2).setWidth(0);
+			tableColigacao.getColumnModel().getColumn(2).setMaxWidth(0);
+			povoarTabelaPartidos();
+			povoarTabelaColigacao();
+			scrollPane1.setViewportView(tableColigacao);
 		}
 		contentPane.add(scrollPane1);
-		scrollPane1.setBounds(20, 115, 470, 200);
-
-		//---- buttonAtualizar ----
-		buttonAtualizar.setText("Atualizar tabelas");
-		buttonAtualizar.setFont(new Font("Arial", Font.PLAIN, 14));
-		buttonAtualizar.addActionListener(e -> buttonAtualizarActionPerformed(e));
-		contentPane.add(buttonAtualizar);
-		buttonAtualizar.setBounds(15, 325, 155, buttonAtualizar.getPreferredSize().height);
+		scrollPane1.setBounds(20, 315, 470, 200);
 
 		//---- buttonEliminar ----
-		buttonEliminar.setText("Eliminar partido");
+		buttonEliminar.setText("Eliminar coliga\u00e7\u00e3o");
 		buttonEliminar.setFont(new Font("Arial", Font.PLAIN, 14));
 		buttonEliminar.addActionListener(e -> buttonEliminarActionPerformed(e));
 		contentPane.add(buttonEliminar);
-		buttonEliminar.setBounds(175, 325, 155, 25);
+		buttonEliminar.setBounds(140, 525, 155, 25);
 
 		//---- buttonAdicionar ----
-		buttonAdicionar.setText("Adicionar partido");
+		buttonAdicionar.setText("Adicionar coliga\u00e7\u00e3o");
 		buttonAdicionar.setFont(new Font("Arial", Font.PLAIN, 14));
 		buttonAdicionar.addActionListener(e -> buttonAdicionarActionPerformed(e));
 		contentPane.add(buttonAdicionar);
-		buttonAdicionar.setBounds(335, 325, 155, 25);
+		buttonAdicionar.setBounds(305, 525, 185, 25);
+
+		//======== scrollPane2 ========
+		{
+
+			//---- tablePartidos ----
+			tablePartidos.setModel(new DefaultTableModel(
+				new Object[][] {
+				},
+				new String[] {
+					"Nome", "Sigla", null
+				}
+			));
+			tablePartidos.getColumnModel().getColumn(2).setPreferredWidth(0);
+			tablePartidos.getColumnModel().getColumn(2).setMinWidth(0);
+			tablePartidos.getColumnModel().getColumn(2).setWidth(0);
+			tablePartidos.getColumnModel().getColumn(2).setMaxWidth(0);
+			povoarTabelaPartidos();
+			povoarTabelaColigacao();
+			scrollPane2.setViewportView(tablePartidos);
+		}
+		contentPane.add(scrollPane2);
+		scrollPane2.setBounds(20, 130, 470, 160);
+		contentPane.add(separator1);
+		separator1.setBounds(20, 295, 465, separator1.getPreferredSize().height);
+		contentPane.add(separator2);
+		separator2.setBounds(20, 110, 465, 14);
 
 		{ // compute preferred size
 			Dimension preferredSize = new Dimension();
@@ -206,13 +264,14 @@ public class Partidos extends JFrame {
 			contentPane.setMinimumSize(preferredSize);
 			contentPane.setPreferredSize(preferredSize);
 		}
-		setSize(525, 400);
+		setSize(525, 600);
 		setLocationRelativeTo(null);
 		// JFormDesigner - End of component initialization  //GEN-END:initComponents
 	}
 
 	// JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables
 	// Generated using JFormDesigner Evaluation license - Octavio Maia
+	private JFileChooser fileChooser1;
 	private JLabel label1;
 	private JLabel label2;
 	private JLabel label3;
@@ -221,10 +280,12 @@ public class Partidos extends JFrame {
 	private JTextField nomeCandidato;
 	private JTextField pathImagem;
 	private JScrollPane scrollPane1;
-	private JTable table1;
-	private JButton buttonAtualizar;
+	private JTable tableColigacao;
 	private JButton buttonEliminar;
 	private JButton buttonAdicionar;
-	private JFileChooser fileChooser1;
+	private JScrollPane scrollPane2;
+	private JTable tablePartidos;
+	private JComponent separator1;
+	private JComponent separator2;
 	// JFormDesigner - End of variables declaration  //GEN-END:variables
 }
