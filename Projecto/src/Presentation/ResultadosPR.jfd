@@ -74,6 +74,9 @@ new FormModel {
 						add( null )
 					} )
 					"font": &Font3 new java.awt.Font( "Arial", 0, 12 )
+					auxiliary() {
+						"JavaCodeGenerator.postInitCode": "povoarListaGlobais();"
+					}
 				} )
 			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
 				"width": 235
@@ -95,7 +98,7 @@ new FormModel {
 				name: "globaisBrancosN"
 				"font": #Font1
 				auxiliary() {
-					"JavaCodeGenerator.preInitCode": "globaisBrancosN.setText(\"\"+sge.getResultadoGlobalPR(eleicao, voltaBox.getSelectedIndex()+1).getBrancos());"
+					"JavaCodeGenerator.preInitCode": "globaisBrancosN.setText(\"\"+sge.getResultadoGlobalPR(eleicao,1).getBrancos());"
 				}
 			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
 				"width": 75
@@ -107,7 +110,7 @@ new FormModel {
 				name: "globaisNulosN"
 				"font": #Font1
 				auxiliary() {
-					"JavaCodeGenerator.preInitCode": "globaisNulosN.setText(\"\"+sge.getResultadoGlobalPR(eleicao, voltaBox.getSelectedIndex()+1).getNulos());"
+					"JavaCodeGenerator.preInitCode": "globaisNulosN.setText(\"\"+sge.getResultadoGlobalPR(eleicao, 1).getNulos());"
 				}
 			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
 				"width": 75
@@ -119,7 +122,7 @@ new FormModel {
 				name: "globaisAbstencaoN"
 				"font": #Font1
 				auxiliary() {
-					"JavaCodeGenerator.preInitCode": "globaisAbstencaoN.setText(\"\"+sge.getResultadoGlobalPR(eleicao, voltaBox.getSelectedIndex()+1).getAbstencao());"
+					"JavaCodeGenerator.preInitCode": "globaisAbstencaoN.setText(\"\"+sge.getResultadoGlobalPR(eleicao,1).getAbstencao());"
 				}
 			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
 				"width": 75
@@ -131,7 +134,7 @@ new FormModel {
 				name: "globaisAbstencaoP"
 				"font": #Font1
 				auxiliary() {
-					"JavaCodeGenerator.preInitCode": "globaisAbstencaoP.setText(Math.round(100.0 / eleicao.numeroEleitores() * sge.getResultadoGlobalPR(eleicao,voltaBox.getSelectedIndex()+1).getAbstencao())+\"%\");"
+					"JavaCodeGenerator.preInitCode": "globaisAbstencaoP.setText(Math.round(100.0 / eleicao.numeroEleitores() * sge.getResultadoGlobalPR(eleicao,1).getAbstencao())+\"%\");"
 				}
 			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
 				"width": 55
@@ -143,7 +146,7 @@ new FormModel {
 				name: "globaisNulosP"
 				"font": #Font1
 				auxiliary() {
-					"JavaCodeGenerator.preInitCode": "globaisNulosP.setText(Math.round(100.0 / eleicao.numeroEleitores() * sge.getResultadoGlobalPR(eleicao,voltaBox.getSelectedIndex()+1).getNulos())+\"%\");"
+					"JavaCodeGenerator.preInitCode": "globaisNulosP.setText(Math.round(100.0 / eleicao.numeroEleitores() * sge.getResultadoGlobalPR(eleicao,1).getNulos())+\"%\");"
 				}
 			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
 				"width": 55
@@ -155,42 +158,13 @@ new FormModel {
 				name: "globaisBrancosP"
 				"font": #Font1
 				auxiliary() {
-					"JavaCodeGenerator.preInitCode": "globaisBrancosP.setText(Math.round(100.0 / eleicao.numeroEleitores() * sge.getResultadoGlobalPR(eleicao,voltaBox.getSelectedIndex()+1).getBrancos())+\"%\");"
+					"JavaCodeGenerator.preInitCode": "globaisBrancosP.setText(Math.round(100.0 / eleicao.numeroEleitores() * sge.getResultadoGlobalPR(eleicao,1).getBrancos())+\"%\");"
 				}
 			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
 				"width": 55
 				"height": 17
 				"x": 480
 				"y": 60
-			} )
-			add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
-				name: "scrollCirculo"
-				"font": new java.awt.Font( "Arial", 0, 12 )
-				add( new FormComponent( "javax.swing.JTable" ) {
-					name: "tableCirculo"
-					"font": new java.awt.Font( "Arial", 0, 12 )
-					"model": new com.jformdesigner.model.SwingTableModel( new java.util.Vector, new java.util.Vector {
-						add( "Círculo" )
-						add( null )
-					}, new java.util.Vector {
-						add( null )
-						add( null )
-					}, new java.util.Vector {
-						add( false )
-						add( null )
-					}, new java.util.Vector {
-						add( new com.jformdesigner.model.SwingTableColumn( null, 0, 0, 0, false ) )
-						add( null )
-					} )
-					auxiliary() {
-						"JavaCodeGenerator.postInitCode": "tableCirculo.getColumnModel().getColumn(1).setPreferredWidth(0);\ntableCirculo.getColumnModel().getColumn(1).setMinWidth(0);\ntableCirculo.getColumnModel().getColumn(1).setWidth(0);\ntableCirculo.getColumnModel().getColumn(1).setMaxWidth(0);"
-					}
-				} )
-			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
-				"x": 15
-				"y": 385
-				"width": 130
-				"height": 190
 			} )
 			add( new FormComponent( "javax.swing.JLabel" ) {
 				name: "label12"
@@ -326,9 +300,9 @@ new FormModel {
 					}
 				} )
 			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
-				"width": 420
+				"width": 560
 				"height": 135
-				"x": 155
+				"x": 15
 				"y": 440
 			} )
 			add( new FormComponent( "javax.swing.JToolBar$Separator" ) {
@@ -398,6 +372,41 @@ new FormModel {
 				"y": 15
 				"width": 135
 				"height": 25
+			} )
+			add( new FormComponent( "javax.swing.JComboBox" ) {
+				name: "comboBox1"
+				"font": new java.awt.Font( "Arial", 0, 14 )
+				"model": new javax.swing.DefaultComboBoxModel {
+					selectedItem: "Aveiro"
+					addElement( "Aveiro" )
+					addElement( "Beja" )
+					addElement( "Braga" )
+					addElement( "Braganca" )
+					addElement( "Castelo Branco" )
+					addElement( "Coimbra" )
+					addElement( "Evora" )
+					addElement( "Faro" )
+					addElement( "Guarda" )
+					addElement( "Leiria" )
+					addElement( "Lisboa" )
+					addElement( "Portalegre" )
+					addElement( "Porto" )
+					addElement( "Santarem" )
+					addElement( "Setubal" )
+					addElement( "Viana do Castelo" )
+					addElement( "Vila Real" )
+					addElement( "Viseu" )
+					addElement( "Acores" )
+					addElement( "Madeira" )
+					addElement( "Europa" )
+					addElement( "Fora da Europa" )
+				}
+				addEvent( new FormEvent( "java.awt.event.ItemListener", "itemStateChanged", "comboBox1ItemStateChanged", true ) )
+			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
+				"width": 185
+				"height": 25
+				"x": 15
+				"y": 390
 			} )
 		}, new FormLayoutConstraints( null ) {
 			"size": new java.awt.Dimension( 605, 625 )
