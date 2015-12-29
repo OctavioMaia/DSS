@@ -12,11 +12,11 @@ import javax.swing.*;
 import javax.swing.border.*;
 import javax.swing.table.*;
 import Business.EleicaoPR;
+import Business.ListaPR;
 import Business.ListavelVotos;
 import Business.ResultadoGlobalAR;
 import Business.ResultadoGlobalPR;
 import Business.SGE;
-import Business.VotavelVotos;
 
 /**
  * @author Octavio Maia
@@ -43,9 +43,10 @@ public class ResultadosPR extends JFrame {
                 ((DefaultTableModel) tableResultadosGlobais.getModel()).removeRow(conta);
             }
         }
-		
-		for(ListavelVotos el : set){	
-			data[i] = el.toTable(historico.getTotEleitores());
+		int toteleitores = res_global.getTotEleitores();
+		for(ListavelVotos listavot : set){	
+			Object[] dataaux = {listavot.getVotos()/toteleitores*100, ((ListaPR)listavot.getLista()).getCandidato().getNome()};
+			data[i] =dataaux;
 			
 			DefaultTableModel model = (DefaultTableModel) tableResultadosGlobais.getModel();
 			model.addRow(data[i]);
@@ -59,7 +60,7 @@ public class ResultadosPR extends JFrame {
 	
 	private void initComponents() {
 		// JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
-		// Generated using JFormDesigner Evaluation license - Octavio Maia
+		// Generated using JFormDesigner Evaluation license - Rui Freitas
 		ResultadosPR = new JFrame();
 		label1 = new JLabel();
 		label2 = new JLabel();
@@ -215,7 +216,7 @@ public class ResultadosPR extends JFrame {
 			label12.setBounds(265, 360, 100, 17);
 
 			//---- circuloBrancosN ----
-			circuloBrancosN.setText(""+sge.getResultadoCirculoPR(eleicao, voltaBox.getSelectedIndex()+1, (int) tableCirculo.getModel().getValueAt(tableCirculo.getSelectedRow(), 1)).getBrancos());
+			circuloBrancosN.setText(""+sge.getResultadoCirculoPR(eleicao, 1,1).getBrancos());
 			circuloBrancosN.setFont(new Font("Arial", Font.PLAIN, 14));
 			ResultadosPRContentPane.add(circuloBrancosN);
 			circuloBrancosN.setBounds(380, 360, 75, 17);
@@ -394,7 +395,7 @@ public class ResultadosPR extends JFrame {
 	}
 
 	// JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables
-	// Generated using JFormDesigner Evaluation license - Octavio Maia
+	// Generated using JFormDesigner Evaluation license - Rui Freitas
 	private JFrame ResultadosPR;
 	private JLabel label1;
 	private JLabel label2;
