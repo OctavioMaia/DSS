@@ -65,7 +65,7 @@ public class CandidatoAR extends Candidato {
 	
 	@Override
 	public Object[] toTable(){
-		Object[] lista = {super.getNome(), super.getBi(), this.partido.getSigla(),this};
+		Object[] lista = {super.getNome(), super.getBi(), this.partido.getSigla(),this.tipo,this};
     	return lista;
 	}
 }

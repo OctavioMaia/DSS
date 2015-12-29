@@ -73,6 +73,7 @@ public class GerirPR {
 		try{
 			Candidato c = new Candidato(nome, bi, profissao, dataN, residencia, naturalidade, foto);
 			sge.addCandidatoPR(eleicao,c);
+			povoarTabela();
 			
 			//reset tabelas
 			nomeCandidato.setText("");
@@ -84,8 +85,10 @@ public class GerirPR {
 			this.pathImagem.setText("");
 		}catch(ExceptionListaExiste | ExceptionLimiteCandidatos|  ExceptionMandanteInvalido | ExceptionEleicaoEstado ex){
 			JOptionPane.showMessageDialog(null, ex.getMessage());
+		}catch(NumberFormatException ex){
+			JOptionPane.showMessageDialog(null, "Por favor insira um número no campo B.I/C.C");
 		}
-	}
+	}	
 
 	//data inicio
 	private void button1ActionPerformed(ActionEvent e) {
@@ -174,10 +177,6 @@ public class GerirPR {
 		}
 	}
 
-	private void buttonAtualizarActionPerformed(ActionEvent e) {
-		povoarTabela();
-	}
-
 	private void tableCandidatosFocusGained(FocusEvent e) {
 		if(tableCandidatos.getSelectedColumnCount()==1) buttonEliminarCandidato.setEnabled(true);
 	}
@@ -216,7 +215,6 @@ public class GerirPR {
 		tableCandidatos = new JTable();
 		labelFoto = new JLabel();
 		buttonEliminarCandidato = new JButton();
-		button1 = new JButton();
 		dialogoCalendario = new JDialog();
 		calendar1 = new JCalendar();
 		buttonConfirmarDataInicio = new JButton();
@@ -438,13 +436,6 @@ public class GerirPR {
 			GerirPRContentPane.add(buttonEliminarCandidato);
 			buttonEliminarCandidato.setBounds(375, 540, 154, buttonEliminarCandidato.getPreferredSize().height);
 
-			//---- button1 ----
-			button1.setText("Atualizar tabela");
-			button1.setFont(new Font("Arial", Font.PLAIN, 14));
-			button1.addActionListener(e -> buttonAtualizarActionPerformed(e));
-			GerirPRContentPane.add(button1);
-			button1.setBounds(15, 585, 335, 25);
-
 			{ // compute preferred size
 				Dimension preferredSize = new Dimension();
 				for(int i = 0; i < GerirPRContentPane.getComponentCount(); i++) {
@@ -556,7 +547,6 @@ public class GerirPR {
 	private JTable tableCandidatos;
 	private JLabel labelFoto;
 	private JButton buttonEliminarCandidato;
-	private JButton button1;
 	private JDialog dialogoCalendario;
 	private JCalendar calendar1;
 	private JButton buttonConfirmarDataInicio;
