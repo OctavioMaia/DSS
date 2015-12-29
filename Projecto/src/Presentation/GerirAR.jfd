@@ -543,7 +543,7 @@ new FormModel {
 		add( new FormComponent( "javax.swing.JFileChooser" ) {
 			name: "fileChooser1"
 		}, new FormLayoutConstraints( null ) {
-			"location": new java.awt.Point( 1055, 90 )
+			"location": new java.awt.Point( 1045, 30 )
 			"size": new java.awt.Dimension( 480, 310 )
 		} )
 		add( new FormWindow( "javax.swing.JDialog", new FormLayoutManager( class com.jformdesigner.runtime.NullLayout ) {
@@ -587,7 +587,7 @@ new FormModel {
 			} )
 		}, new FormLayoutConstraints( null ) {
 			"size": new java.awt.Dimension( 225, 235 )
-			"location": new java.awt.Point( 1015, 560 )
+			"location": new java.awt.Point( 1075, 375 )
 		} )
 	}
 }
