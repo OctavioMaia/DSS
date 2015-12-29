@@ -61,10 +61,10 @@ new FormModel {
 			} )
 			add( new FormComponent( "javax.swing.JLabel" ) {
 				name: "label2"
-				"text": "Círculo nº:"
+				"text": "Círculo"
 				"font": #Font0
 			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
-				"width": 75
+				"width": 60
 				"height": 25
 				"x": 10
 				"y": 125
@@ -73,35 +73,35 @@ new FormModel {
 				name: "comboBox1"
 				"font": new java.awt.Font( "Arial", 0, 14 )
 				"model": new javax.swing.DefaultComboBoxModel {
-					selectedItem: "1"
-					addElement( "1" )
-					addElement( "2" )
-					addElement( "3" )
-					addElement( "4" )
-					addElement( "5" )
-					addElement( "6" )
-					addElement( "7" )
-					addElement( "8" )
-					addElement( "9" )
-					addElement( "10" )
-					addElement( "11" )
-					addElement( "12" )
-					addElement( "13" )
-					addElement( "14" )
-					addElement( "15" )
-					addElement( "16" )
-					addElement( "17" )
-					addElement( "18" )
-					addElement( "19" )
-					addElement( "20" )
-					addElement( "21" )
-					addElement( "22" )
+					selectedItem: "Aveiro"
+					addElement( "Aveiro" )
+					addElement( "Beja" )
+					addElement( "Braga" )
+					addElement( "Braganca" )
+					addElement( "Castelo Branco" )
+					addElement( "Coimbra" )
+					addElement( "Evora" )
+					addElement( "Faro" )
+					addElement( "Guarda" )
+					addElement( "Leiria" )
+					addElement( "Lisboa" )
+					addElement( "Portalegre" )
+					addElement( "Porto" )
+					addElement( "Santarem" )
+					addElement( "Setubal" )
+					addElement( "Viana do Castelo" )
+					addElement( "Vila Real" )
+					addElement( "Viseu" )
+					addElement( "Acores" )
+					addElement( "Madeira" )
+					addElement( "Europa" )
+					addElement( "Fora da Europa" )
 				}
 				addEvent( new FormEvent( "java.awt.event.ItemListener", "itemStateChanged", "comboBox1ItemStateChanged", true ) )
 			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
-				"x": 95
+				"x": 80
 				"y": 125
-				"width": 75
+				"width": 115
 				"height": 25
 			} )
 			add( new FormComponent( "javax.swing.JLabel" ) {
@@ -162,7 +162,7 @@ new FormModel {
 			} )
 			add( new FormComponent( "javax.swing.JButton" ) {
 				name: "buttonCancelar"
-				"text": "Cancelar"
+				"text": "Sair"
 				"font": #Font1
 				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "buttonCancelarActionPerformed", true ) )
 			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {

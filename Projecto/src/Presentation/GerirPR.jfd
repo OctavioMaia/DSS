@@ -92,10 +92,10 @@ new FormModel {
 				"font": #Font2
 				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "buttonSairActionPerformed", true ) )
 			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
-				"width": 95
+				"width": 155
 				"height": 25
-				"x": 435
-				"y": 590
+				"x": 375
+				"y": 585
 			} )
 			add( new FormComponent( "javax.swing.JButton" ) {
 				name: "buttonData"
@@ -110,8 +110,10 @@ new FormModel {
 			} )
 			add( new FormComponent( "javax.swing.JLabel" ) {
 				name: "dataInicioEleicao"
-				"text": "dd/mm/aa"
 				"font": #Font0
+				auxiliary() {
+					"JavaCodeGenerator.preInitCode": "Calendar cal = eleicao.getData();\nint dia = cal.get(Calendar.DAY_OF_MONTH);\nint mes = cal.get(Calendar.MONTH)+1;\nint ano = cal.get(Calendar.YEAR);\ndataInicioEleicao.setText(dia+\"/\"+mes+\"/\"+ano);"
+				}
 			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
 				"width": 115
 				"height": 17
@@ -267,8 +269,9 @@ new FormModel {
 						add( new com.jformdesigner.model.SwingTableColumn( null, 0, 0, 0, false ) )
 					} )
 					auxiliary() {
-						"JavaCodeGenerator.postInitCode": "tableCandidatos.getColumnModel().getColumn(2).setPreferredWidth(0);\ntableCandidatos.getColumnModel().getColumn(2).setMinWidth(0);\ntableCandidatos.getColumnModel().getColumn(2).setWidth(0);\ntableCandidatos.getColumnModel().getColumn(2).setMaxWidth(0);"
+						"JavaCodeGenerator.postInitCode": "tableCandidatos.getColumnModel().getColumn(2).setPreferredWidth(0);\ntableCandidatos.getColumnModel().getColumn(2).setMinWidth(0);\ntableCandidatos.getColumnModel().getColumn(2).setWidth(0);\ntableCandidatos.getColumnModel().getColumn(2).setMaxWidth(0);\npovoarTabela();"
 					}
+					addEvent( new FormEvent( "java.awt.event.FocusListener", "focusGained", "tableCandidatosFocusGained", true ) )
 				} )
 			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
 				"x": 15
@@ -278,19 +281,12 @@ new FormModel {
 			} )
 			add( new FormComponent( "javax.swing.JLabel" ) {
 				name: "labelFoto"
+				"text": "Imagem"
 			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
 				"x": 375
 				"y": 370
 				"width": 150
 				"height": 150
-			} )
-			add( new FormComponent( "javax.swing.JSeparator" ) {
-				name: "separator3"
-			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
-				"width": 520
-				"height": 5
-				"x": 10
-				"y": 580
 			} )
 			add( new FormComponent( "javax.swing.JButton" ) {
 				name: "buttonEliminarCandidato"
@@ -306,24 +302,6 @@ new FormModel {
 		}, new FormLayoutConstraints( null ) {
 			"location": new java.awt.Point( 5, 5 )
 			"size": new java.awt.Dimension( 560, 660 )
-		} )
-		add( new FormWindow( "javax.swing.JDialog", new FormLayoutManager( class com.jformdesigner.runtime.NullLayout ) ) {
-			name: "dialog1"
-			"resizable": false
-			"font": new java.awt.Font( "Arial", 0, 12 )
-			"title": "Gestor de Ficheiros"
-			add( new FormComponent( "javax.swing.JFileChooser" ) {
-				name: "fileChooser1"
-				"font": new java.awt.Font( "Arial", 0, 11 )
-			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
-				"x": 0
-				"y": 0
-				"width": 437
-				"height": 315
-			} )
-		}, new FormLayoutConstraints( null ) {
-			"location": new java.awt.Point( 590, 5 )
-			"size": new java.awt.Dimension( 450, 355 )
 		} )
 		add( new FormWindow( "javax.swing.JDialog", new FormLayoutManager( class com.jformdesigner.runtime.NullLayout ) {
 			"autoSize": false
@@ -410,6 +388,13 @@ new FormModel {
 		}, new FormLayoutConstraints( null ) {
 			"size": #Dimension0
 			"location": new java.awt.Point( 850, 375 )
+		} )
+		add( new FormComponent( "javax.swing.JFileChooser" ) {
+			name: "fileChooser1"
+			"font": new java.awt.Font( "Arial", 0, 11 )
+		}, new FormLayoutConstraints( null ) {
+			"location": new java.awt.Point( 610, 5 )
+			"size": new java.awt.Dimension( 475, 310 )
 		} )
 	}
 }

@@ -1,7 +1,6 @@
 package Business;
 
 import java.util.Calendar;
-import java.util.Date;
 
 public class CandidatoAR extends Candidato {
 
@@ -62,5 +61,11 @@ public class CandidatoAR extends Candidato {
 	
 	public String toString() {
 		return "Candidato " + super.getNome() + ", com BI nº"+super.getBi() + ", nascido a " + super.getDataNasc().getTime() + ", pertencente ao partido " + partido;
+	}
+	
+	@Override
+	public Object[] toTable(){
+		Object[] lista = {super.getNome(), super.getBi(), this.partido.getSigla(),this.tipo,this};
+    	return lista;
 	}
 }

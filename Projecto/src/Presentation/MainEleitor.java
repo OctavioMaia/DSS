@@ -12,7 +12,7 @@ import java.util.Calendar;
 import javax.swing.*;
 import javax.swing.table.*;
 
-import Business.SGE;
+import Business.*;
 
 /**
  * @author Octavio Maia
@@ -28,12 +28,15 @@ public class MainEleitor {
 	}
 
 	private void buttonVotarActionPerformed(ActionEvent e) {
-		Votar v = new Votar(sge);
-		v.setVisible(true);
+		new Votar(sge);
 	}
 
 	private void button1ActionPerformed(ActionEvent e) {
-		ResultadosAR gui = new ResultadosAR(null, 0);
+		if(tableEleicoes.getValueAt(tableEleicoes.getSelectedRow(), 2).getClass().getSimpleName().equals("EleicaoAR")){
+			ResultadosAR gui = new ResultadosAR(null, (EleicaoAR) tableEleicoes.getValueAt(tableEleicoes.getSelectedRow(), 2));
+		}else{
+			ResultadosPR gui = new ResultadosPR(null, (EleicaoPR) tableEleicoes.getValueAt(tableEleicoes.getSelectedRow(), 2));
+		}
 	}
 
 	private void scrollPane1PropertyChange(PropertyChangeEvent e) {
@@ -49,23 +52,6 @@ public class MainEleitor {
 	}
 
 	private void initComponents(SGE sge) {
-		/*vars
-		String nome,tipo,data;
-		Calendar cal = sge.eleicaoAtiva().getData();
-
-		nome = sge.getEleitor().getNome();
-		
-		if(sge.eleicaoAtiva().getClass().getSimpleName().equals("EleicaoAR")) 
-			tipo = "Eleição A.R.";
-		else 
-			tipo = "Eleição P.R.";
-		
-		data =  cal.get(Calendar.DAY_OF_WEEK)+"/"+cal.get(Calendar.MONTH)+"/"+cal.get(Calendar.YEAR);
-		
-		//fim vars
-
-		*/
-		
 		// JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
 		// Generated using JFormDesigner Evaluation license - Octavio Maia
 		frameEleitor = new JFrame();
@@ -94,53 +80,55 @@ public class MainEleitor {
 			label1.setText("Nome do eleitor:");
 			label1.setFont(new Font("Arial", Font.PLAIN, 14));
 			frameEleitorContentPane.add(label1);
-			label1.setBounds(new Rectangle(new Point(20, 20), label1.getPreferredSize()));
+			label1.setBounds(20, 15, label1.getPreferredSize().width, 25);
 
 			//---- label2 ----
 			label2.setText("Tipo de elei\u00e7\u00e3o:");
 			label2.setFont(new Font("Arial", Font.PLAIN, 14));
 			frameEleitorContentPane.add(label2);
-			label2.setBounds(20, 50, 103, 17);
+			label2.setBounds(20, 45, 103, 25);
 
 			//---- label3 ----
 			label3.setText("Data de in\u00edcio:");
 			label3.setFont(new Font("Arial", Font.PLAIN, 14));
 			frameEleitorContentPane.add(label3);
-			label3.setBounds(20, 80, 103, 17);
+			label3.setBounds(20, 75, 103, 25);
 
 			//---- labelNome ----
-			//labelNome.setText(sge.getEleitor().getNome());
+			labelNome.setText(sge.getEleitor().getNome());
 			labelNome.setFont(new Font("Arial", Font.PLAIN, 14));
 			frameEleitorContentPane.add(labelNome);
-			labelNome.setBounds(140, 20, 103, 17);
+			labelNome.setBounds(140, 15, 310, 25);
 
 			//---- labelEleicao ----
-			//if(sge.eleicaoAtiva().getClass().getSimpleName().equals("EleicaoAR")) labelEleicao.setText("Eleição Assembleia República");
-			//else labelEleicao.setText("Eleição Presidência República");
+			if(sge.eleicaoAtiva().getClass().getSimpleName().equals("EleicaoAR")) 
+				labelEleicao.setText("Eleição Assembleia República");
+			else 
+				labelEleicao.setText("Eleição Presidência República");
 			labelEleicao.setFont(new Font("Arial", Font.PLAIN, 14));
 			frameEleitorContentPane.add(labelEleicao);
-			labelEleicao.setBounds(140, 50, 103, 17);
+			labelEleicao.setBounds(140, 45, 310, 25);
 
 			//---- labelDataInicio ----
-			//labelDataInicio.setText(sge.eleicaoAtiva().getData().get(Calendar.DAY_OF_MONTH)+"/"+sge.eleicaoAtiva().getData().get(Calendar.MONTH)+"/"+sge.eleicaoAtiva().getData().get(Calendar.YEAR));
+			labelDataInicio.setText(sge.eleicaoAtiva().getData().get(Calendar.DAY_OF_MONTH)+"/"+sge.eleicaoAtiva().getData().get(Calendar.MONTH)+"/"+sge.eleicaoAtiva().getData().get(Calendar.YEAR));
 			labelDataInicio.setFont(new Font("Arial", Font.PLAIN, 14));
 			frameEleitorContentPane.add(labelDataInicio);
-			labelDataInicio.setBounds(140, 80, 103, 17);
+			labelDataInicio.setBounds(140, 75, 310, 25);
 
 			//---- buttonVotar ----
 			buttonVotar.setText("Votar");
 			buttonVotar.setFont(new Font("Arial", Font.BOLD, 14));
 			buttonVotar.addActionListener(e -> buttonVotarActionPerformed(e));
 			frameEleitorContentPane.add(buttonVotar);
-			buttonVotar.setBounds(285, 25, 85, 55);
+			buttonVotar.setBounds(480, 25, 85, 55);
 			frameEleitorContentPane.add(separator2);
-			separator2.setBounds(10, 110, 365, 10);
+			separator2.setBounds(10, 110, 555, 5);
 
 			//---- label5 ----
 			label5.setText("Hist\u00f3rico de Elei\u00e7\u00f5es");
 			label5.setFont(new Font("Arial", Font.PLAIN, 14));
 			frameEleitorContentPane.add(label5);
-			label5.setBounds(new Rectangle(new Point(20, 120), label5.getPreferredSize()));
+			label5.setBounds(new Rectangle(new Point(15, 115), label5.getPreferredSize()));
 
 			//======== scrollPane1 ========
 			{
@@ -155,7 +143,6 @@ public class MainEleitor {
 				//---- tableEleicoes ----
 				tableEleicoes.setModel(new DefaultTableModel(
 					new Object[][] {
-						{null, null, null},
 					},
 					new String[] {
 						"Data de in\u00edcio", "Tipo de Elei\u00e7\u00e3o", "id"
@@ -181,6 +168,7 @@ public class MainEleitor {
 					cm.getColumn(0).setResizable(false);
 				}
 				tableEleicoes.setFont(new Font("Arial", Font.PLAIN, 12));
+				tableEleicoes.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 				tableEleicoes.addMouseListener(new MouseAdapter() {
 					@Override
 					public void mouseClicked(MouseEvent e) {
@@ -194,7 +182,7 @@ public class MainEleitor {
 				scrollPane1.setViewportView(tableEleicoes);
 			}
 			frameEleitorContentPane.add(scrollPane1);
-			scrollPane1.setBounds(15, 140, 360, 200);
+			scrollPane1.setBounds(15, 140, 555, 200);
 
 			//---- button1 ----
 			button1.setText("Ver resultados");
@@ -202,7 +190,7 @@ public class MainEleitor {
 			button1.setEnabled(false);
 			button1.addActionListener(e -> button1ActionPerformed(e));
 			frameEleitorContentPane.add(button1);
-			button1.setBounds(15, 345, 360, button1.getPreferredSize().height);
+			button1.setBounds(15, 345, 555, button1.getPreferredSize().height);
 
 			{ // compute preferred size
 				Dimension preferredSize = new Dimension();
@@ -217,7 +205,7 @@ public class MainEleitor {
 				frameEleitorContentPane.setMinimumSize(preferredSize);
 				frameEleitorContentPane.setPreferredSize(preferredSize);
 			}
-			frameEleitor.setSize(400, 415);
+			frameEleitor.setSize(600, 415);
 			frameEleitor.setLocationRelativeTo(null);
 		}
 		// JFormDesigner - End of component initialization  //GEN-END:initComponents

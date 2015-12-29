@@ -29,11 +29,11 @@ public class Votar extends JFrame {
 	private Eleicao eleicao;
 	private Boletim boletim;
 	private SGE sge;
+	private String path;
 	
 	public Votar(SGE s) {
 		//sge = s;
 		//eleicao = sge.eleicaoAtiva();
-		//boletim = sge.getBoletim(eleicao, sge.getEleitor());
 		initComponents();
 		this.setVisible(true);
 	}
@@ -44,31 +44,41 @@ public class Votar extends JFrame {
 	}
 
 	private void buttonVotarActionPerformed(ActionEvent e) {
-		List<Listavel> a = boletim.getListas();
-		Lista lista_ar = null;
-		ListaPR lista_pr = null;
 		Eleitor eleitor = sge.getEleitor();
 		
 		if(table1.getSelectedRowCount()==1){
-			for(Listavel l : a){
-				if(l.getClass().getSimpleName().equals("Lista")){
-					lista_ar = (Lista) l;
-					if(lista_ar.getNome().equals(table1.getModel().getValueAt(table1.getSelectedRow(), table1.getSelectedColumn()))){
-						sge.addVoto(eleicao, lista_ar, eleitor);
-						break;
-					}
-				}else{
-					lista_pr = (ListaPR) l;
-					if(lista_pr.getCandidato().getNome().equals(table1.getModel().getValueAt(table1.getSelectedRow(), table1.getSelectedColumn()))){
-						sge.addVoto(eleicao, lista_pr, eleitor);
-						break;
-					}
-				}
-			}			
+			sge.addVoto(eleicao, (Listavel) table1.getValueAt(table1.getSelectedRow(), 2), eleitor);			
 		}else if(table1.getSelectedRowCount()>1){
 			sge.addVotoNulo(eleicao, eleitor);
 		}else{
 			sge.addVotoBranco(eleicao, eleitor);
+		}
+	}
+
+	private void povoarTabela() {
+		boletim = sge.getBoletim(eleicao, sge.getEleitor());
+		int i = 0;
+		List <Listavel> lista = boletim.getListas();
+		Object[][] data = new Object[lista.size()][]; 
+		
+		for(Listavel l :lista){
+			data[i] = l.toTable();
+			
+			DefaultTableModel model = (DefaultTableModel) table1.getModel();
+			model.addRow(data[i]);
+			
+			i++;
+		}
+	}
+
+	private void table1FocusGained(FocusEvent e) {
+		Listavel l;
+		
+		for (int i = 0; i < table1.getRowCount(); i++) {
+			if (table1.isRowSelected(i) && table1.getSelectedRowCount()==1) {
+				l = (Listavel) table1.getValueAt(table1.getSelectedRow(), 2);
+				path = l.pathImage();
+			}
 		}
 	}
 
@@ -104,19 +114,12 @@ public class Votar extends JFrame {
 				new Object[][] {
 				},
 				new String[] {
-					"Listas"
+					"Nome", "Identifica\u00e7\u00e3o", null
 				}
 			) {
-				Class<?>[] columnTypes = new Class<?>[] {
-					String.class
-				};
 				boolean[] columnEditable = new boolean[] {
-					false
+					false, true, true
 				};
-				@Override
-				public Class<?> getColumnClass(int columnIndex) {
-					return columnTypes[columnIndex];
-				}
 				@Override
 				public boolean isCellEditable(int rowIndex, int columnIndex) {
 					return columnEditable[columnIndex];
@@ -127,15 +130,30 @@ public class Votar extends JFrame {
 				cm.getColumn(0).setResizable(false);
 			}
 			table1.setFont(new Font("Arial", Font.PLAIN, 12));
+			table1.addFocusListener(new FocusAdapter() {
+				@Override
+				public void focusGained(FocusEvent e) {
+					table1FocusGained(e);
+				}
+			});
+			table1.getColumnModel().getColumn(2).setPreferredWidth(0);
+			table1.getColumnModel().getColumn(2).setMinWidth(0);
+			table1.getColumnModel().getColumn(2).setWidth(0);
+			table1.getColumnModel().getColumn(2).setMaxWidth(0);
+			povoarTabela();
 			scrollPane1.setViewportView(table1);
 		}
 		contentPane.add(scrollPane1);
 		scrollPane1.setBounds(15, 45, 230, 200);
+
+		//---- labelImagem ----
+		labelImagem.setIcon(new ImageIcon(getClass().getResource(path)));
+		labelImagem.setText("Imagem");
 		contentPane.add(labelImagem);
 		labelImagem.setBounds(290, 45, 150, 150);
 
 		//---- nomeEleitor ----
-		//nomeEleitor.setText(sge.getEleitor().getNome());
+		nomeEleitor.setText(sge.getEleitor().getNome());
 		nomeEleitor.setFont(new Font("Arial", Font.PLAIN, 14));
 		contentPane.add(nomeEleitor);
 		nomeEleitor.setBounds(125, 15, 335, 20);
@@ -145,7 +163,7 @@ public class Votar extends JFrame {
 		buttonLimpar.setFont(new Font("Arial", Font.PLAIN, 14));
 		buttonLimpar.addActionListener(e -> buttonLimparActionPerformed(e));
 		contentPane.add(buttonLimpar);
-		buttonLimpar.setBounds(new Rectangle(new Point(280, 220), buttonLimpar.getPreferredSize()));
+		buttonLimpar.setBounds(280, 220, buttonLimpar.getPreferredSize().width, 25);
 
 		//---- buttonVotar ----
 		buttonVotar.setText("Votar");

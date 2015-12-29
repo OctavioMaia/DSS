@@ -182,18 +182,33 @@ public class EleicaoPR extends Eleicao {
 		Random r = new Random();
 		int nListas = listas.size();
 		int rand;
+		System.out.println("geraBoletim0");
 		for (ListaPR listaPR : listas) {
-			rand = r.nextInt(nListas - 1);
-			while (nums.contains(rand)) {
-				rand = r.nextInt(nListas - 1);
-			}
+			System.out.println("geraBoletim1");
+			rand = r.nextInt(nListas);
+			//if(nums.size()<nListas){
+				while (nums.contains(rand)) {
+					//System.out.println("geraBoletim_while");
+					rand = r.nextInt(nListas);
+					System.out.println("nlistas:"+nListas);
+					System.out.println("rand"+rand);
+				}
+			//}
+			System.out.println("geraBoletim2");
 			if (!this.volta2) {
+				System.out.println("geraBoletim3");
 				listaPR.setOrdem1(rand);
+				System.out.println("geraBoletim4");
 			} else {
+				System.out.println("geraBoletim5");
 				listaPR.setOrdem2(rand);
+				System.out.println("geraBoletim6");
 			}
+			System.out.println("geraBoletim7");
 			nums.add(rand);
+			System.out.println("geraBoletim8");
 			this.listas.put(listaPR.getIdListaPR(), listaPR);
+			System.out.println("geraBoletim9");
 		}
 	}
 
@@ -211,10 +226,16 @@ public class EleicaoPR extends Eleicao {
 		}else{
 			reslt = this.voltaR2.values();
 		}
+		int i =0;
 		for (ResultadoCirculoPR resC : reslt) {
 			validos = resC.getValidos();
 			for (ListaPR lista : validos.keySet()) {
-				segVolta.put(lista, segVolta.get(lista) + validos.get(lista));
+				if(segVolta.get(lista)==null)
+					i=0;
+				else 
+					i = segVolta.get(lista);
+				System.out.println(validos.get(lista));
+				segVolta.put(lista, i + validos.get(lista));
 				// linha a rever
 			}
 		}
@@ -251,24 +272,34 @@ public class EleicaoPR extends Eleicao {
 	@Override
 	public void iniciar() throws ExceptionIniciarEleicao {
 		if (super.estado(-1)) {// iniciar depois da eleicao ter sido criada
+			System.out.println("pr_debug1");
+			super.setEstado(0);
+			System.out.println("pr_debug2");
 			Collection<ListaPR> list = this.listas.values();
 			this.geraBoletim(list);
+			System.out.println("pr_debug3");
 			for (ResultadoCirculoPR resC : this.voltaR1.values()) {
 				resC.addListas(list);
 				this.voltaR1.put(resC.getCirculo().getId(), resC);
 			}
+			System.out.println("debug4");
 		} else {
+			System.out.println("debug5");
 			if (super.estado(0) && this.volta2) { // iniciar segunda volta
+				System.out.println("debug6");
 				Collection<ListaPR> list = this.disputaSegundaVolta(this.resultadosVolta(1));
 				if (list.size() == 2) {
 					this.geraBoletim(list);
+					System.out.println("debug7");
 					for (ResultadoCirculoPR resC : this.voltaR2.values()) {
+						System.out.println("debug8");
 						resC.addListas(list);
 						this.voltaR2.put(resC.getCirculo().getId(), resC);
 					}
 				}
 			} else {
-				throw new ExceptionIniciarEleicao("Inpossivel iniciar Elicão;");
+				System.out.println("debug9");
+				throw new ExceptionIniciarEleicao("Impossivel iniciar Eleicão");
 			}
 		}
 	}
@@ -278,16 +309,20 @@ public class EleicaoPR extends Eleicao {
 		if (super.estado(0) && this.volta2 == false) {
 			// terminar primeira volta
 			super.setPermitirVotar(false);
+			System.out.println("permitevotarfalse");
 			// verificar se ouve maioria absoluta
 			if (verifacarMaioria() == false) {
 				// criar segunda volta
 				this.volta2 = true;
+				System.out.println("volta2");
 			} else {
 				super.setEstado(1);
+				System.out.println("estado1");
 			}
 		} else {
 			// terminar segunda volta
 			if (volta2) {
+				System.out.println("volta2else");
 				super.setPermitirVotar(false);
 				super.setEstado(1);
 			}
@@ -297,7 +332,6 @@ public class EleicaoPR extends Eleicao {
 	private Calendar defData2(Calendar data1) {
 		Calendar data2aux = new GregorianCalendar();
 		data2aux.set(data1.get(Calendar.YEAR), data1.get(Calendar.MONTH), data1.get(Calendar.DAY_OF_YEAR));
-		;
 		data2aux.add(Calendar.DAY_OF_YEAR, 30);
 		while (data2aux.get(Calendar.DAY_OF_WEEK) != Calendar.SUNDAY) {
 			data2aux.add(Calendar.DAY_OF_YEAR, 1);
@@ -340,10 +374,14 @@ public class EleicaoPR extends Eleicao {
 
 	private boolean verifacarMaioria() {
 		boolean ver = false;
+		System.out.println(ver);
 		Iterator<ListavelVotos> itLV = this.resultadosVolta(1).iterator();
+		
 		if (itLV.hasNext() && itLV.next().getVotos() > (super.numeroVotos() / 2)) {
 			ver = true;
 		}
+		
+		System.out.println("fim"+ver);
 		return ver;
 	}
 
@@ -422,4 +460,26 @@ public class EleicaoPR extends Eleicao {
 		}
 		return nulos;
 	}
+
+	public Collection<ListaPR> getLista(){
+		return listas.values();
+	}
+	
+	@Override
+	public Object[] toTable() {
+		Object[] lista = {super.getData().getTime(), "Presidência da República", this};
+	    return lista;
+	}
+
+	@Override
+	public boolean eleitorVotar(Eleitor e) {
+		boolean res;
+		if(this.volta2==false){
+			res = super.getVotantes().contains(e.getnIdent());
+		}else{
+			res = this.votantes2.contains(e.getnIdent());
+		}
+		return res;
+	}
+
 }

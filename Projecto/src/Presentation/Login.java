@@ -15,11 +15,10 @@ import Business.SGE;
  */
 public class Login  {
 
-	boolean boolean_erro = false;
-	private SGE local; //TODO verificar se esta correto
+	private SGE local;
 	
 	public Login(SGE sge){
-		sge=local;
+		local=sge;
 		initComponents(local);
 		frameLogin.setVisible(true);
 	}
@@ -29,10 +28,20 @@ public class Login  {
 			String pw = new String(textPassword.getPassword());
 			int numeroEleitor = Integer.parseInt(textUsername.getText());
 
-			if(local.login(numeroEleitor, pw)) boolean_erro = false;
-			else boolean_erro = true;
+			if(local.login(numeroEleitor, pw)){				
+				if(local.getEleitor()==null){
+					frameLogin.setVisible(false);
+					new MainAdmin(local);
+				}
+				else{
+					frameLogin.setVisible(false);
+					new MainEleitor(local);
+				}
+			}else 
+				labelPasswordErrada.setVisible(true);
 			
 		}catch(NumberFormatException ex){
+			labelPasswordErrada.setVisible(true);
 			JOptionPane.showMessageDialog(null, "Introduza o seu número de eleitor correto!");
 		}
 	}
@@ -60,7 +69,7 @@ public class Login  {
 			frameLogin.setResizable(false);
 			frameLogin.setTitle("Sistemas de Elei\u00e7\u00f5es");
 			frameLogin.setType(Window.Type.UTILITY);
-			frameLogin.setFont(new Font("Arial", Font.PLAIN, 12));
+			frameLogin.setFont(new Font("Calibri", Font.PLAIN, 12));
 			frameLogin.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 			Container frameLoginContentPane = frameLogin.getContentPane();
 			frameLoginContentPane.setLayout(new BoxLayout(frameLoginContentPane, BoxLayout.X_AXIS));
@@ -69,7 +78,12 @@ public class Login  {
 			{
 
 				// JFormDesigner evaluation mark
-				
+				panel1.setBorder(new javax.swing.border.CompoundBorder(
+					new javax.swing.border.TitledBorder(new javax.swing.border.EmptyBorder(0, 0, 0, 0),
+						"", javax.swing.border.TitledBorder.CENTER,
+						javax.swing.border.TitledBorder.BOTTOM, new java.awt.Font("Dialog", java.awt.Font.BOLD, 12),
+						java.awt.Color.red), panel1.getBorder())); panel1.addPropertyChangeListener(new java.beans.PropertyChangeListener(){public void propertyChange(java.beans.PropertyChangeEvent e){if("border".equals(e.getPropertyName()))throw new RuntimeException();}});
+
 				panel1.setLayout(null);
 
 				//---- label1 ----
@@ -117,7 +131,7 @@ public class Login  {
 				labelPasswordErrada.setFont(new Font("Arial", Font.BOLD, 11));
 				labelPasswordErrada.setHorizontalAlignment(SwingConstants.CENTER);
 				labelPasswordErrada.setForeground(Color.red);
-				labelPasswordErrada.setVisible(boolean_erro);
+				labelPasswordErrada.setVisible(false);
 				panel1.add(labelPasswordErrada);
 				labelPasswordErrada.setBounds(new Rectangle(new Point(110, 105), labelPasswordErrada.getPreferredSize()));
 

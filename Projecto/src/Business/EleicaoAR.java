@@ -11,6 +11,7 @@ import java.util.Random;
 import java.util.Set;
 import java.util.TreeSet;
 
+import Comparator.ComparatorLista;
 import Data.CirculoInfoDAO;
 import Data.ResultadoCirculoARDAO;
 import Exception.*;
@@ -23,8 +24,8 @@ public class EleicaoAR extends Eleicao {
 	public EleicaoAR(int idEleicao, Calendar data,int mandatosAssembleia) {
 		super(idEleicao, data);
 		this.mandatosAssembleia = mandatosAssembleia;
-		this.circulos = new CirculoInfoDAO(idEleicao);
-		this.resultado = new ResultadoCirculoARDAO(idEleicao);
+		this.circulos = null;
+		this.resultado = null;
 	}
 
 	public EleicaoAR(int idEleicao, Calendar data, int estado, boolean permitirVotar, Set<Integer> vot,int mandatosAssembleia) {
@@ -34,7 +35,9 @@ public class EleicaoAR extends Eleicao {
 		this.resultado = new ResultadoCirculoARDAO(idEleicao);
 	}
 	
-	public void inicializarCirculos(Collection<Circulo> circulos){
+	public void inicializarCirculos(int idEleicao, Collection<Circulo> circulos){
+		this.circulos = new CirculoInfoDAO(idEleicao);
+		this.resultado = new ResultadoCirculoARDAO(idEleicao);
 		Iterator<Circulo> it = circulos.iterator();
 		while(it.hasNext()){
 			Circulo circulo = it.next();
@@ -50,12 +53,12 @@ public class EleicaoAR extends Eleicao {
 	 * Chamar esta funcao apos a alteracao dos cadernos de recenseamento
 	 */
 	public void atualizarCirculos(){
-		this.calcularMandatosCirculos();
 		for(int circulo: this.resultado.keySet()){
 			ResultadoCirculoAR resCirc = this.resultado.get(circulo);
 			resCirc.atualizarTotEleitores();
 			this.resultado.put(circulo, resCirc);
 		}
+		this.calcularMandatosCirculos();
 	}
 	
 	public int getMandatosAssembleia() {
@@ -129,7 +132,7 @@ public class EleicaoAR extends Eleicao {
 			ResultadoCirculoAR resultadoCirculo = this.resultado.get(circulo);
 			Map<Lista,Integer> votos = resultadoCirculo.getValidos();
 			@SuppressWarnings({ "unchecked", "static-access" })
-			Map<Lista,Integer> mandatos = (HashMap<Lista,Integer>)new Hondt().getMandatos(mandatosCirculo, votos);
+			Map<Lista,Integer> mandatos = (HashMap<Lista,Integer>)Hondt.getMandatos(mandatosCirculo, votos);
 			resultadoCirculo.setMandatos(mandatos);
 		}
 	}
@@ -143,6 +146,7 @@ public class EleicaoAR extends Eleicao {
 		}
 		super.setEstado(0);
 		super.setPermitirVotar(true);
+		this.geraBoletim();
 		this.calcularMandatosCirculos();
 	}
 	
@@ -150,7 +154,6 @@ public class EleicaoAR extends Eleicao {
 	public void terminar(){
 		super.setEstado(1);
 		super.setPermitirVotar(false);
-		this.geraBoletim();
 		this.atribuirMandatosListas();
 	}
 	
@@ -198,8 +201,11 @@ public class EleicaoAR extends Eleicao {
 		}
 		int maxID = 0;
 		for(CirculoInfo cinfo: this.circulos.values()){
-			int maxcirculo = Collections.max(cinfo.getListas().keySet());
-			if(maxcirculo>=maxID) maxID = maxcirculo;
+			int maxcirculo=0;
+			if(cinfo.getListas().size()>0){
+				maxcirculo = Collections.max(cinfo.getListas().keySet());
+				if(maxcirculo>=maxID) maxID = maxcirculo;
+			}
 		}
 		l.setID(maxID+1);
 		
@@ -214,7 +220,7 @@ public class EleicaoAR extends Eleicao {
 	}
 	
 	public Set<Lista> getListasCirculo(int idCirculo){
-		TreeSet<Lista> listas = new TreeSet<>();
+		TreeSet<Lista> listas = new TreeSet<>(new ComparatorLista());
 		for(Lista lista: this.circulos.get(idCirculo).getListas().values()){
 			listas.add(lista);
 		}
@@ -274,9 +280,11 @@ public class EleicaoAR extends Eleicao {
 			nums = new ArrayList<>();
 			for(Lista listaCirculo: listasCirculo){
 				int nListas = listasCirculo.size();
-				rand = r.nextInt(nListas-1);
-				while(nums.contains(rand)){
-					rand = r.nextInt(nListas-1);
+				rand = r.nextInt(nListas);
+				if(nums.size()<nListas){
+					while(nums.contains(rand)){
+						rand = r.nextInt(nListas);
+					}
 				}
 				listaCirculo.setOrdem(rand);
 				nums.add(rand);
@@ -297,4 +305,23 @@ public class EleicaoAR extends Eleicao {
 		}
 		return candidato;
 	}
+
+	@Override
+	public Object[] toTable() {
+		Object[] lista = {super.getData().getTime(), "Assembleia da República", this};
+    	return lista;
+	}
+
+	
+	public void removeCandidatoAR(Lista lista, CandidatoAR cand) {
+		this.circulos.get(lista.getCirculo().getId()).removeCandidato(lista, cand);
+	}
+
+	@Override
+	public boolean eleitorVotar(Eleitor e) {
+		return super.getVotantes().contains(e.getnIdent());
+	}
+
+	
+
 }

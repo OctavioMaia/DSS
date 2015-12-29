@@ -163,9 +163,14 @@ public class Lista implements Listavel{
 	}
 
 	@Override
-	public String[] toTable() {
-		String[] lista = {this.nome, Integer.toString(this.nIdent)};
+	public Object[] toTable() {
+		Object[] lista = {this.simbolo,this.sigla,this.nome,this};
     	return lista;
+	}
+
+	@Override
+	public String pathImage() {
+		return this.simbolo;
 	}
 
 }
