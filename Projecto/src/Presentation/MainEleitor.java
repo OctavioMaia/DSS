@@ -8,6 +8,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.beans.*;
 import java.util.Calendar;
+import java.util.Set;
 
 import javax.swing.*;
 import javax.swing.table.*;
@@ -28,7 +29,12 @@ public class MainEleitor {
 	}
 
 	private void buttonVotarActionPerformed(ActionEvent e) {
-		new Votar(sge);
+		if(!sge.eleitorVotar(sge.getEleitor())) 
+			new Votar(sge);
+		else{
+			buttonVotar.setEnabled(false);
+			JOptionPane.showMessageDialog(null, "Já votou nesta eleição!");
+		}
 	}
 
 	private void button1ActionPerformed(ActionEvent e) {
@@ -39,16 +45,41 @@ public class MainEleitor {
 		}
 	}
 
-	private void scrollPane1PropertyChange(PropertyChangeEvent e) {
-		if(tableEleicoes.getSelectedColumns().length>0){
-			button1.setEnabled(true);
-		}
-	}
-
 	private void scrollPane1MouseClicked(MouseEvent e) {
 		if(tableEleicoes.getSelectedColumns().length>0){
 			button1.setEnabled(true);
 		}
+	}
+	
+	private void verificaVoto() {
+		if(sge.eleitorVotar(sge.getEleitor())) 
+			buttonVotar.setEnabled(false);
+	}
+	
+	private void povoarTabela(){
+		Set<Eleicao> historico = sge.getEleicoesTerminadas();
+		Object[][] data = new Object[historico.size()][]; 
+		int i=0;
+		
+		if (tableEleicoes.getRowCount() > 0) {
+            for (int conta = tableEleicoes.getRowCount() - 1; conta > -1; conta--) {
+                ((DefaultTableModel) tableEleicoes.getModel()).removeRow(conta);
+            }
+        }
+		
+		for(Eleicao el : historico){	
+			data[i] = el.toTable();
+			
+			DefaultTableModel model = (DefaultTableModel) tableEleicoes.getModel();
+			model.addRow(data[i]);
+
+			i++;
+		}
+	}
+
+	private void button2ActionPerformed(ActionEvent e) {
+		frameEleitor.setVisible(false);
+		new Login(sge);
 	}
 
 	private void initComponents(SGE sge) {
@@ -67,6 +98,8 @@ public class MainEleitor {
 		scrollPane1 = new JScrollPane();
 		tableEleicoes = new JTable();
 		button1 = new JButton();
+		separator3 = new JSeparator();
+		button2 = new JButton();
 
 		//======== frameEleitor ========
 		{
@@ -110,7 +143,7 @@ public class MainEleitor {
 			labelEleicao.setBounds(140, 45, 310, 25);
 
 			//---- labelDataInicio ----
-			labelDataInicio.setText(sge.eleicaoAtiva().getData().get(Calendar.DAY_OF_MONTH)+"/"+sge.eleicaoAtiva().getData().get(Calendar.MONTH)+"/"+sge.eleicaoAtiva().getData().get(Calendar.YEAR));
+			labelDataInicio.setText(sge.eleicaoAtiva().getData().get(Calendar.DAY_OF_MONTH)+"/"+(sge.eleicaoAtiva().getData().get(Calendar.MONTH)+1)+"/"+sge.eleicaoAtiva().getData().get(Calendar.YEAR));
 			labelDataInicio.setFont(new Font("Arial", Font.PLAIN, 14));
 			frameEleitorContentPane.add(labelDataInicio);
 			labelDataInicio.setBounds(140, 75, 310, 25);
@@ -179,6 +212,8 @@ public class MainEleitor {
 				tableEleicoes.getColumnModel().getColumn(2).setMinWidth(0);
 				tableEleicoes.getColumnModel().getColumn(2).setWidth(0);
 				tableEleicoes.getColumnModel().getColumn(2).setMaxWidth(0);
+				verificaVoto();
+				povoarTabela();
 				scrollPane1.setViewportView(tableEleicoes);
 			}
 			frameEleitorContentPane.add(scrollPane1);
@@ -191,6 +226,15 @@ public class MainEleitor {
 			button1.addActionListener(e -> button1ActionPerformed(e));
 			frameEleitorContentPane.add(button1);
 			button1.setBounds(15, 345, 555, button1.getPreferredSize().height);
+			frameEleitorContentPane.add(separator3);
+			separator3.setBounds(15, 375, 555, 5);
+
+			//---- button2 ----
+			button2.setText("Sair");
+			button2.setFont(new Font("Arial", Font.PLAIN, 14));
+			button2.addActionListener(e -> button2ActionPerformed(e));
+			frameEleitorContentPane.add(button2);
+			button2.setBounds(505, 380, 60, 25);
 
 			{ // compute preferred size
 				Dimension preferredSize = new Dimension();
@@ -205,7 +249,7 @@ public class MainEleitor {
 				frameEleitorContentPane.setMinimumSize(preferredSize);
 				frameEleitorContentPane.setPreferredSize(preferredSize);
 			}
-			frameEleitor.setSize(600, 415);
+			frameEleitor.setSize(600, 455);
 			frameEleitor.setLocationRelativeTo(null);
 		}
 		// JFormDesigner - End of component initialization  //GEN-END:initComponents
@@ -226,5 +270,7 @@ public class MainEleitor {
 	private JScrollPane scrollPane1;
 	private JTable tableEleicoes;
 	private JButton button1;
+	private JSeparator separator3;
+	private JButton button2;
 	// JFormDesigner - End of variables declaration  //GEN-END:variables
 }

@@ -200,16 +200,18 @@ public class EleicaoPRDAO implements Map<Integer,EleicaoPR>{
 		}
 		
 		//inserir votantes volta1
-		PreparedStatement psisnsert = conn.prepareStatement("INSERT INTRO "+ TabVotName +
-				 " VALUES ("+IdEleit+","+TabId+","+Volta+")"
-				+ "(?,?,?)");
+		PreparedStatement psisnsert = conn.prepareStatement("INSERT INTO "+ TabVotName +
+				 " ("+IdEleit+","+TabId+","+Volta+")"
+				+ " VALUES"
+				+ " (?,?,?)");
 		psisnsert.setInt(3,1);
 		psisnsert.setInt(2,key);
 		Iterator<Integer> iv1 = value.getVotantes().iterator();
 		while(iv1.hasNext()){
 			int idv = iv1.next();
 			psisnsert.setInt(1, idv);
-			psisnsert.executeQuery();
+			//System.out.println(psisnsert.toString());
+			psisnsert.execute();
 		}
 		
 		//inserir votantes volta2
@@ -218,7 +220,7 @@ public class EleicaoPRDAO implements Map<Integer,EleicaoPR>{
 		while(iv2.hasNext()){
 			int idv = iv2.next();
 			psisnsert.setInt(1, idv);
-			psisnsert.executeQuery();
+			psisnsert.execute();
 		}
 		psisnsert.close();
 	}

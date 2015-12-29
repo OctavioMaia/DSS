@@ -115,7 +115,14 @@ public class GerirAR extends JFrame {
 	}
 
 	private void comboBox1ItemStateChanged(ItemEvent e) {
+		//this.eleicao = (EleicaoAR) sge.getEleicao(this.eleicao.getIdEleicao());
 		povoarTabelaListas();
+		
+		if (table2.getRowCount() > 0) {
+			for (int conta = table2.getRowCount() - 1; conta > -1; conta--) {
+				((DefaultTableModel) table2.getModel()).removeRow(conta);
+			}
+		}
 	}	
 
 	private void povoarTabelaListas() {
@@ -170,18 +177,25 @@ public class GerirAR extends JFrame {
 	}
 
 	private void button3ActionPerformed(ActionEvent e) {
-		Lista lista = new Lista(0, sge.getCirculo(comboBox1.getSelectedIndex()+1), sigla.getText(), nomeLista.getText(), pathImagem.getText(), (Votavel) table3.getValueAt(table3.getSelectedRow(), 3));
-		try {
-			sge.addLista(eleicao, lista);
-			povoarTabelaListas();
-		} catch (ExceptionListaExiste e1) {
-			JOptionPane.showMessageDialog(null, e1.getMessage());
-		} catch (ExceptionLimiteCandidatos e1) {
-			JOptionPane.showMessageDialog(null, e1.getMessage());
-		} catch (ExceptionMandanteInvalido e1) {
-			e1.printStackTrace();
-		} catch (ExceptionEleicaoEstado e1) {
-			JOptionPane.showMessageDialog(null, e1.getMessage());
+		
+		if(table3.getSelectedRowCount()!=1){
+			JOptionPane.showMessageDialog(null, "Por favor selecione um partido/coligação");
+		}else{
+			try {
+				Lista lista = new Lista(0, sge.getCirculo(comboBox1.getSelectedIndex()+1), sigla.getText(), nomeLista.getText(), pathImagem.getText(), (Votavel) table3.getValueAt(table3.getSelectedRow(), 3));
+				sge.addLista(eleicao, lista);
+				povoarTabelaListas();
+			} catch (ExceptionListaExiste e1) {
+				JOptionPane.showMessageDialog(null, e1.getMessage());
+			} catch (ExceptionLimiteCandidatos e1) {
+				JOptionPane.showMessageDialog(null, e1.getMessage());
+			} catch (ExceptionMandanteInvalido e1) {
+				JOptionPane.showMessageDialog(null, e1.getMessage());
+			} catch (ExceptionEleicaoEstado e1) {
+				JOptionPane.showMessageDialog(null, e1.getMessage());
+			} catch (Exception e1){
+				
+			}
 		}
 	}
 	
@@ -209,7 +223,7 @@ public class GerirAR extends JFrame {
 	}
 
 	private void buttonEliminarCandidatoActionPerformed(ActionEvent e) {
-		sge.removeCandidatoAR(eleicao, (Lista) table1.getValueAt(table1.getSelectedRow(), 4), (CandidatoAR) table2.getValueAt(table2.getSelectedRow(), 4));
+		sge.removeCandidatoAR(eleicao, (Lista) table1.getValueAt(table1.getSelectedRow(), 3), (CandidatoAR) table2.getValueAt(table2.getSelectedRow(), 4));
 		povoarTabelaCandidato();
 	}
 

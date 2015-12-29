@@ -112,6 +112,10 @@ public class SGE {
 	public void setEleitor(Eleitor eleitor) {
 		this.eleitor = eleitor;
 	}
+	
+	public boolean eleitorVotar(Eleitor eleitor){
+		return eleicaoAtiva().eleitorVotar(eleitor);
+	}
 
 	private int procuraEleicaoAtiva() {
 		int idEleicaoAtiva = -1;
@@ -507,6 +511,16 @@ public class SGE {
 		}
 		return listasSeg;
 	}
+	
+	public Set<ListavelVotos> ordenarLista(HashMap<Lista, Integer> listas) {
+		TreeSet<ListavelVotos> listasSeg = new TreeSet<>(new ComparatorListavelVotos());
+		for (Lista lista : listas.keySet()) {
+			ListavelVotos lv = new ListavelVotos(lista, listas.get(lista));
+			listasSeg.add(lv);
+		}
+		return listasSeg;
+	}
+	
 	public Set<VotavelVotos> ordenarVotavel(HashMap<Votavel, Integer> listas){
 		TreeSet<VotavelVotos> listasOrdenadas = new TreeSet<>(new ComparatorVotavelVotos());
 		for (Votavel vot : listas.keySet()) {
