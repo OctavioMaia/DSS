@@ -126,7 +126,7 @@ public class EleicaoAR extends Eleicao {
 		}
 	}
 	
-	public void atribuirMandatosListas(){
+	private void atribuirMandatosListas(){
 		for(Integer circulo: this.resultado.keySet()){
 			int mandatosCirculo = this.circulos.get(circulo).getMandatos();
 			ResultadoCirculoAR resultadoCirculo = this.resultado.get(circulo);
@@ -270,7 +270,7 @@ public class EleicaoAR extends Eleicao {
 		return boletim;
 	}
 	
-	public void geraBoletim(){
+	private void geraBoletim(){
 		Random r = new Random();
 		ArrayList<Integer> nums = null;
 		Collection<Lista> listasCirculo = null;
