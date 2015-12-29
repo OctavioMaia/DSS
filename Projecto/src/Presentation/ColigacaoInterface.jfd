@@ -1,0 +1,194 @@
+JFDML JFormDesigner: "5.2.2.2.228" Java: "1.8.0_65" encoding: "UTF-8"
+
+new FormModel {
+	contentType: "form/swing"
+	root: new FormRoot {
+		add( new FormComponent( "javax.swing.JFileChooser" ) {
+			name: "fileChooser1"
+		}, new FormLayoutConstraints( null ) {
+			"location": new java.awt.Point( 680, 35 )
+			"size": new java.awt.Dimension( 480, 310 )
+		} )
+		add( new FormWindow( "javax.swing.JFrame", new FormLayoutManager( class com.jformdesigner.runtime.NullLayout ) ) {
+			name: "this"
+			"title": "Gestão de coligações"
+			"resizable": false
+			"$locationPolicy": 1
+			"$sizePolicy": 1
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label1"
+				"text": "Nome:"
+				"font": &Font0 new java.awt.Font( "Arial", 0, 14 )
+			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
+				"width": 84
+				"height": 25
+				"x": 20
+				"y": 15
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label2"
+				"text": "Sigla:"
+				"font": #Font0
+			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
+				"width": 84
+				"height": 25
+				"x": 20
+				"y": 45
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label3"
+				"text": "Símbolo:"
+				"font": #Font0
+			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
+				"width": 84
+				"height": 25
+				"x": 20
+				"y": 75
+			} )
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "button1"
+				"text": "Procurar"
+				"font": new java.awt.Font( "Arial", 0, 14 )
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "button1ActionPerformed", true ) )
+			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
+				"width": 130
+				"x": 360
+				"y": 75
+			} )
+			add( new FormComponent( "javax.swing.JTextField" ) {
+				name: "sigla"
+				"font": &Font1 new java.awt.Font( "Arial", 0, 14 )
+			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
+				"width": 390
+				"x": 100
+				"y": 45
+			} )
+			add( new FormComponent( "javax.swing.JTextField" ) {
+				name: "nomeCandidato"
+				"font": #Font1
+			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
+				"width": 390
+				"x": 100
+				"y": 15
+			} )
+			add( new FormComponent( "javax.swing.JTextField" ) {
+				name: "pathImagem"
+				"font": new java.awt.Font( "Arial", 0, 14 )
+				"editable": false
+				"enabled": false
+			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
+				"width": 255
+				"height": 25
+				"x": 100
+				"y": 75
+			} )
+			add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
+				name: "scrollPane1"
+				add( new FormComponent( "javax.swing.JTable" ) {
+					name: "tableColigacao"
+					"model": new com.jformdesigner.model.SwingTableModel( new java.util.Vector, new java.util.Vector {
+						add( "Nome" )
+						add( "Sigla" )
+						add( null )
+					}, new java.util.Vector {
+						add( null )
+						add( null )
+						add( null )
+					}, new java.util.Vector {
+						add( null )
+						add( null )
+						add( null )
+					}, new java.util.Vector {
+						add( null )
+						add( null )
+						add( null )
+					} )
+					"selectionMode": 0
+					auxiliary() {
+						"JavaCodeGenerator.postInitCode": "tableColigacao.getColumnModel().getColumn(2).setPreferredWidth(0);\ntableColigacao.getColumnModel().getColumn(2).setMinWidth(0);\ntableColigacao.getColumnModel().getColumn(2).setWidth(0);\ntableColigacao.getColumnModel().getColumn(2).setMaxWidth(0);\npovoarTabelaPartidos();\npovoarTabelaColigacao();"
+					}
+				} )
+			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
+				"x": 20
+				"y": 315
+				"width": 470
+				"height": 200
+			} )
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "buttonEliminar"
+				"text": "Eliminar coligação"
+				"font": &Font2 new java.awt.Font( "Arial", 0, 14 )
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "buttonEliminarActionPerformed", true ) )
+			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
+				"width": 155
+				"height": 25
+				"x": 140
+				"y": 525
+			} )
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "buttonAdicionar"
+				"text": "Adicionar coligação"
+				"font": #Font2
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "buttonAdicionarActionPerformed", true ) )
+			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
+				"width": 185
+				"height": 25
+				"x": 305
+				"y": 525
+			} )
+			add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
+				name: "scrollPane2"
+				add( new FormComponent( "javax.swing.JTable" ) {
+					name: "tablePartidos"
+					"model": new com.jformdesigner.model.SwingTableModel( new java.util.Vector, new java.util.Vector {
+						add( "Nome" )
+						add( "Sigla" )
+						add( null )
+					}, new java.util.Vector {
+						add( null )
+						add( null )
+						add( null )
+					}, new java.util.Vector {
+						add( null )
+						add( null )
+						add( null )
+					}, new java.util.Vector {
+						add( null )
+						add( null )
+						add( null )
+					} )
+					auxiliary() {
+						"JavaCodeGenerator.postInitCode": "tablePartidos.getColumnModel().getColumn(2).setPreferredWidth(0);\ntablePartidos.getColumnModel().getColumn(2).setMinWidth(0);\ntablePartidos.getColumnModel().getColumn(2).setWidth(0);\ntablePartidos.getColumnModel().getColumn(2).setMaxWidth(0);\npovoarTabelaPartidos();\npovoarTabelaColigacao();"
+					}
+				} )
+			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
+				"x": 20
+				"y": 130
+				"width": 470
+				"height": 160
+			} )
+			add( new FormComponent( "com.jformdesigner.designer.wrapper.JGoodiesFormsSeparator" ) {
+				name: "separator1"
+				"text": "Coligações"
+				"alignment": 0
+			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
+				"x": 20
+				"y": 295
+				"width": 465
+			} )
+			add( new FormComponent( "com.jformdesigner.designer.wrapper.JGoodiesFormsSeparator" ) {
+				name: "separator2"
+				"text": "Partidos"
+				"alignment": 0
+			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
+				"width": 465
+				"height": 14
+				"x": 20
+				"y": 110
+			} )
+		}, new FormLayoutConstraints( null ) {
+			"size": new java.awt.Dimension( 525, 600 )
+			"location": new java.awt.Point( 15, 10 )
+		} )
+	}
+}

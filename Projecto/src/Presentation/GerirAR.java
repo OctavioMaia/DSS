@@ -63,12 +63,12 @@ public class GerirAR extends JFrame {
 		String residencia = this.residencia.getText();
 		String profissao = this.profissao.getText();
 		int bi = Integer.parseInt(this.bi.getText());
-		String foto = this.pathImagem.getText();
 		Calendar dataN = this.dataNasc;
 		
 		try{
 			CandidatoAR c = new CandidatoAR(nome, bi, profissao, dataN, residencia, naturalidade, listaPartidos.get(comboBox3.getSelectedIndex()), ((String) comboBox2.getSelectedItem()).charAt(0));
 			sge.addCandidatoAR(eleicao,(Lista) table1.getValueAt(table1.getSelectedRow(), 3), c);
+			povoarTabelaCandidato();
 			
 			//reset tabelas
 			nomeCandidato.setText("");
@@ -176,6 +176,7 @@ public class GerirAR extends JFrame {
 		Lista lista = new Lista(0, sge.getCirculo(comboBox1.getSelectedIndex()+1), sigla.getText(), nomeLista.getText(), pathImagem.getText(), (Votavel) table3.getValueAt(table3.getSelectedRow(), 2));
 		try {
 			sge.addLista(eleicao, lista);
+			povoarTabelaListas();
 		} catch (ExceptionListaExiste e1) {
 			JOptionPane.showMessageDialog(null, e1.getMessage());
 		} catch (ExceptionLimiteCandidatos e1) {
@@ -490,6 +491,7 @@ public class GerirAR extends JFrame {
 			table2.getColumnModel().getColumn(4).setMinWidth(0);
 			table2.getColumnModel().getColumn(4).setWidth(0);
 			table2.getColumnModel().getColumn(4).setMaxWidth(0);
+			povoarTabelaCandidato();
 			scrollPane3.setViewportView(table2);
 		}
 		contentPane.add(scrollPane3);

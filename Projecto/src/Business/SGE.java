@@ -331,12 +331,6 @@ public class SGE {
 	}
 
 	public void addPartido(Partido part) throws ExceptionPartidoExiste {
-		Iterator<Partido> itPart = this.partidos.values().iterator();
-		while (itPart.hasNext()) {
-			if (!itPart.next().equals(part)) {
-				throw new ExceptionPartidoExiste("O partido já se encontram registado");
-			}
-		}
 		part.setId(this.chavePartido());
 		this.partidos.put(part.getId(), part);
 	}
@@ -543,4 +537,25 @@ public class SGE {
 		}
 		return part;
 	}
+
+	public Set<Partido> getPartidos(){
+		Set<Partido> part = new HashSet<Partido>();
+		for(Partido p : this.partidos.values()){
+			if(!p.isRemovido()){
+				part.add(p);
+			}
+		}
+		return part;
+	}
+	
+	public Set<Coligacao> getColigacoes(){
+		Set<Coligacao> col = new HashSet<Coligacao>();
+		for(Coligacao c : this.coligacoes.values()){
+			if(!c.isRemovido()){
+				col.add(c);
+			}
+		}
+		return col;
+	}
+	
 }
