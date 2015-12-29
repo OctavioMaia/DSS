@@ -56,6 +56,7 @@ new FormModel {
 			} )
 			add( new FormComponent( "javax.swing.JLabel" ) {
 				name: "labelImagem"
+				"text": "Imagem"
 				auxiliary() {
 					"JavaCodeGenerator.preInitCode": "labelImagem.setIcon(new ImageIcon(getClass().getResource(path)));"
 				}
@@ -85,6 +86,7 @@ new FormModel {
 			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
 				"x": 280
 				"y": 220
+				"height": 25
 			} )
 			add( new FormComponent( "javax.swing.JButton" ) {
 				name: "buttonVotar"

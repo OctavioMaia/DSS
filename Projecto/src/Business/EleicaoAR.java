@@ -11,6 +11,7 @@ import java.util.Random;
 import java.util.Set;
 import java.util.TreeSet;
 
+import Comparator.ComparatorLista;
 import Data.CirculoInfoDAO;
 import Data.ResultadoCirculoARDAO;
 import Exception.*;
@@ -200,8 +201,11 @@ public class EleicaoAR extends Eleicao {
 		}
 		int maxID = 0;
 		for(CirculoInfo cinfo: this.circulos.values()){
-			int maxcirculo = Collections.max(cinfo.getListas().keySet());
-			if(maxcirculo>=maxID) maxID = maxcirculo;
+			int maxcirculo=0;
+			if(cinfo.getListas().size()>0){
+				maxcirculo = Collections.max(cinfo.getListas().keySet());
+				if(maxcirculo>=maxID) maxID = maxcirculo;
+			}
 		}
 		l.setID(maxID+1);
 		
@@ -216,7 +220,7 @@ public class EleicaoAR extends Eleicao {
 	}
 	
 	public Set<Lista> getListasCirculo(int idCirculo){
-		TreeSet<Lista> listas = new TreeSet<>();
+		TreeSet<Lista> listas = new TreeSet<>(new ComparatorLista());
 		for(Lista lista: this.circulos.get(idCirculo).getListas().values()){
 			listas.add(lista);
 		}
@@ -276,9 +280,11 @@ public class EleicaoAR extends Eleicao {
 			nums = new ArrayList<>();
 			for(Lista listaCirculo: listasCirculo){
 				int nListas = listasCirculo.size();
-				rand = r.nextInt(nListas-1);
-				while(nums.contains(rand)){
-					rand = r.nextInt(nListas-1);
+				rand = r.nextInt(nListas);
+				if(nums.size()<nListas){
+					while(nums.contains(rand)){
+						rand = r.nextInt(nListas);
+					}
 				}
 				listaCirculo.setOrdem(rand);
 				nums.add(rand);

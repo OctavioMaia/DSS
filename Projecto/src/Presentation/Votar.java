@@ -148,6 +148,7 @@ public class Votar extends JFrame {
 
 		//---- labelImagem ----
 		labelImagem.setIcon(new ImageIcon(getClass().getResource(path)));
+		labelImagem.setText("Imagem");
 		contentPane.add(labelImagem);
 		labelImagem.setBounds(290, 45, 150, 150);
 
@@ -162,7 +163,7 @@ public class Votar extends JFrame {
 		buttonLimpar.setFont(new Font("Arial", Font.PLAIN, 14));
 		buttonLimpar.addActionListener(e -> buttonLimparActionPerformed(e));
 		contentPane.add(buttonLimpar);
-		buttonLimpar.setBounds(new Rectangle(new Point(280, 220), buttonLimpar.getPreferredSize()));
+		buttonLimpar.setBounds(280, 220, buttonLimpar.getPreferredSize().width, 25);
 
 		//---- buttonVotar ----
 		buttonVotar.setText("Votar");
