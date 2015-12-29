@@ -317,6 +317,11 @@ public class EleicaoAR extends Eleicao {
 		this.circulos.get(lista.getCirculo().getId()).removeCandidato(lista, cand);
 	}
 
+	@Override
+	public boolean eleitorVotar(Eleitor e) {
+		return super.getVotantes().contains(e.getnIdent());
+	}
+
 	
 
 }
