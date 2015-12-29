@@ -138,7 +138,7 @@ public class MainAdmin extends JFrame {
 		
 		if (table2.getRowCount() > 0) {
             for (int conta = table2.getRowCount() - 1; conta > -1; conta--) {
-                ((DefaultTableModel) table2.getModel()).removeRow(conta);;
+                ((DefaultTableModel) table2.getModel()).removeRow(conta);
             }
         }
 		
@@ -157,6 +157,14 @@ public class MainAdmin extends JFrame {
 			povoarTabelaCriadas();
 		else 
 			povoarTabelaHistorico();
+	}
+
+	private void buttonGerirPartidosActionPerformed(ActionEvent e) {
+		// TODO add your code here
+	}
+
+	private void buttonGerirPartidos2ActionPerformed(ActionEvent e) {
+		// TODO add your code here
 	}
 	
 	private void initComponents() {
@@ -180,6 +188,8 @@ public class MainAdmin extends JFrame {
 		buttonTerminarEleicao = new JButton();
 		buttonCriarEleicao = new JButton();
 		button1 = new JButton();
+		buttonGerirPartidos = new JButton();
+		buttonGerirPartidos2 = new JButton();
 
 		//======== this ========
 		setTitle("Main Admin");
@@ -321,7 +331,7 @@ public class MainAdmin extends JFrame {
 		buttonVerResultados.setEnabled(false);
 		buttonVerResultados.addActionListener(e -> buttonVerResultadosActionPerformed(e));
 		contentPane.add(buttonVerResultados);
-		buttonVerResultados.setBounds(590, 335, 155, 25);
+		buttonVerResultados.setBounds(590, 345, 155, 25);
 
 		//---- buttonIniciarEleicao ----
 		buttonIniciarEleicao.setText("Iniciar elei\u00e7\u00e3o");
@@ -329,7 +339,7 @@ public class MainAdmin extends JFrame {
 		buttonIniciarEleicao.setEnabled(false);
 		buttonIniciarEleicao.addActionListener(e -> buttonIniciarEleicaoActionPerformed(e));
 		contentPane.add(buttonIniciarEleicao);
-		buttonIniciarEleicao.setBounds(590, 255, 155, 25);
+		buttonIniciarEleicao.setBounds(590, 275, 155, 25);
 
 		//---- buttonGerirEleicao ----
 		buttonGerirEleicao.setText("Gerir elei\u00e7\u00e3o");
@@ -337,14 +347,14 @@ public class MainAdmin extends JFrame {
 		buttonGerirEleicao.setEnabled(false);
 		buttonGerirEleicao.addActionListener(e -> buttonGerirEleicaoActionPerformed(e));
 		contentPane.add(buttonGerirEleicao);
-		buttonGerirEleicao.setBounds(590, 295, 155, 25);
+		buttonGerirEleicao.setBounds(590, 310, 155, 25);
 
 		//---- buttonInserirCaderno ----
 		buttonInserirCaderno.setText("<html><center>Inserir caderno<br />de recenseamento<center></html>");
 		buttonInserirCaderno.setFont(new Font("Arial", Font.PLAIN, 14));
 		buttonInserirCaderno.addActionListener(e -> buttonInserirCadernoActionPerformed(e));
 		contentPane.add(buttonInserirCaderno);
-		buttonInserirCaderno.setBounds(590, 115, 155, 85);
+		buttonInserirCaderno.setBounds(590, 70, 155, 85);
 
 		//---- buttonSair ----
 		buttonSair.setText("Sair");
@@ -365,14 +375,28 @@ public class MainAdmin extends JFrame {
 		buttonCriarEleicao.setFont(new Font("Arial", Font.PLAIN, 14));
 		buttonCriarEleicao.addActionListener(e -> buttonCriarEleicaoActionPerformed(e));
 		contentPane.add(buttonCriarEleicao);
-		buttonCriarEleicao.setBounds(590, 215, 155, buttonCriarEleicao.getPreferredSize().height);
+		buttonCriarEleicao.setBounds(590, 235, 155, buttonCriarEleicao.getPreferredSize().height);
 
 		//---- button1 ----
 		button1.setText("Atualizar tabelas");
 		button1.setFont(new Font("Arial", Font.PLAIN, 14));
 		button1.addActionListener(e -> button1ActionPerformed(e));
 		contentPane.add(button1);
-		button1.setBounds(590, 370, 155, 25);
+		button1.setBounds(590, 380, 155, 25);
+
+		//---- buttonGerirPartidos ----
+		buttonGerirPartidos.setFont(new Font("Arial", Font.PLAIN, 14));
+		buttonGerirPartidos.setText("Gest\u00e3o partidos");
+		buttonGerirPartidos.addActionListener(e -> buttonGerirPartidosActionPerformed(e));
+		contentPane.add(buttonGerirPartidos);
+		buttonGerirPartidos.setBounds(590, 165, 155, 25);
+
+		//---- buttonGerirPartidos2 ----
+		buttonGerirPartidos2.setFont(new Font("Arial", Font.PLAIN, 14));
+		buttonGerirPartidos2.setText("Gest\u00e3o coliga\u00e7\u00f5es");
+		buttonGerirPartidos2.addActionListener(e -> buttonGerirPartidos2ActionPerformed(e));
+		contentPane.add(buttonGerirPartidos2);
+		buttonGerirPartidos2.setBounds(590, 200, 155, 25);
 
 		{ // compute preferred size
 			Dimension preferredSize = new Dimension();
@@ -412,5 +436,7 @@ public class MainAdmin extends JFrame {
 	private JButton buttonTerminarEleicao;
 	private JButton buttonCriarEleicao;
 	private JButton button1;
+	private JButton buttonGerirPartidos;
+	private JButton buttonGerirPartidos2;
 	// JFormDesigner - End of variables declaration  //GEN-END:variables
 }
