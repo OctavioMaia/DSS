@@ -243,15 +243,15 @@ public class EleicaoARDAO implements Map<Integer,EleicaoAR>{
     			psRemoveEleitor.execute();
     			psRemoveEleitor.close();
     			//Inserir novos eleitores
-        		PreparedStatement psInsertEleitor = conn.prepareStatement("INSERT INTRO "+ TabEleitores +
-        				 " VALUES ("+Eleitor+","+Eleicao+","+Volta+")"
+        		PreparedStatement psInsertEleitor = conn.prepareStatement("INSERT INTO "+ TabEleitores +
+        				 " ("+Eleitor+","+Eleicao+","+Volta+") VALUES "
         				+ "(?,?,0)");
         		psInsertEleitor.setInt(2,key);
         		Iterator<Integer> eleitores = value.getVotantes().iterator();
         		while(eleitores.hasNext()){
         			int eleitor = eleitores.next();
         			psInsertEleitor.setInt(1, eleitor);
-        			psInsertEleitor.executeQuery();
+        			psInsertEleitor.execute();
         		}
         	}
     		conn.commit();

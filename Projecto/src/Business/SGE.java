@@ -112,6 +112,10 @@ public class SGE {
 	public void setEleitor(Eleitor eleitor) {
 		this.eleitor = eleitor;
 	}
+	
+	public boolean eleitorVotar(Eleitor eleitor){
+		return eleicaoAtiva().eleitorVotar(eleitor);
+	}
 
 	private int procuraEleicaoAtiva() {
 		int idEleicaoAtiva = -1;
@@ -223,18 +227,25 @@ public class SGE {
 		if (this.ativa != -1) {
 			throw new ExceptionEleicaoAtiva("Já existe uma eleição ativa");
 		} else {
-			this.ativa = e.getIdEleicao();
 			System.out.println("ativa id:"+ativa);
 			if (e.getClass().getSimpleName().equals("EleicaoPR")) {
+				System.out.println("debug1");
 				el = this.eleicoesPR.get(e.getIdEleicao());
+				System.out.println("debug2");
 				el.iniciar();
 				System.out.println("added");
 				this.eleicoesPR.put(el.getIdEleicao(), (EleicaoPR) el);
+				System.out.println("debug3");
 			} else {
+				System.out.println("debug4");
 				el = this.eleicoesAR.get(e.getIdEleicao());
+				System.out.println("debug5");
 				el.iniciar();
+				System.out.println("debug6");
 				this.eleicoesAR.put(el.getIdEleicao(), (EleicaoAR) el);
+				System.out.println("debug7");
 			}
+			this.ativa = e.getIdEleicao();
 		}
 	}
 
@@ -269,8 +280,8 @@ public class SGE {
 
 	public EleicaoAR criarEleicaoAR(EleicaoAR eleicao) {
 		eleicao.setIdEleicao(this.chaveEleicao());
-		eleicao.inicializarCirculos(this.circulos.values());
 		this.eleicoesAR.put(eleicao.getIdEleicao(), eleicao);
+		eleicao.inicializarCirculos(eleicao.getIdEleicao(),this.circulos.values());
 		return eleicao;
 	}
 
@@ -331,12 +342,6 @@ public class SGE {
 	}
 
 	public void addPartido(Partido part) throws ExceptionPartidoExiste {
-		Iterator<Partido> itPart = this.partidos.values().iterator();
-		while (itPart.hasNext()) {
-			if (!itPart.next().equals(part)) {
-				throw new ExceptionPartidoExiste("O partido já se encontram registado");
-			}
-		}
 		part.setId(this.chavePartido());
 		this.partidos.put(part.getId(), part);
 	}
@@ -430,11 +435,14 @@ public class SGE {
 		int maxAR = 0;
 		if (this.eleicoesAR.size() > 0) {
 			maxAR = Collections.max(this.eleicoesAR.keySet());
+			//System.out.println("ar:"+maxAR);
 		}
 		if (this.eleicoesPR.size() > 0) {
-			maxAR = Collections.max(this.eleicoesPR.keySet());
+			maxPR = Collections.max(this.eleicoesPR.keySet());
+			//System.out.println("pr:"+maxAR);
 		}
-		return Math.max(maxPR, maxAR) + 1;
+		//System.out.println("max"+(Math.max(maxPR, maxAR) + 1));
+		return (Math.max(maxPR, maxAR) + 1);
 	}
 
 	private int chaveColigacoes() {
@@ -456,6 +464,10 @@ public class SGE {
 		EleicaoAR ar = this.eleicoesAR.get(eleicao.getIdEleicao());
 		ar.addCandidato(lista, cand);
 		this.eleicoesAR.put(ar.getIdEleicao(), ar);
+	}
+	
+	public void removeCandidatoAR(EleicaoAR eleicao, Lista lista, CandidatoAR cand){
+		eleicao.removeCandidatoAR(lista, cand);
 	}
 
 	public Eleicao getEleicao(int idEleicao) {
@@ -499,6 +511,16 @@ public class SGE {
 		}
 		return listasSeg;
 	}
+	
+	public Set<ListavelVotos> ordenarLista(HashMap<Lista, Integer> listas) {
+		TreeSet<ListavelVotos> listasSeg = new TreeSet<>(new ComparatorListavelVotos());
+		for (Lista lista : listas.keySet()) {
+			ListavelVotos lv = new ListavelVotos(lista, listas.get(lista));
+			listasSeg.add(lv);
+		}
+		return listasSeg;
+	}
+	
 	public Set<VotavelVotos> ordenarVotavel(HashMap<Votavel, Integer> listas){
 		TreeSet<VotavelVotos> listasOrdenadas = new TreeSet<>(new ComparatorVotavelVotos());
 		for (Votavel vot : listas.keySet()) {
@@ -513,10 +535,51 @@ public class SGE {
 	}
 
 	
-	Set<Votavel> getVotaveis(){
+	public Set<Votavel> getVotaveis(){
 		Set<Votavel> vot = new HashSet<>();
-		vot.addAll(this.partidos.values());
-		vot.addAll(this.coligacoes.values());
-		return vot;
+		for(Partido  p : this.partidos.values()){
+			if(!p.isRemovido()){
+				vot.add(p);
+			}
+		}
+		for(Coligacao  c : this.coligacoes.values()){
+			if(!c.isRemovido()){
+				vot.add(c);
+			}
+		}
+		return vot;	
 	}
+
+	public ArrayList<Partido> partCandidato(Votavel vot){
+		ArrayList<Partido> part = new ArrayList<>();
+		if(vot.getClass().getSimpleName().equals("Coligacao")){
+			for (Partido partido : ((Coligacao)vot).getPartidos()) {
+				part.add(partido);
+			}
+		}else{
+			part.add((Partido)vot);
+		}
+		return part;
+	}
+
+	public Set<Partido> getPartidos(){
+		Set<Partido> part = new HashSet<Partido>();
+		for(Partido p : this.partidos.values()){
+			if(!p.isRemovido()){
+				part.add(p);
+			}
+		}
+		return part;
+	}
+	
+	public Set<Coligacao> getColigacoes(){
+		Set<Coligacao> col = new HashSet<Coligacao>();
+		for(Coligacao c : this.coligacoes.values()){
+			if(!c.isRemovido()){
+				col.add(c);
+			}
+		}
+		return col;
+	}
+	
 }

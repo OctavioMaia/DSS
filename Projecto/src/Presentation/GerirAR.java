@@ -7,8 +7,10 @@ package Presentation;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.Set;
 
 import javax.swing.*;
 import javax.swing.table.*;
@@ -28,11 +30,12 @@ import com.toedter.calendar.*;
 public class GerirAR extends JFrame {
 	
 	private SGE sge;
-	private Eleicao eleicao;
+	private EleicaoAR eleicao;
 	private GregorianCalendar dataNasc;
+	private ArrayList<Partido> listaPartidos;
 	
 	public GerirAR(SGE s, Eleicao e) {
-		eleicao=e;
+		eleicao=(EleicaoAR) e;
 		sge=s;
 		initComponents();
 		this.setVisible(true);
@@ -53,51 +56,45 @@ public class GerirAR extends JFrame {
 		dialogoCalendario.setVisible(true);
 	}
 
-	private void buttonProcurarActionPerformed(ActionEvent e) {
-		fileChooser1.setVisible(true);
-		int result = fileChooser1.showOpenDialog(fileChooser1);
-		if (result == JFileChooser.APPROVE_OPTION) {
-		    File selectedFile = fileChooser1.getSelectedFile();
-		    pathImagem2.setText(selectedFile.getAbsolutePath());
-		    fileChooser1.setVisible(false);
-		}else
-			fileChooser1.setVisible(false);
-	}
 
-	private void buttonAdicionarFotoActionPerformed(ActionEvent e) {
-		String nome = nomeCandidato.getText();
-		String naturalidade = this.naturalidade.getText();
-		String residencia = this.residencia.getText();
-		String profissao = this.profissao.getText();
-		int bi = Integer.parseInt(this.bi.getText());
-		String foto = this.pathImagem.getText();
-		GregorianCalendar dataN = this.dataNasc;
-		
+	private void buttonAdicionarFotoActionPerformed(ActionEvent e) {		
 		try{
-			Candidato c = new Candidato(nome, bi, profissao, dataN, residencia, naturalidade, foto);
-			sge.addCandidatoAR(eleicao,c);
-			
-			//reset tabelas
-			nomeCandidato.setText("");
-			this.naturalidade.setText("");
-			this.residencia.setText("");
-			this.profissao.setText("");
-			this.bi.setText("");
-			this.dataNascimento.setText("dd/mm/aa");
-			this.pathImagem.setText("");
-		}catch(ExceptionListaExiste | ExceptionLimiteCandidatos|  ExceptionMandanteInvalido | ExceptionEleicaoEstado ex){
-			JOptionPane.showMessageDialog(null, ex.getMessage());
+			if(table1.getSelectedRowCount()==1){
+				String nome = nomeCandidato.getText();
+				String naturalidade = this.naturalidade.getText();
+				String residencia = this.residencia.getText();
+				String profissao = this.profissao.getText();
+				int bi = Integer.parseInt(this.bi.getText());
+				Calendar dataN = this.dataNasc;
+				CandidatoAR c = new CandidatoAR(nome, bi, profissao, dataN, residencia, naturalidade, listaPartidos.get(comboBox3.getSelectedIndex()), ((String) comboBox2.getSelectedItem()).charAt(0));
+				sge.addCandidatoAR(eleicao,(Lista) table1.getValueAt(table1.getSelectedRow(), 3), c);
+				povoarTabelaCandidato();
+				
+				//reset tabelas
+				nomeCandidato.setText("");
+				this.naturalidade.setText("");
+				this.residencia.setText("");
+				this.profissao.setText("");
+				this.bi.setText("");
+				this.dataNascimento.setText("dd/mm/aa");
+				this.pathImagem.setText("");
+			}else{
+				JOptionPane.showMessageDialog(null, "Por favor selecione uma lista.");
+			}
+		}catch(ExceptionLimiteCandidatos|  ExceptionMandanteInvalido ex){
+			ex.printStackTrace();
+		}catch(NumberFormatException ex){
+			JOptionPane.showMessageDialog(null, "Por favor introduza os campos necessários");
 		}
 	}
 
 	private void buttonApagarInfoActionPerformed(ActionEvent e) {
-		nomeCandidato.setText("");
+		this.nomeCandidato.setText("");
 		this.naturalidade.setText("");
 		this.residencia.setText("");
 		this.profissao.setText("");
 		this.bi.setText("");
 		this.dataNascimento.setText("dd/mm/aa");
-		this.pathImagem.setText("");
 	}
 
 	private void buttonConfirmarDataActionPerformed(ActionEvent e) {
@@ -118,6 +115,139 @@ public class GerirAR extends JFrame {
 	}
 
 	private void comboBox1ItemStateChanged(ItemEvent e) {
+		//this.eleicao = (EleicaoAR) sge.getEleicao(this.eleicao.getIdEleicao());
+		povoarTabelaListas();
+		
+		if (table2.getRowCount() > 0) {
+			for (int conta = table2.getRowCount() - 1; conta > -1; conta--) {
+				((DefaultTableModel) table2.getModel()).removeRow(conta);
+			}
+		}
+	}	
+
+	private void povoarTabelaListas() {
+		Set<Lista> set = eleicao.getListasCirculo(comboBox1.getSelectedIndex() + 1);
+		Object[][] data = new Object[set.size()][];
+		int i = 0;
+
+		if (table1.getRowCount() > 0) {
+			for (int conta = table1.getRowCount() - 1; conta > -1; conta--) {
+				((DefaultTableModel) table1.getModel()).removeRow(conta);
+			}
+		}
+
+		for (Lista el : set) {
+			data[i] = el.toTable();
+
+			DefaultTableModel model = (DefaultTableModel) table1.getModel();
+			model.addRow(data[i]);
+
+			i++;
+		}
+
+	}
+	
+	private void povoarTabelaCandidato() {
+		if(table1.getSelectedRowCount()==1){
+			Lista l = (Lista) table1.getValueAt(table1.getSelectedRow(), 3);
+			ArrayList<CandidatoAR> set = l.getCandidatos();
+			Object[][] data = new Object[set.size()][];
+			int i = 0;
+	
+			if (table2.getRowCount() > 0) {
+				for (int conta = table2.getRowCount() - 1; conta > -1; conta--) {
+					((DefaultTableModel) table2.getModel()).removeRow(conta);
+				}
+			}
+	
+			for (CandidatoAR el : set) {
+				data[i] = el.toTable();
+	
+				DefaultTableModel model = (DefaultTableModel) table2.getModel();
+				model.addRow(data[i]);
+	
+				i++;
+			}
+		}
+	}
+	
+	private void button2ActionPerformed(ActionEvent e) {
+		sge.removeLista(eleicao, (Listavel) table1.getValueAt(table1.getSelectedRow(), 3));
+		((DefaultTableModel) table1.getModel()).removeRow(table1.getSelectedRow());
+	}
+
+	private void button3ActionPerformed(ActionEvent e) {
+		
+		if(table3.getSelectedRowCount()!=1){
+			JOptionPane.showMessageDialog(null, "Por favor selecione um partido/coligação");
+		}else{
+			try {
+				Lista lista = new Lista(0, sge.getCirculo(comboBox1.getSelectedIndex()+1), sigla.getText(), nomeLista.getText(), pathImagem.getText(), (Votavel) table3.getValueAt(table3.getSelectedRow(), 3));
+				sge.addLista(eleicao, lista);
+				povoarTabelaListas();
+			} catch (ExceptionListaExiste e1) {
+				JOptionPane.showMessageDialog(null, e1.getMessage());
+			} catch (ExceptionLimiteCandidatos e1) {
+				JOptionPane.showMessageDialog(null, e1.getMessage());
+			} catch (ExceptionMandanteInvalido e1) {
+				JOptionPane.showMessageDialog(null, e1.getMessage());
+			} catch (ExceptionEleicaoEstado e1) {
+				JOptionPane.showMessageDialog(null, e1.getMessage());
+			} catch (Exception e1){
+				
+			}
+		}
+	}
+	
+	private void povoarVotavel() {
+		if(sge.getVotaveis()!=null){
+			Set<Votavel> set = sge.getVotaveis();
+			Object[][] data = new Object[set.size()][]; 
+			int i=0;
+			
+			if (table3.getRowCount() > 0) {
+	            for (int conta = table3.getRowCount() - 1; conta > -1; conta--) {
+	                ((DefaultTableModel) table3.getModel()).removeRow(conta);;
+	            }
+	        }
+			
+			for(Votavel el : set){	
+				data[i] = el.toTable();
+				
+				DefaultTableModel model = (DefaultTableModel) table3.getModel();
+				model.addRow(data[i]);
+	
+				i++;
+			}
+		}
+	}
+
+	private void buttonEliminarCandidatoActionPerformed(ActionEvent e) {
+		sge.removeCandidatoAR(eleicao, (Lista) table1.getValueAt(table1.getSelectedRow(), 3), (CandidatoAR) table2.getValueAt(table2.getSelectedRow(), 4));
+		povoarTabelaCandidato();
+	}
+
+	private void button4ActionPerformed(ActionEvent e) {
+		this.setVisible(false);
+	}
+
+
+	private void scrollPane1MouseEntered(MouseEvent e) {
+		if(table1.getSelectedRowCount()==1){
+			Lista l = (Lista) table1.getValueAt(table1.getSelectedRow(), 3);
+			listaPartidos = sge.partCandidato(l.getMandante());
+			comboBox3.removeAllItems();
+			
+			for(Partido p : listaPartidos){
+				comboBox3.addItem(p.getSigla());
+			}
+		}
+		
+		povoarTabelaCandidato();
+		
+	}
+
+	private void scrollPane2MouseClicked(MouseEvent e) {
 		// TODO add your code here
 	}
 
@@ -129,11 +259,7 @@ public class GerirAR extends JFrame {
 		label2 = new JLabel();
 		label3 = new JLabel();
 		comboBox1 = new JComboBox<>();
-		scrollPane1 = new JScrollPane();
-		table1 = new JTable();
 		separator1 = compFactory.createSeparator("Listas existentes", SwingConstants.CENTER);
-		scrollPane2 = new JScrollPane();
-		list1 = new JList();
 		label4 = new JLabel();
 		button1 = new JButton();
 		nomeLista = new JTextField();
@@ -154,9 +280,6 @@ public class GerirAR extends JFrame {
 		label10 = new JLabel();
 		dataNascimento = new JLabel();
 		buttonDataNascimento = new JButton();
-		label11 = new JLabel();
-		buttonProcurar = new JButton();
-		pathImagem2 = new JTextField();
 		buttonAdicionarCandidato = new JButton();
 		buttonApagarInfo = new JButton();
 		scrollPane3 = new JScrollPane();
@@ -164,10 +287,17 @@ public class GerirAR extends JFrame {
 		separator4 = new JSeparator();
 		separator5 = new JSeparator();
 		separator2 = compFactory.createSeparator("Candidatos", SwingConstants.CENTER);
-		buttonOK = new JButton();
 		button4 = new JButton();
 		buttonEliminarCandidato = new JButton();
 		separator6 = new JSeparator();
+		scrollPane1 = new JScrollPane();
+		table1 = new JTable();
+		scrollPane2 = new JScrollPane();
+		table3 = new JTable();
+		comboBox2 = new JComboBox<>();
+		comboBox3 = new JComboBox();
+		label12 = new JLabel();
+		label13 = new JLabel();
 		fileChooser1 = new JFileChooser();
 		dialogoCalendario = new JDialog();
 		calendar1 = new JCalendar();
@@ -185,52 +315,238 @@ public class GerirAR extends JFrame {
 		label1.setText("Circulo pertencente");
 		label1.setFont(new Font("Arial", Font.PLAIN, 14));
 		contentPane.add(label1);
-		label1.setBounds(20, 20, label1.getPreferredSize().width, 25);
+		label1.setBounds(15, 20, label1.getPreferredSize().width, 25);
 
 		//---- label2 ----
 		label2.setText("Nome da lista");
 		label2.setFont(new Font("Arial", Font.PLAIN, 14));
 		contentPane.add(label2);
-		label2.setBounds(15, 280, 124, 25);
+		label2.setBounds(15, 75, 95, 25);
 
 		//---- label3 ----
 		label3.setText("Sigla");
 		label3.setFont(new Font("Arial", Font.PLAIN, 14));
 		contentPane.add(label3);
-		label3.setBounds(15, 315, 124, 25);
+		label3.setBounds(15, 110, 90, 25);
 
 		//---- comboBox1 ----
 		comboBox1.setFont(new Font("Arial", Font.PLAIN, 14));
 		comboBox1.setModel(new DefaultComboBoxModel<>(new String[] {
-			"1",
-			"2",
-			"3",
-			"4",
-			"5",
-			"6",
-			"7",
-			"8",
-			"9",
-			"10",
-			"11",
-			"12",
-			"13",
-			"14",
-			"15",
-			"16",
-			"17",
-			"18",
-			"19",
-			"20",
-			"21",
-			"22"
+			"Aveiro",
+			"Beja",
+			"Braga",
+			"Braganca",
+			"Castelo Branco",
+			"Coimbra",
+			"Evora",
+			"Faro",
+			"Guarda",
+			"Leiria",
+			"Lisboa",
+			"Portalegre",
+			"Porto",
+			"Santarem",
+			"Setubal",
+			"Viana do Castelo",
+			"Vila Real",
+			"Viseu",
+			"Acores",
+			"Madeira",
+			"Europa",
+			"Fora da Europa"
 		}));
 		comboBox1.addItemListener(e -> comboBox1ItemStateChanged(e));
 		contentPane.add(comboBox1);
-		comboBox1.setBounds(170, 20, 130, 25);
+		comboBox1.setBounds(155, 20, 185, 25);
+
+		//---- separator1 ----
+		separator1.setFont(new Font("Arial", Font.PLAIN, 14));
+		contentPane.add(separator1);
+		separator1.setBounds(20, 55, 930, 15);
+
+		//---- label4 ----
+		label4.setText("S\u00edmbolo");
+		label4.setFont(new Font("Arial", Font.PLAIN, 14));
+		contentPane.add(label4);
+		label4.setBounds(15, 150, 90, 25);
+
+		//---- button1 ----
+		button1.setText("Procurar");
+		button1.setFont(new Font("Arial", Font.PLAIN, 14));
+		button1.addActionListener(e -> button1ActionPerformed(e));
+		contentPane.add(button1);
+		button1.setBounds(480, 150, 130, 25);
+
+		//---- nomeLista ----
+		nomeLista.setFont(new Font("Arial", Font.PLAIN, 14));
+		contentPane.add(nomeLista);
+		nomeLista.setBounds(110, 75, 500, 25);
+
+		//---- sigla ----
+		sigla.setFont(new Font("Arial", Font.PLAIN, 14));
+		contentPane.add(sigla);
+		sigla.setBounds(110, 110, 500, 25);
+
+		//---- pathImagem ----
+		pathImagem.setFont(new Font("Arial", Font.PLAIN, 14));
+		pathImagem.setEditable(false);
+		pathImagem.setEnabled(false);
+		contentPane.add(pathImagem);
+		pathImagem.setBounds(110, 150, 365, 25);
+
+		//---- button2 ----
+		button2.setText("Eliminar lista");
+		button2.setFont(new Font("Arial", Font.PLAIN, 14));
+		button2.addActionListener(e -> button2ActionPerformed(e));
+		contentPane.add(button2);
+		button2.setBounds(525, 355, 205, 25);
+
+		//---- button3 ----
+		button3.setText("Adicionar lista");
+		button3.setFont(new Font("Arial", Font.PLAIN, 16));
+		button3.addActionListener(e -> button3ActionPerformed(e));
+		contentPane.add(button3);
+		button3.setBounds(735, 355, 210, 25);
+
+		//---- label5 ----
+		label5.setText("Nome do candidato:");
+		label5.setFont(new Font("Arial", Font.PLAIN, 14));
+		contentPane.add(label5);
+		label5.setBounds(10, 415, 139, 22);
+
+		//---- label6 ----
+		label6.setText("Naturalidade:");
+		label6.setFont(new Font("Arial", Font.PLAIN, 14));
+		contentPane.add(label6);
+		label6.setBounds(10, 445, 139, 22);
+
+		//---- label7 ----
+		label7.setText("Resid\u00eancia:");
+		label7.setFont(new Font("Arial", Font.PLAIN, 14));
+		contentPane.add(label7);
+		label7.setBounds(515, 415, 85, 22);
+
+		//---- label8 ----
+		label8.setText("Profiss\u00e3o:");
+		label8.setFont(new Font("Arial", Font.PLAIN, 14));
+		contentPane.add(label8);
+		label8.setBounds(515, 445, 80, 22);
+
+		//---- label9 ----
+		label9.setText("B.I. / C.C.");
+		label9.setFont(new Font("Arial", Font.PLAIN, 14));
+		contentPane.add(label9);
+		label9.setBounds(515, 475, 70, 22);
+
+		//---- bi ----
+		bi.setFont(new Font("Arial", Font.PLAIN, 14));
+		contentPane.add(bi);
+		bi.setBounds(595, 475, 355, bi.getPreferredSize().height);
+
+		//---- profissao ----
+		profissao.setFont(new Font("Arial", Font.PLAIN, 14));
+		contentPane.add(profissao);
+		profissao.setBounds(595, 445, 355, profissao.getPreferredSize().height);
+
+		//---- residencia ----
+		residencia.setFont(new Font("Arial", Font.PLAIN, 14));
+		contentPane.add(residencia);
+		residencia.setBounds(595, 415, 355, residencia.getPreferredSize().height);
+
+		//---- naturalidade ----
+		naturalidade.setFont(new Font("Arial", Font.PLAIN, 14));
+		contentPane.add(naturalidade);
+		naturalidade.setBounds(155, 445, 335, naturalidade.getPreferredSize().height);
+
+		//---- nomeCandidato ----
+		nomeCandidato.setFont(new Font("Arial", Font.PLAIN, 14));
+		contentPane.add(nomeCandidato);
+		nomeCandidato.setBounds(155, 415, 335, nomeCandidato.getPreferredSize().height);
+
+		//---- label10 ----
+		label10.setText("Data de nascimento:");
+		label10.setFont(new Font("Arial", Font.PLAIN, 14));
+		contentPane.add(label10);
+		label10.setBounds(10, 480, 139, 25);
+
+		//---- dataNascimento ----
+		dataNascimento.setText("dd/mm/aa");
+		dataNascimento.setFont(new Font("Arial", Font.PLAIN, 14));
+		contentPane.add(dataNascimento);
+		dataNascimento.setBounds(155, 480, 115, 25);
+
+		//---- buttonDataNascimento ----
+		buttonDataNascimento.setText("Alterar");
+		buttonDataNascimento.setFont(new Font("Arial", Font.PLAIN, 12));
+		buttonDataNascimento.addActionListener(e -> buttonDataNascimentoActionPerformed(e));
+		contentPane.add(buttonDataNascimento);
+		buttonDataNascimento.setBounds(410, 480, 80, 25);
+
+		//---- buttonAdicionarCandidato ----
+		buttonAdicionarCandidato.setText("Adicionar");
+		buttonAdicionarCandidato.setFont(new Font("Arial", Font.PLAIN, 14));
+		buttonAdicionarCandidato.addActionListener(e -> buttonAdicionarFotoActionPerformed(e));
+		contentPane.add(buttonAdicionarCandidato);
+		buttonAdicionarCandidato.setBounds(670, 520, 95, 25);
+
+		//---- buttonApagarInfo ----
+		buttonApagarInfo.setText("Apagar informa\u00e7\u00f5es");
+		buttonApagarInfo.setFont(new Font("Arial", Font.PLAIN, 14));
+		buttonApagarInfo.addActionListener(e -> buttonApagarInfoActionPerformed(e));
+		contentPane.add(buttonApagarInfo);
+		buttonApagarInfo.setBounds(780, 520, 165, 25);
+
+		//======== scrollPane3 ========
+		{
+
+			//---- table2 ----
+			table2.setModel(new DefaultTableModel(
+				new Object[][] {
+				},
+				new String[] {
+					"Nome", "B.I. / C.C.", "Partido", "Tipo Candidato", null
+				}
+			));
+			table2.getColumnModel().getColumn(4).setPreferredWidth(0);
+			table2.getColumnModel().getColumn(4).setMinWidth(0);
+			table2.getColumnModel().getColumn(4).setWidth(0);
+			table2.getColumnModel().getColumn(4).setMaxWidth(0);
+			povoarTabelaCandidato();
+			scrollPane3.setViewportView(table2);
+		}
+		contentPane.add(scrollPane3);
+		scrollPane3.setBounds(10, 565, 935, 240);
+		contentPane.add(separator4);
+		separator4.setBounds(0, 1015, 940, 5);
+		contentPane.add(separator5);
+		separator5.setBounds(15, 585, 930, 7);
+		contentPane.add(separator2);
+		separator2.setBounds(15, 390, 930, separator2.getPreferredSize().height);
+
+		//---- button4 ----
+		button4.setText("Sair");
+		button4.setFont(new Font("Arial", Font.PLAIN, 14));
+		button4.addActionListener(e -> button4ActionPerformed(e));
+		contentPane.add(button4);
+		button4.setBounds(800, 850, 145, 25);
+
+		//---- buttonEliminarCandidato ----
+		buttonEliminarCandidato.setText("Eliminar candidato");
+		buttonEliminarCandidato.setFont(new Font("Arial", Font.PLAIN, 14));
+		buttonEliminarCandidato.addActionListener(e -> buttonEliminarCandidatoActionPerformed(e));
+		contentPane.add(buttonEliminarCandidato);
+		buttonEliminarCandidato.setBounds(795, 810, buttonEliminarCandidato.getPreferredSize().width, 25);
+		contentPane.add(separator6);
+		separator6.setBounds(15, 840, 925, 5);
 
 		//======== scrollPane1 ========
 		{
+			scrollPane1.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseEntered(MouseEvent e) {
+					scrollPane1MouseEntered(e);
+				}
+			});
 
 			//---- table1 ----
 			table1.setFont(new Font("Arial", Font.PLAIN, 14));
@@ -246,216 +562,65 @@ public class GerirAR extends JFrame {
 			table1.getColumnModel().getColumn(3).setMinWidth(0);
 			table1.getColumnModel().getColumn(3).setWidth(0);
 			table1.getColumnModel().getColumn(3).setMaxWidth(0);
-			//povoarTabela();
+			povoarTabelaListas();
 			scrollPane1.setViewportView(table1);
 		}
 		contentPane.add(scrollPane1);
-		scrollPane1.setBounds(20, 80, 930, 145);
-
-		//---- separator1 ----
-		separator1.setFont(new Font("Arial", Font.PLAIN, 14));
-		contentPane.add(separator1);
-		separator1.setBounds(20, 55, 930, 25);
+		scrollPane1.setBounds(15, 200, 930, 145);
 
 		//======== scrollPane2 ========
 		{
+			scrollPane2.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseClicked(MouseEvent e) {
+					scrollPane2MouseClicked(e);
+				}
+			});
 
-			//---- list1 ----
-			list1.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-			scrollPane2.setViewportView(list1);
-		}
-		contentPane.add(scrollPane2);
-		scrollPane2.setBounds(745, 280, 210, 105);
-
-		//---- label4 ----
-		label4.setText("S\u00edmbolo");
-		label4.setFont(new Font("Arial", Font.PLAIN, 14));
-		contentPane.add(label4);
-		label4.setBounds(15, 355, 124, 25);
-
-		//---- button1 ----
-		button1.setText("Procurar");
-		button1.setFont(new Font("Arial", Font.PLAIN, 14));
-		button1.addActionListener(e -> button1ActionPerformed(e));
-		contentPane.add(button1);
-		button1.setBounds(595, 355, 130, 25);
-
-		//---- nomeLista ----
-		nomeLista.setFont(new Font("Arial", Font.PLAIN, 14));
-		contentPane.add(nomeLista);
-		nomeLista.setBounds(155, 280, 565, 25);
-
-		//---- sigla ----
-		sigla.setFont(new Font("Arial", Font.PLAIN, 14));
-		contentPane.add(sigla);
-		sigla.setBounds(155, 315, 565, 25);
-
-		//---- pathImagem ----
-		pathImagem.setFont(new Font("Arial", Font.PLAIN, 14));
-		pathImagem.setEnabled(false);
-		contentPane.add(pathImagem);
-		pathImagem.setBounds(155, 355, 430, 25);
-
-		//---- button2 ----
-		button2.setText("Eliminar lista");
-		button2.setFont(new Font("Arial", Font.PLAIN, 14));
-		contentPane.add(button2);
-		button2.setBounds(745, 235, 205, 25);
-
-		//---- button3 ----
-		button3.setText("Adicionar lista");
-		button3.setFont(new Font("Arial", Font.PLAIN, 16));
-		contentPane.add(button3);
-		button3.setBounds(745, 395, 210, 25);
-
-		//---- label5 ----
-		label5.setText("Nome do candidato:");
-		label5.setFont(new Font("Arial", Font.PLAIN, 14));
-		contentPane.add(label5);
-		label5.setBounds(10, 445, 139, 22);
-
-		//---- label6 ----
-		label6.setText("Naturalidade:");
-		label6.setFont(new Font("Arial", Font.PLAIN, 14));
-		contentPane.add(label6);
-		label6.setBounds(10, 475, 139, 22);
-
-		//---- label7 ----
-		label7.setText("Resid\u00eancia:");
-		label7.setFont(new Font("Arial", Font.PLAIN, 14));
-		contentPane.add(label7);
-		label7.setBounds(515, 445, 85, 22);
-
-		//---- label8 ----
-		label8.setText("Profiss\u00e3o:");
-		label8.setFont(new Font("Arial", Font.PLAIN, 14));
-		contentPane.add(label8);
-		label8.setBounds(515, 475, 80, 22);
-
-		//---- label9 ----
-		label9.setText("B.I. / C.C.");
-		label9.setFont(new Font("Arial", Font.PLAIN, 14));
-		contentPane.add(label9);
-		label9.setBounds(515, 505, 70, 22);
-
-		//---- bi ----
-		bi.setFont(new Font("Arial", Font.PLAIN, 14));
-		contentPane.add(bi);
-		bi.setBounds(595, 505, 355, bi.getPreferredSize().height);
-
-		//---- profissao ----
-		profissao.setFont(new Font("Arial", Font.PLAIN, 14));
-		contentPane.add(profissao);
-		profissao.setBounds(595, 475, 355, profissao.getPreferredSize().height);
-
-		//---- residencia ----
-		residencia.setFont(new Font("Arial", Font.PLAIN, 14));
-		contentPane.add(residencia);
-		residencia.setBounds(595, 445, 355, residencia.getPreferredSize().height);
-
-		//---- naturalidade ----
-		naturalidade.setFont(new Font("Arial", Font.PLAIN, 14));
-		contentPane.add(naturalidade);
-		naturalidade.setBounds(155, 475, 335, naturalidade.getPreferredSize().height);
-
-		//---- nomeCandidato ----
-		nomeCandidato.setFont(new Font("Arial", Font.PLAIN, 14));
-		contentPane.add(nomeCandidato);
-		nomeCandidato.setBounds(155, 445, 335, nomeCandidato.getPreferredSize().height);
-
-		//---- label10 ----
-		label10.setText("Data de nascimento:");
-		label10.setFont(new Font("Arial", Font.PLAIN, 14));
-		contentPane.add(label10);
-		label10.setBounds(10, 510, 139, 25);
-
-		//---- dataNascimento ----
-		dataNascimento.setText("dd/mm/aa");
-		dataNascimento.setFont(new Font("Arial", Font.PLAIN, 14));
-		contentPane.add(dataNascimento);
-		dataNascimento.setBounds(155, 510, 115, 25);
-
-		//---- buttonDataNascimento ----
-		buttonDataNascimento.setText("Alterar");
-		buttonDataNascimento.setFont(new Font("Arial", Font.PLAIN, 12));
-		buttonDataNascimento.addActionListener(e -> buttonDataNascimentoActionPerformed(e));
-		contentPane.add(buttonDataNascimento);
-		buttonDataNascimento.setBounds(270, 510, 80, 25);
-
-		//---- label11 ----
-		label11.setText("Foto");
-		label11.setFont(new Font("Arial", Font.PLAIN, 14));
-		contentPane.add(label11);
-		label11.setBounds(10, 545, 35, 22);
-
-		//---- buttonProcurar ----
-		buttonProcurar.setText("Procurar");
-		buttonProcurar.setFont(new Font("Arial", Font.PLAIN, 14));
-		buttonProcurar.addActionListener(e -> buttonProcurarActionPerformed(e));
-		contentPane.add(buttonProcurar);
-		buttonProcurar.setBounds(50, 545, 95, buttonProcurar.getPreferredSize().height);
-
-		//---- pathImagem2 ----
-		pathImagem2.setEditable(false);
-		contentPane.add(pathImagem2);
-		pathImagem2.setBounds(155, 545, 335, 25);
-
-		//---- buttonAdicionarCandidato ----
-		buttonAdicionarCandidato.setText("Adicionar");
-		buttonAdicionarCandidato.setFont(new Font("Arial", Font.PLAIN, 14));
-		buttonAdicionarCandidato.addActionListener(e -> buttonAdicionarFotoActionPerformed(e));
-		contentPane.add(buttonAdicionarCandidato);
-		buttonAdicionarCandidato.setBounds(680, 535, 95, buttonAdicionarCandidato.getPreferredSize().height);
-
-		//---- buttonApagarInfo ----
-		buttonApagarInfo.setText("Apagar informa\u00e7\u00f5es");
-		buttonApagarInfo.setFont(new Font("Arial", Font.PLAIN, 14));
-		buttonApagarInfo.addActionListener(e -> buttonApagarInfoActionPerformed(e));
-		contentPane.add(buttonApagarInfo);
-		buttonApagarInfo.setBounds(785, 535, 165, buttonApagarInfo.getPreferredSize().height);
-
-		//======== scrollPane3 ========
-		{
-
-			//---- table2 ----
-			table2.setModel(new DefaultTableModel(
+			//---- table3 ----
+			table3.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+			table3.setModel(new DefaultTableModel(
 				new Object[][] {
-					{null, null, null, null, null},
 				},
 				new String[] {
-					"Nome", "B.I. / C.C.", "Partido", "Tipo Candidato", null
+					"Nome", "Sigla", "Tipo", null
 				}
 			));
-			scrollPane3.setViewportView(table2);
+			table3.getColumnModel().getColumn(3).setPreferredWidth(0);
+			table3.getColumnModel().getColumn(3).setMinWidth(0);
+			table3.getColumnModel().getColumn(3).setWidth(0);
+			table3.getColumnModel().getColumn(3).setMaxWidth(0);
+			povoarVotavel();
+			scrollPane2.setViewportView(table3);
 		}
-		contentPane.add(scrollPane3);
-		scrollPane3.setBounds(10, 595, 935, 240);
-		contentPane.add(separator4);
-		separator4.setBounds(0, 1015, 940, 5);
-		contentPane.add(separator5);
-		separator5.setBounds(15, 585, 930, 7);
-		contentPane.add(separator2);
-		separator2.setBounds(15, 420, 930, separator2.getPreferredSize().height);
+		contentPane.add(scrollPane2);
+		scrollPane2.setBounds(620, 75, 325, 110);
 
-		//---- buttonOK ----
-		buttonOK.setText("OK");
-		buttonOK.setFont(new Font("Arial", Font.PLAIN, 14));
-		contentPane.add(buttonOK);
-		buttonOK.setBounds(895, 885, buttonOK.getPreferredSize().width, 25);
+		//---- comboBox2 ----
+		comboBox2.setFont(new Font("Arial", Font.PLAIN, 14));
+		comboBox2.setModel(new DefaultComboBoxModel<>(new String[] {
+			"Primario",
+			"Secundario"
+		}));
+		contentPane.add(comboBox2);
+		comboBox2.setBounds(385, 515, 105, 25);
 
-		//---- button4 ----
-		button4.setText("Cancelar");
-		button4.setFont(new Font("Arial", Font.PLAIN, 14));
-		contentPane.add(button4);
-		button4.setBounds(795, 885, button4.getPreferredSize().width, 25);
+		//---- comboBox3 ----
+		comboBox3.setFont(new Font("Arial", Font.PLAIN, 14));
+		contentPane.add(comboBox3);
+		comboBox3.setBounds(80, 515, 145, 25);
 
-		//---- buttonEliminarCandidato ----
-		buttonEliminarCandidato.setText("Eliminar candidato");
-		buttonEliminarCandidato.setFont(new Font("Arial", Font.PLAIN, 14));
-		contentPane.add(buttonEliminarCandidato);
-		buttonEliminarCandidato.setBounds(795, 840, buttonEliminarCandidato.getPreferredSize().width, 25);
-		contentPane.add(separator6);
-		separator6.setBounds(15, 870, 925, 5);
+		//---- label12 ----
+		label12.setText("Partido:");
+		label12.setFont(new Font("Arial", Font.PLAIN, 14));
+		contentPane.add(label12);
+		label12.setBounds(10, 515, label12.getPreferredSize().width, 25);
+
+		//---- label13 ----
+		label13.setText("Tipo:");
+		label13.setFont(new Font("Arial", Font.PLAIN, 14));
+		contentPane.add(label13);
+		label13.setBounds(330, 515, 40, 25);
 
 		{ // compute preferred size
 			Dimension preferredSize = new Dimension();
@@ -470,7 +635,7 @@ public class GerirAR extends JFrame {
 			contentPane.setMinimumSize(preferredSize);
 			contentPane.setPreferredSize(preferredSize);
 		}
-		setSize(980, 955);
+		setSize(980, 920);
 		setLocationRelativeTo(null);
 
 		//======== dialogoCalendario ========
@@ -504,17 +669,14 @@ public class GerirAR extends JFrame {
 		// JFormDesigner - End of component initialization  //GEN-END:initComponents
 	}
 
+
 	// JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables
 	// Generated using JFormDesigner Evaluation license - Octavio Maia
 	private JLabel label1;
 	private JLabel label2;
 	private JLabel label3;
 	private JComboBox<String> comboBox1;
-	private JScrollPane scrollPane1;
-	private JTable table1;
 	private JComponent separator1;
-	private JScrollPane scrollPane2;
-	private JList list1;
 	private JLabel label4;
 	private JButton button1;
 	private JTextField nomeLista;
@@ -535,9 +697,6 @@ public class GerirAR extends JFrame {
 	private JLabel label10;
 	private JLabel dataNascimento;
 	private JButton buttonDataNascimento;
-	private JLabel label11;
-	private JButton buttonProcurar;
-	private JTextField pathImagem2;
 	private JButton buttonAdicionarCandidato;
 	private JButton buttonApagarInfo;
 	private JScrollPane scrollPane3;
@@ -545,10 +704,17 @@ public class GerirAR extends JFrame {
 	private JSeparator separator4;
 	private JSeparator separator5;
 	private JComponent separator2;
-	private JButton buttonOK;
 	private JButton button4;
 	private JButton buttonEliminarCandidato;
 	private JSeparator separator6;
+	private JScrollPane scrollPane1;
+	private JTable table1;
+	private JScrollPane scrollPane2;
+	private JTable table3;
+	private JComboBox<String> comboBox2;
+	private JComboBox comboBox3;
+	private JLabel label12;
+	private JLabel label13;
 	private JFileChooser fileChooser1;
 	private JDialog dialogoCalendario;
 	private JCalendar calendar1;

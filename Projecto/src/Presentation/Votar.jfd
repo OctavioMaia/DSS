@@ -26,25 +26,29 @@ new FormModel {
 				add( new FormComponent( "javax.swing.JTable" ) {
 					name: "table1"
 					"model": new com.jformdesigner.model.SwingTableModel( new java.util.Vector, new java.util.Vector {
+						add( null )
 						add( "Nome" )
 						add( "Identificação" )
 						add( null )
 					}, new java.util.Vector {
+						add( null )
 						add( class java.lang.Object )
 						add( null )
 						add( null )
 					}, new java.util.Vector {
+						add( null )
 						add( false )
 						add( null )
 						add( null )
 					}, new java.util.Vector {
+						add( null )
 						add( new com.jformdesigner.model.SwingTableColumn( null, 0, 0, 0, false ) )
 						add( null )
 						add( null )
 					} )
 					"font": new java.awt.Font( "Arial", 0, 12 )
 					auxiliary() {
-						"JavaCodeGenerator.postInitCode": "table1.getColumnModel().getColumn(2).setPreferredWidth(0);\ntable1.getColumnModel().getColumn(2).setMinWidth(0);\ntable1.getColumnModel().getColumn(2).setWidth(0);\ntable1.getColumnModel().getColumn(2).setMaxWidth(0);\npovoarTabela();"
+						"JavaCodeGenerator.postInitCode": "table1.getColumnModel().getColumn(3).setPreferredWidth(0);\ntable1.getColumnModel().getColumn(3).setMinWidth(0);\ntable1.getColumnModel().getColumn(3).setWidth(0);\ntable1.getColumnModel().getColumn(3).setMaxWidth(0);\ntable1.getColumnModel().getColumn(0).setPreferredWidth(0);\ntable1.getColumnModel().getColumn(0).setMinWidth(0);\ntable1.getColumnModel().getColumn(0).setWidth(0);\ntable1.getColumnModel().getColumn(0).setMaxWidth(0);\npovoarTabela();"
 					}
 					addEvent( new FormEvent( "java.awt.event.FocusListener", "focusGained", "table1FocusGained", true ) )
 				} )
@@ -56,8 +60,9 @@ new FormModel {
 			} )
 			add( new FormComponent( "javax.swing.JLabel" ) {
 				name: "labelImagem"
+				"text": "Imagem"
 				auxiliary() {
-					"JavaCodeGenerator.preInitCode": "labelImagem.setIcon(new ImageIcon(getClass().getResource(path)));"
+					"JavaCodeGenerator.preInitCode": "//labelImagem.setIcon(new ImageIcon(getClass().getResource(path)));"
 				}
 			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
 				"x": 290
@@ -85,6 +90,7 @@ new FormModel {
 			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
 				"x": 280
 				"y": 220
+				"height": 25
 			} )
 			add( new FormComponent( "javax.swing.JButton" ) {
 				name: "buttonVotar"

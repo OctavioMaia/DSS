@@ -24,4 +24,5 @@ public class ListavelVotos {
 	public void setVotos(int votos) {
 		this.votos = votos;
 	}
+
 }

@@ -15,7 +15,6 @@ import Business.SGE;
  */
 public class Login  {
 
-	boolean boolean_erro = false;
 	private SGE local;
 	
 	public Login(SGE sge){
@@ -26,12 +25,11 @@ public class Login  {
 	
 	private void buttonAutenticarActionPerformed(ActionEvent e) {		
 		try{
+			local.setEleitor(null);
 			String pw = new String(textPassword.getPassword());
 			int numeroEleitor = Integer.parseInt(textUsername.getText());
 
-			if(local.login(numeroEleitor, pw)){
-				boolean_erro = false;
-				
+			if(local.login(numeroEleitor, pw)){				
 				if(local.getEleitor()==null){
 					frameLogin.setVisible(false);
 					new MainAdmin(local);
@@ -40,12 +38,14 @@ public class Login  {
 					frameLogin.setVisible(false);
 					new MainEleitor(local);
 				}
-			}
-			else 
-				boolean_erro = true;
+			}else 
+				labelPasswordErrada.setVisible(true);
 			
 		}catch(NumberFormatException ex){
+			labelPasswordErrada.setVisible(true);
 			JOptionPane.showMessageDialog(null, "Introduza o seu número de eleitor correto!");
+		}catch(NullPointerException ex){
+			
 		}
 	}
 
@@ -91,26 +91,26 @@ public class Login  {
 
 				//---- label1 ----
 				label1.setText("Username");
-				label1.setFont(new Font("Calibri", Font.BOLD, 22));
+				label1.setFont(new Font("Arial", Font.BOLD, 22));
 				label1.setHorizontalAlignment(SwingConstants.CENTER);
 				panel1.add(label1);
 				label1.setBounds(40, 15, 120, 40);
 
 				//---- label2 ----
 				label2.setText("Password");
-				label2.setFont(new Font("Calibri", Font.BOLD, 22));
+				label2.setFont(new Font("Arial", Font.BOLD, 22));
 				label2.setHorizontalAlignment(SwingConstants.CENTER);
 				panel1.add(label2);
 				label2.setBounds(40, 60, 120, 40);
 
 				//---- textUsername ----
-				textUsername.setFont(new Font("Calibri", Font.PLAIN, 14));
+				textUsername.setFont(new Font("Arial", Font.PLAIN, 14));
 				textUsername.setHorizontalAlignment(SwingConstants.CENTER);
 				panel1.add(textUsername);
 				textUsername.setBounds(160, 20, 190, 35);
 
 				//---- textPassword ----
-				textPassword.setFont(new Font("Calibri", Font.PLAIN, 14));
+				textPassword.setFont(new Font("Arial", Font.PLAIN, 14));
 				textPassword.setHorizontalAlignment(SwingConstants.CENTER);
 				panel1.add(textPassword);
 				textPassword.setBounds(160, 60, 190, 35);

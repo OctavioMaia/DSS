@@ -167,8 +167,7 @@ public class ResultadoCirculoPRDAO implements Map<Integer,ResultadoCirculoPR>{
 		if(rs2.next()){
 			//Ir buscar o circulo
 			Circulo ci = cd.get_aux(key,c);
-			ret = new ResultadoCirculoPR(ci,rs2.getInt(Brancos), rs2.getInt(Nulos), rs2.getInt(Toteleitores), 
-					listasvotos);
+			ret = new ResultadoCirculoPR(ci, rs2.getInt(Toteleitores),rs2.getInt(Brancos), rs2.getInt(Nulos), listasvotos);
 		}
 		rs2.close();
 		circuloGeral.close();

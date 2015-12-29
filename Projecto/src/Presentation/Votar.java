@@ -32,8 +32,8 @@ public class Votar extends JFrame {
 	private String path;
 	
 	public Votar(SGE s) {
-		//sge = s;
-		//eleicao = sge.eleicaoAtiva();
+		sge = s;
+		eleicao = sge.eleicaoAtiva();
 		initComponents();
 		this.setVisible(true);
 	}
@@ -47,12 +47,13 @@ public class Votar extends JFrame {
 		Eleitor eleitor = sge.getEleitor();
 		
 		if(table1.getSelectedRowCount()==1){
-			sge.addVoto(eleicao, (Listavel) table1.getValueAt(table1.getSelectedRow(), 2), eleitor);			
+			sge.addVoto(eleicao, (Listavel) table1.getValueAt(table1.getSelectedRow(), 3), eleitor);			
 		}else if(table1.getSelectedRowCount()>1){
 			sge.addVotoNulo(eleicao, eleitor);
 		}else{
 			sge.addVotoBranco(eleicao, eleitor);
 		}
+		this.setVisible(false);
 	}
 
 	private void povoarTabela() {
@@ -61,15 +62,18 @@ public class Votar extends JFrame {
 		List <Listavel> lista = boletim.getListas();
 		Object[][] data = new Object[lista.size()][]; 
 		
-		for(Listavel l :lista){
-			data[i] = l.toTable();
-			
-			DefaultTableModel model = (DefaultTableModel) table1.getModel();
-			model.addRow(data[i]);
-			
-			i++;
+		for (Listavel l : lista) {
+			if (l != null) {
+				data[i] = l.toTable();
+
+				DefaultTableModel model = (DefaultTableModel) table1.getModel();
+				model.addRow(data[i]);
+
+				i++;
+			}
 		}
 	}
+	
 
 	private void table1FocusGained(FocusEvent e) {
 		Listavel l;
@@ -114,11 +118,11 @@ public class Votar extends JFrame {
 				new Object[][] {
 				},
 				new String[] {
-					"Nome", "Identifica\u00e7\u00e3o", null
+					null, "Nome", "Identifica\u00e7\u00e3o", null
 				}
 			) {
 				boolean[] columnEditable = new boolean[] {
-					false, true, true
+					true, false, true, true
 				};
 				@Override
 				public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -127,7 +131,7 @@ public class Votar extends JFrame {
 			});
 			{
 				TableColumnModel cm = table1.getColumnModel();
-				cm.getColumn(0).setResizable(false);
+				cm.getColumn(1).setResizable(false);
 			}
 			table1.setFont(new Font("Arial", Font.PLAIN, 12));
 			table1.addFocusListener(new FocusAdapter() {
@@ -136,10 +140,14 @@ public class Votar extends JFrame {
 					table1FocusGained(e);
 				}
 			});
-			table1.getColumnModel().getColumn(2).setPreferredWidth(0);
-			table1.getColumnModel().getColumn(2).setMinWidth(0);
-			table1.getColumnModel().getColumn(2).setWidth(0);
-			table1.getColumnModel().getColumn(2).setMaxWidth(0);
+			table1.getColumnModel().getColumn(3).setPreferredWidth(0);
+			table1.getColumnModel().getColumn(3).setMinWidth(0);
+			table1.getColumnModel().getColumn(3).setWidth(0);
+			table1.getColumnModel().getColumn(3).setMaxWidth(0);
+			table1.getColumnModel().getColumn(0).setPreferredWidth(0);
+			table1.getColumnModel().getColumn(0).setMinWidth(0);
+			table1.getColumnModel().getColumn(0).setWidth(0);
+			table1.getColumnModel().getColumn(0).setMaxWidth(0);
 			povoarTabela();
 			scrollPane1.setViewportView(table1);
 		}
@@ -147,7 +155,8 @@ public class Votar extends JFrame {
 		scrollPane1.setBounds(15, 45, 230, 200);
 
 		//---- labelImagem ----
-		labelImagem.setIcon(new ImageIcon(getClass().getResource(path)));
+		//labelImagem.setIcon(new ImageIcon(getClass().getResource(path)));
+		labelImagem.setText("Imagem");
 		contentPane.add(labelImagem);
 		labelImagem.setBounds(290, 45, 150, 150);
 
@@ -162,7 +171,7 @@ public class Votar extends JFrame {
 		buttonLimpar.setFont(new Font("Arial", Font.PLAIN, 14));
 		buttonLimpar.addActionListener(e -> buttonLimparActionPerformed(e));
 		contentPane.add(buttonLimpar);
-		buttonLimpar.setBounds(new Rectangle(new Point(280, 220), buttonLimpar.getPreferredSize()));
+		buttonLimpar.setBounds(280, 220, buttonLimpar.getPreferredSize().width, 25);
 
 		//---- buttonVotar ----
 		buttonVotar.setText("Votar");
