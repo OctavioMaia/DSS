@@ -215,7 +215,7 @@ public class ResultadoCirculoARDAO implements Map<Integer,ResultadoCirculoAR>{
 		Iterator<Lista> i = mandatos.keySet().iterator();
 
 		PreparedStatement psU = c.prepareStatement("UPDATE " + TabResLista + " "
-				+ "SET "+ TabResListaMandatos+"=?,"+TabResListaVotos+"=?, "
+				+ "SET "+ TabResListaMandatos+"=?,"+TabResListaVotos+"=? "
 				+ "WHERE " + TabResListaIDCirc+"=? AND "+TabResListaIDElei+"=? AND "
 				+ TabResListaIDLista +"=?");
 		
@@ -240,6 +240,7 @@ public class ResultadoCirculoARDAO implements Map<Integer,ResultadoCirculoAR>{
 				psU.setInt(5, idlista);
 				psU.setInt(1, mand);
 				psU.setInt(2, vot);
+				System.out.println("debug"+psU.toString());
 				psU.execute();
 			}else{
 				psI.setInt(1, idlista);

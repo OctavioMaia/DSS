@@ -8,6 +8,10 @@ public class Boletim {
 	
 	public Boletim(int nListas) {
 		listas = new ArrayList<Listavel>(nListas);
+		
+		for(int i=0; i<nListas;i++){
+			listas.add(null);
+		}
 	}
 
 	public List<Listavel> getListas() {
@@ -19,7 +23,7 @@ public class Boletim {
 	}
 	
 	public void addLista(Listavel l){
-		if(l.getClass().getSimpleName()=="Lista"){
+		if(l.getClass().getSimpleName().equals("Lista")){
 			Lista ar = (Lista) l;
 			listas.add(ar.getOrdem(), ar);
 		}else{
