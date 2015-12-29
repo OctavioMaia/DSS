@@ -20,4 +20,17 @@ public class VotavelVotos {
 	public void setVotos(int votos) {
 		this.votos = votos;
 	}
+	
+	public Object[] toTable(int totEleitores){
+		float percentagem=0;
+		
+		try{
+			percentagem = (votos/totEleitores)*100;
+		}catch(Exception e){
+			
+		}
+		
+		Object[] r = {(votavel.toTable()[0]),(votavel.toTable()[2]),percentagem,votos};
+		return r;
+	}
 }

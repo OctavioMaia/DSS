@@ -92,16 +92,26 @@ public class EleicaoAR extends Eleicao {
 				Votavel mandante = lista.getMandante();
 				if(!validos.containsKey(mandante))
 					validos.put(mandante, validosCirculo.get(lista));
-				else
-					validos.put(mandante, validos.get(mandante) + validosCirculo.get(mandante));
+				else{
+					if(validosCirculo.get(mandante)==null){
+						validos.put(mandante, validos.get(mandante));
+					}else{
+						validos.put(mandante, validos.get(mandante) + validosCirculo.get(mandante));
+					}
+				}
 			}
 			Map<Lista,Integer> mandatosCirculo = this.resultado.get(circulo).getMandatos();
 			for(Lista lista: mandatosCirculo.keySet()){
 				Votavel mandante = lista.getMandante();
 				if(!mandatos.containsKey(mandante))
 					mandatos.put(mandante, mandatosCirculo.get(lista));
-				else
-					mandatos.put(mandante, mandatos.get(mandante) + mandatosCirculo.get(mandante));
+				else{
+					if(validosCirculo.get(mandante)==null){
+						mandatos.put(mandante, mandatos.get(mandante));
+					}else{
+						mandatos.put(mandante, mandatos.get(mandante) + mandatosCirculo.get(mandante));
+					}
+				}
 			}
 		}
 		return new ResultadoGlobalAR(nulos,brancos,totEleitores,validos,mandatos); 
@@ -126,7 +136,7 @@ public class EleicaoAR extends Eleicao {
 		}
 	}
 	
-	public void atribuirMandatosListas(){
+	private void atribuirMandatosListas(){
 		for(Integer circulo: this.resultado.keySet()){
 			int mandatosCirculo = this.circulos.get(circulo).getMandatos();
 			ResultadoCirculoAR resultadoCirculo = this.resultado.get(circulo);
@@ -208,12 +218,12 @@ public class EleicaoAR extends Eleicao {
 			}
 		}
 		l.setID(maxID+1);
-		
-		/*
-		 * Atencao: nao e garantido que a lista seja adicionada aos circulos e aos resultados,
-		 * se acontecer um errro na base de dados
-		 */
-		this.circulos.get(l.getCirculo().getId()).addLista(l);
+		try{
+			this.circulos.get(l.getCirculo().getId()).addLista(l);
+		}
+		catch(ExceptionMandanteInvalido e){
+			throw e;
+		}
 		ResultadoCirculoAR resultadoCirculo = this.resultado.get(l.getCirculo().getId());
 		resultadoCirculo.addLista(l);
 		this.resultado.put(l.getCirculo().getId(), resultadoCirculo);
@@ -270,7 +280,7 @@ public class EleicaoAR extends Eleicao {
 		return boletim;
 	}
 	
-	public void geraBoletim(){
+	private void geraBoletim(){
 		Random r = new Random();
 		ArrayList<Integer> nums = null;
 		Collection<Lista> listasCirculo = null;
@@ -292,6 +302,9 @@ public class EleicaoAR extends Eleicao {
 					cinfo.addLista(listaCirculo);
 				} catch (ExceptionLimiteCandidatos e) {
 					e.printStackTrace();
+				}
+				catch (ExceptionMandanteInvalido e){
+					//
 				}
 			}
 		}
