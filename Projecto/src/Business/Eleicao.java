@@ -121,4 +121,6 @@ public abstract class Eleicao {
 	public void alterarData(Calendar dataInicio) {
 		data=dataInicio;
 	}
+
+	public abstract boolean eleitorVotar(Eleitor e);
 }

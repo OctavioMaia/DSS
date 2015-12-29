@@ -436,4 +436,16 @@ public class EleicaoPR extends Eleicao {
 		Object[] lista = {super.getData().getTime(), "Presidência da República", this};
 	    return lista;
 	}
+
+	@Override
+	public boolean eleitorVotar(Eleitor e) {
+		boolean res;
+		if(this.volta2==false){
+			res = super.getVotantes().contains(e.getnIdent());
+		}else{
+			res = this.votantes2.contains(e.getnIdent());
+		}
+		return res;
+	}
+
 }
