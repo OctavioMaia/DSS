@@ -293,9 +293,7 @@ public class AdminDAO implements Map<Integer,Admin> {
     	Connection conn=null;
     	Admin el = null;
     	try{
-    		System.out.println("aqui");
     		conn = Connector.newConnection(false);
-    		System.out.println("aqui");
     		el = this.put_aux(key, value, conn);
     		conn.commit();
     	}catch(Exception e){
