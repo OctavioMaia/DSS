@@ -87,7 +87,6 @@ public class MainAdmin extends JFrame {
 				}
 			}
 		}
-		
 	}
 	
 	
@@ -101,8 +100,8 @@ public class MainAdmin extends JFrame {
 			}
 			Eleicao ativaEL = sge.eleicaoAtiva();
 			sge.terminarEleicao(ativaEL);
-			iniarSegundaVolta(ativaEL);
 			if(sge.eleicaoAtiva()==null) labelEleicaoAtiva.setText("");
+			iniarSegundaVolta(ativaEL);
 		} catch (ExceptionEleicaoAtiva e1) {
 			JOptionPane.showMessageDialog(null, e1.getMessage());
 		} catch (ExceptionTerminarEleicao e1) {
