@@ -94,11 +94,7 @@ public class ResultadoCirculoPR {
 	}
 
 	public void addVoto(ListaPR l) {
-		if(this.validos.get(l)!=null){
-			this.validos.put(l, this.validos.get(l) + 1);
-		}else{
-			this.validos.put(l, 0 + 1);
-		}
+		this.validos.put(l, this.validos.get(l) + 1);
 	}
 
 	public void addVotoBranco() {
@@ -114,17 +110,11 @@ public class ResultadoCirculoPR {
 	public void addListas(Collection<ListaPR> listas) {
 		for (ListaPR lista : listas) {
 			if (!this.validos.containsKey(lista)) {
+				System.out.println("Teste1conetem chave");
 				this.validos.put(lista, 0);
 			}
 		}
 	}
-
-	/*
-	 * public ListaPR maisVotada(){ int maxVotos=0; ListaPR maisVotada = null;
-	 * for(ListaPR lista : this.validos.keySet()){
-	 * if(this.validos.get(lista)>maxVotos){ maisVotada=lista;
-	 * maxVotos=this.validos.get(lista); } } return maisVotada; }
-	 */
 
 	public int votosLista(ListaPR lista) {
 		return this.validos.get(lista);

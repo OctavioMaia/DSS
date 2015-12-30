@@ -278,6 +278,7 @@ public class EleicaoPR extends Eleicao {
 		if (super.estado(-1)) {// iniciar depois da eleicao ter sido criada
 			System.out.println("pr_debug1");
 			super.setEstado(0);
+			super.setPermitirVotar(true);
 			System.out.println("pr_debug2");
 			Collection<ListaPR> list = this.listas.values();
 			this.geraBoletim(list);
@@ -291,6 +292,7 @@ public class EleicaoPR extends Eleicao {
 			System.out.println("debug5");
 			if (super.estado(0) && this.volta2) { // iniciar segunda volta
 				System.out.println("debug6");
+				super.setPermitirVotar(true);
 				Collection<ListaPR> list = this.disputaSegundaVolta(this.resultadosVolta(1));
 				if (list.size() == 2) {
 					this.geraBoletim(list);
@@ -477,13 +479,20 @@ public class EleicaoPR extends Eleicao {
 
 	@Override
 	public boolean eleitorVotar(Eleitor e) {
-		boolean res;
-		if(this.volta2==false){
-			res = super.getVotantes().contains(e.getnIdent());
-		}else{
-			res = this.votantes2.contains(e.getnIdent());
+		boolean res=false;
+		if(super.isPermitirVotar()){
+			if(this.volta2==false){
+				res = super.getVotantes().contains(e.getnIdent());
+			}else{
+				res = this.votantes2.contains(e.getnIdent());
+			}
 		}
+			
 		return res;
+	}
+
+	public boolean temSegundaVolta() {
+		return this.volta2;
 	}
 
 }
