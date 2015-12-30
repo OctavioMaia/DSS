@@ -71,23 +71,29 @@ public class ListaPR implements Listavel {
 		r=this.candidato.equals(c);
 		return r;
 	}
+
 	@Override
 	public boolean equals(Object obj) {
+		if(this.getClass()!=obj.getClass()) return false;
 		ListaPR lista = (ListaPR) obj;
-		return this.idEleicao==lista.idEleicao;
+		return this.idEleicao==lista.idEleicao && this.idListaPR==lista.idListaPR;
 	}
 	public boolean equalsID(int idLista){
 		return this.idEleicao==idLista;
 	}
-
 	@Override
 	public Object[] toTable() {
-		Object[] lista = {this.candidato.getNome(), this.candidato.getBi(),this};
+		Object[] lista = {"",this.candidato.getNome(), this.candidato.getBi(),this};
     	return lista;
 	}
-
 	@Override
 	public String pathImage() {
 		return this.candidato.getFoto();
+	}
+	
+	@Override
+	public int hashCode() {
+		// TODO Auto-generated method stub
+		return this.idListaPR;
 	}
 }

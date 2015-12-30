@@ -210,7 +210,6 @@ public class EleicaoPRDAO implements Map<Integer,EleicaoPR>{
 		while(iv1.hasNext()){
 			int idv = iv1.next();
 			psisnsert.setInt(1, idv);
-			//System.out.println(psisnsert.toString());
 			psisnsert.execute();
 		}
 		
@@ -311,9 +310,8 @@ public class EleicaoPRDAO implements Map<Integer,EleicaoPR>{
 		EleicaoPR ret = this.get_aux(key,c);
 		if(ret==null) return null;
 		//Limpar DAO quem EleicaoTem com a  mesma conneccao
-		/*System.out.println("V1 " + key);
+		/*
 		(new ResultadoCirculoPRDAO(key, 1)).clear_aux(c);
-		System.out.println("V2 " + key);
 		(new ResultadoCirculoPRDAO(key, 2)).clear_aux(c);*/
 		ret.getVoltaR1().clear_aux(c);
 		ret.getVoltaR2().clear_aux(c);

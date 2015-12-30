@@ -84,7 +84,7 @@ public class PartidosInterface extends JFrame {
 
 	private void initComponents() {
 		// JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
-		// Generated using JFormDesigner Evaluation license - Octavio Maia
+		// Generated using JFormDesigner Evaluation license - Rui Freitas
 		label1 = new JLabel();
 		label2 = new JLabel();
 		label3 = new JLabel();
@@ -201,7 +201,7 @@ public class PartidosInterface extends JFrame {
 	}
 
 	// JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables
-	// Generated using JFormDesigner Evaluation license - Octavio Maia
+	// Generated using JFormDesigner Evaluation license - Rui Freitas
 	private JLabel label1;
 	private JLabel label2;
 	private JLabel label3;

@@ -240,7 +240,6 @@ public class ResultadoCirculoARDAO implements Map<Integer,ResultadoCirculoAR>{
 				psU.setInt(5, idlista);
 				psU.setInt(1, mand);
 				psU.setInt(2, vot);
-				System.out.println("debug"+psU.toString());
 				psU.execute();
 			}else{
 				psI.setInt(1, idlista);
@@ -270,7 +269,6 @@ public class ResultadoCirculoARDAO implements Map<Integer,ResultadoCirculoAR>{
 			ps.setInt(3, value.getTotEleitores());
 			ps.setInt(4, this.idEleicao);
 			ps.setInt(5, key);
-			System.out.println(ps.toString());
 			ps.execute();
 			ps.close();
 		}else{//novo

@@ -133,9 +133,7 @@ public class SGE {
 				idEleicaoAtiva = ar.getIdEleicao();
 			}
 		}
-		
-		System.out.println("id ativa inicial "+idEleicaoAtiva);
-		
+				
 		return idEleicaoAtiva;
 	}
 	
@@ -166,7 +164,6 @@ public class SGE {
 			while ((line = br.readLine()) != null) {
 				if (line.contains(flin)) {
 					csvSplit = line.split("=")[1];
-					//System.out.println(csvSplit);
 				} else {
 					String[] eleitores = line.split(csvSplit);
 					int nCiruclo = Integer.parseInt(eleitores[1]);
@@ -224,26 +221,17 @@ public class SGE {
 
 	public void iniciarEleicao(Eleicao e) throws ExceptionEleicaoAtiva, ExceptionIniciarEleicao {
 		Eleicao el;
-		if (this.ativa != -1) {
+		if (this.ativa != -1 && this.ativa!=e.getIdEleicao()) {
 			throw new ExceptionEleicaoAtiva("Já existe uma eleição ativa");
 		} else {
-			System.out.println("ativa id:"+ativa);
 			if (e.getClass().getSimpleName().equals("EleicaoPR")) {
-				System.out.println("debug1");
 				el = this.eleicoesPR.get(e.getIdEleicao());
-				System.out.println("debug2");
 				el.iniciar();
-				System.out.println("added");
 				this.eleicoesPR.put(el.getIdEleicao(), (EleicaoPR) el);
-				System.out.println("debug3");
 			} else {
-				System.out.println("debug4");
 				el = this.eleicoesAR.get(e.getIdEleicao());
-				System.out.println("debug5");
 				el.iniciar();
-				System.out.println("debug6");
 				this.eleicoesAR.put(el.getIdEleicao(), (EleicaoAR) el);
-				System.out.println("debug7");
 			}
 			this.ativa = e.getIdEleicao();
 		}
@@ -272,8 +260,8 @@ public class SGE {
 		eleicao.setIdEleicao(this.chaveEleicao());
 		this.eleicoesPR.put(eleicao.getIdEleicao(), eleicao);
 		EleicaoPR l = this.eleicoesPR.get(eleicao.getIdEleicao());
-		l.initResultadoCirculoPRDAO(eleicao.getIdEleicao(), 1, circulos.values());
-		l.initResultadoCirculoPRDAO(eleicao.getIdEleicao(), 2, circulos.values());
+		l.initResultadoCirculoPRDAO(l.getIdEleicao(), 1, circulos.values());
+		l.initResultadoCirculoPRDAO(l.getIdEleicao(), 2, circulos.values());
 		this.eleicoesPR.put(l.getIdEleicao(), l);
 		return l;
 	}
@@ -343,6 +331,9 @@ public class SGE {
 
 	public void addPartido(Partido part) throws ExceptionPartidoExiste {
 		part.setId(this.chavePartido());
+		if(this.partidos.containsValue(part)){
+			throw new ExceptionPartidoExiste("O partido que quer registar já se encontra registado");
+		}
 		this.partidos.put(part.getId(), part);
 	}
 
@@ -435,13 +426,10 @@ public class SGE {
 		int maxAR = 0;
 		if (this.eleicoesAR.size() > 0) {
 			maxAR = Collections.max(this.eleicoesAR.keySet());
-			//System.out.println("ar:"+maxAR);
 		}
 		if (this.eleicoesPR.size() > 0) {
 			maxPR = Collections.max(this.eleicoesPR.keySet());
-			//System.out.println("pr:"+maxAR);
 		}
-		//System.out.println("max"+(Math.max(maxPR, maxAR) + 1));
 		return (Math.max(maxPR, maxAR) + 1);
 	}
 
@@ -512,9 +500,9 @@ public class SGE {
 		return listasSeg;
 	}
 	
-	public Set<ListavelVotos> ordenarLista(HashMap<Lista, Integer> listas) {
+	public Set<ListavelVotos> ordenarListaPR(HashMap<ListaPR, Integer> listas) {
 		TreeSet<ListavelVotos> listasSeg = new TreeSet<>(new ComparatorListavelVotos());
-		for (Lista lista : listas.keySet()) {
+		for (ListaPR lista : listas.keySet()) {
 			ListavelVotos lv = new ListavelVotos(lista, listas.get(lista));
 			listasSeg.add(lv);
 		}
@@ -534,7 +522,6 @@ public class SGE {
 		return this.circulos.get(num);
 	}
 
-	
 	public Set<Votavel> getVotaveis(){
 		Set<Votavel> vot = new HashSet<>();
 		for(Partido  p : this.partidos.values()){
@@ -580,6 +567,10 @@ public class SGE {
 			}
 		}
 		return col;
+	}
+	
+	public boolean temSegundaVolta(EleicaoPR el){
+		return el.temSegundaVolta();
 	}
 	
 }

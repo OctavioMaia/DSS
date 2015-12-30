@@ -218,12 +218,12 @@ public class EleicaoAR extends Eleicao {
 			}
 		}
 		l.setID(maxID+1);
-		
-		/*
-		 * Atencao: nao e garantido que a lista seja adicionada aos circulos e aos resultados,
-		 * se acontecer um errro na base de dados
-		 */
-		this.circulos.get(l.getCirculo().getId()).addLista(l);
+		try{
+			this.circulos.get(l.getCirculo().getId()).addLista(l);
+		}
+		catch(ExceptionMandanteInvalido e){
+			throw e;
+		}
 		ResultadoCirculoAR resultadoCirculo = this.resultado.get(l.getCirculo().getId());
 		resultadoCirculo.addLista(l);
 		this.resultado.put(l.getCirculo().getId(), resultadoCirculo);
@@ -303,6 +303,9 @@ public class EleicaoAR extends Eleicao {
 				} catch (ExceptionLimiteCandidatos e) {
 					e.printStackTrace();
 				}
+				catch (ExceptionMandanteInvalido e){
+					//
+				}
 			}
 		}
 	}
@@ -329,7 +332,7 @@ public class EleicaoAR extends Eleicao {
 
 	@Override
 	public boolean eleitorVotar(Eleitor e) {
-		return super.getVotantes().contains(e.getnIdent());
+		return super.isPermitirVotar() && super.getVotantes().contains(e.getnIdent());
 	}
 
 	
