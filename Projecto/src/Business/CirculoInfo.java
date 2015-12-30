@@ -47,8 +47,11 @@ public class CirculoInfo {
 		this.mandatos = mandatos;
 	}
 
-	public void addLista(Lista lista) throws ExceptionLimiteCandidatos{
+	public void addLista(Lista lista) throws ExceptionLimiteCandidatos, ExceptionMandanteInvalido{
 		if(lista.getNumCandPrim() >= this.mandatos) throw new ExceptionLimiteCandidatos("Limite de candidatos primarios ("+this.mandatos+") excedido");
+		for(Lista l: listas.values()){
+			if(l.getMandante().equals(lista.getMandante())) throw new ExceptionMandanteInvalido("Partido ou coligação já existente no circulo");
+		}
 		this.listas.put(lista.getID(),lista);
 	}
 	
