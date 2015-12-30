@@ -80,7 +80,7 @@ public class Votar extends JFrame {
 		
 		for (int i = 0; i < table1.getRowCount(); i++) {
 			if (table1.isRowSelected(i) && table1.getSelectedRowCount()==1) {
-				l = (Listavel) table1.getValueAt(table1.getSelectedRow(), 2);
+				l = (Listavel) table1.getValueAt(table1.getSelectedRow(), 3);
 				path = l.pathImage();
 			}
 		}

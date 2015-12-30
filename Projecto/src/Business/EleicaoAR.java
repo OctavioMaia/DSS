@@ -332,7 +332,7 @@ public class EleicaoAR extends Eleicao {
 
 	@Override
 	public boolean eleitorVotar(Eleitor e) {
-		return super.getVotantes().contains(e.getnIdent());
+		return super.isPermitirVotar() && super.getVotantes().contains(e.getnIdent());
 	}
 
 	
