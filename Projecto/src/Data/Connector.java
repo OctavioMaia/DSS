@@ -5,7 +5,7 @@ import java.sql.DriverManager;
 
 public class Connector {
 	private static String url="jdbc:mysql://localhost:3306/sge";
-	private static String username="root";
+	private static String username="";
 	private static String password="";
 
 	public static Connection newConnection(boolean autoCommit) throws Exception {
