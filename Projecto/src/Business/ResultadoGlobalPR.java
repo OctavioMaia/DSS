@@ -58,7 +58,7 @@ public class ResultadoGlobalPR {
 			totVotos+=i.next().getVotos();
 		}
 		
-		abstencao = totVotos-brancos-nulos;
+		abstencao = totEleitores-totVotos-brancos-nulos;
 		
 		return abstencao;
 	}

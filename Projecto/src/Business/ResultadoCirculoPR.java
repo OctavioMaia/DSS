@@ -80,7 +80,7 @@ public class ResultadoCirculoPR {
 			totVotos+=i.next();
 		}
 		
-		abstencao = totVotos-brancos-nulos;
+		abstencao = totEleitores-totVotos-brancos-nulos;
 		
 		return abstencao;
 	}
