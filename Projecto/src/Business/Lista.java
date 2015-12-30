@@ -173,4 +173,8 @@ public class Lista implements Listavel{
 		return this.simbolo;
 	}
 
+	@Override
+	public int hashCode() {
+		return this.id;
+	}
 }
