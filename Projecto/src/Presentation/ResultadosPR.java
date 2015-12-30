@@ -12,11 +12,12 @@ import javax.swing.*;
 import javax.swing.border.*;
 import javax.swing.table.*;
 import Business.EleicaoPR;
+import Business.ListaPR;
 import Business.ListavelVotos;
+import Business.ResultadoCirculoPR;
 import Business.ResultadoGlobalAR;
 import Business.ResultadoGlobalPR;
 import Business.SGE;
-import Business.VotavelVotos;
 
 /**
  * @author Octavio Maia
@@ -43,9 +44,31 @@ public class ResultadosPR extends JFrame {
                 ((DefaultTableModel) tableResultadosGlobais.getModel()).removeRow(conta);
             }
         }
+		int toteleitores = res_global.getTotEleitores();
+		for(ListavelVotos listavot : set){	
+			Object[] dataaux = {((ListaPR)listavot.getLista()).getCandidato().getNome(),listavot.getVotos()/toteleitores*100,listavot.getVotos()};
+			data[i] =dataaux;
+			
+			DefaultTableModel model = (DefaultTableModel) tableResultadosGlobais.getModel();
+			model.addRow(data[i]);
+			i++;
+		}
+	}
+	private void povoarListaCriculo(int volta,int circulo){
+		ResultadoCirculoPR res_cir = sge.getResultadoCirculoPR(eleicao,volta,circulo);
+		Set<ListavelVotos> set = sge.ordenarListaPR(res_cir.getValidos());
+		Object[][] data = new Object[set.size()][]; 
+		int i=0;
 		
-		for(ListavelVotos el : set){	
-			data[i] = el.toTable(historico.getTotEleitores());
+		if (tableResultadosGlobais.getRowCount() > 0) {
+            for (int conta = tableResultadosGlobais.getRowCount() - 1; conta > -1; conta--) {
+                ((DefaultTableModel) tableResultadosGlobais.getModel()).removeRow(conta);
+            }
+        }
+		int toteleitoresCirculo = res_cir.getTotEleitores();
+		for(ListavelVotos listavot : set){	
+			Object[] dataaux = {((ListaPR)listavot.getLista()).getCandidato().getNome(),listavot.getVotos()/toteleitoresCirculo*100,listavot.getVotos()};
+			data[i] =dataaux;
 			
 			DefaultTableModel model = (DefaultTableModel) tableResultadosGlobais.getModel();
 			model.addRow(data[i]);
@@ -53,13 +76,26 @@ public class ResultadosPR extends JFrame {
 		}
 	}
 
+	
 	private void comboBox1ItemStateChanged(ItemEvent e) {
-		// TODO add your code here
+		povoarListaCriculo(voltaBox.getSelectedIndex()+1, comboBox1.getSelectedIndex()+1);
+	}
+
+	private void voltaBoxItemStateChanged(ItemEvent e) {
+		if(voltaBox.getSelectedIndex()==1){
+			if(sge.temSegundaVolta(eleicao)){
+				povoarListaGlobais(2);
+				povoarListaCriculo(2, 1);
+			}else{
+				JOptionPane.showMessageDialog(null, "Houve maioria absoluta na primeira volta");
+				voltaBox.removeItemAt(1);
+			}
+		}
 	}
 	
 	private void initComponents() {
 		// JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
-		// Generated using JFormDesigner Evaluation license - Octavio Maia
+		// Generated using JFormDesigner Evaluation license - Rui Freitas
 		ResultadosPR = new JFrame();
 		label1 = new JLabel();
 		label2 = new JLabel();
@@ -137,14 +173,14 @@ public class ResultadosPR extends JFrame {
 					new Object[][] {
 					},
 					new String[] {
-						"Percentagem", "Lista"
+						"Lista", "Percentagem", "Votos"
 					}
 				) {
 					Class<?>[] columnTypes = new Class<?>[] {
-						String.class, Object.class
+						String.class, Object.class, Object.class
 					};
 					boolean[] columnEditable = new boolean[] {
-						false, false
+						false, false, true
 					};
 					@Override
 					public Class<?> getColumnClass(int columnIndex) {
@@ -160,7 +196,8 @@ public class ResultadosPR extends JFrame {
 					cm.getColumn(0).setResizable(false);
 				}
 				tableResultadosGlobais.setFont(new Font("Arial", Font.PLAIN, 12));
-				povoarListaGlobais();
+				tableResultadosGlobais.setRowSelectionAllowed(false);
+				povoarListaGlobais(1);
 				scrollGlobais.setViewportView(tableResultadosGlobais);
 			}
 			ResultadosPRContentPane.add(scrollGlobais);
@@ -215,37 +252,37 @@ public class ResultadosPR extends JFrame {
 			label12.setBounds(265, 360, 100, 17);
 
 			//---- circuloBrancosN ----
-			circuloBrancosN.setText(""+sge.getResultadoCirculoPR(eleicao, voltaBox.getSelectedIndex()+1, (int) tableCirculo.getModel().getValueAt(tableCirculo.getSelectedRow(), 1)).getBrancos());
+			circuloBrancosN.setText(""+sge.getResultadoCirculoPR(eleicao, 1, 1).getBrancos());
 			circuloBrancosN.setFont(new Font("Arial", Font.PLAIN, 14));
 			ResultadosPRContentPane.add(circuloBrancosN);
 			circuloBrancosN.setBounds(380, 360, 75, 17);
 
 			//---- circuloBrancosP ----
-			circuloBrancosP.setText(Math.round(100.0 / eleicao.numeroEleitores() * sge.getResultadoCirculoPR(eleicao,voltaBox.getSelectedIndex()+1,(int) tableCirculo.getValueAt(tableCirculo.getSelectedRow(), 1)).getBrancos())+"%");
+			circuloBrancosP.setText(Math.round(100.0 / eleicao.numeroEleitores() * sge.getResultadoCirculoPR(eleicao,1,1).getBrancos())+"%");
 			circuloBrancosP.setFont(new Font("Arial", Font.PLAIN, 14));
 			ResultadosPRContentPane.add(circuloBrancosP);
 			circuloBrancosP.setBounds(480, 360, 55, 17);
 
 			//---- circuloNulosP ----
-			circuloNulosP.setText(Math.round(100.0 / eleicao.numeroEleitores() * sge.getResultadoCirculoPR(eleicao,voltaBox.getSelectedIndex()+1,(int) tableCirculo.getValueAt(tableCirculo.getSelectedRow(), 1)).getNulos())+"%");
+			circuloNulosP.setText(Math.round(100.0 / eleicao.numeroEleitores() * sge.getResultadoCirculoPR(eleicao,1,1).getNulos())+"%");
 			circuloNulosP.setFont(new Font("Arial", Font.PLAIN, 14));
 			ResultadosPRContentPane.add(circuloNulosP);
 			circuloNulosP.setBounds(480, 385, 55, 17);
 
 			//---- circuloAbstencaoP ----
-			circuloAbstencaoP.setText(Math.round(100.0 / eleicao.numeroEleitores() * sge.getResultadoCirculoPR(eleicao,voltaBox.getSelectedIndex()+1,(int) tableCirculo.getValueAt(tableCirculo.getSelectedRow(), 1)).getAbstencao())+"%");
+			circuloAbstencaoP.setText(Math.round(100.0 / eleicao.numeroEleitores() * sge.getResultadoCirculoPR(eleicao,1,1).getAbstencao())+"%");
 			circuloAbstencaoP.setFont(new Font("Arial", Font.PLAIN, 14));
 			ResultadosPRContentPane.add(circuloAbstencaoP);
 			circuloAbstencaoP.setBounds(480, 410, 55, 17);
 
 			//---- circuloAbstencaoN ----
-			circuloAbstencaoN.setText(""+sge.getResultadoCirculoPR(eleicao, voltaBox.getSelectedIndex()+1, (int) tableCirculo.getModel().getValueAt(tableCirculo.getSelectedRow(), 1)).getAbstencao());
+			circuloAbstencaoN.setText(""+sge.getResultadoCirculoPR(eleicao, 1, 1).getAbstencao());
 			circuloAbstencaoN.setFont(new Font("Arial", Font.PLAIN, 14));
 			ResultadosPRContentPane.add(circuloAbstencaoN);
 			circuloAbstencaoN.setBounds(380, 410, 75, 17);
 
 			//---- circuloNulosN ----
-			circuloNulosN.setText(""+sge.getResultadoCirculoPR(eleicao, voltaBox.getSelectedIndex()+1, (int) tableCirculo.getModel().getValueAt(tableCirculo.getSelectedRow(), 1)).getNulos());
+			circuloNulosN.setText(""+sge.getResultadoCirculoPR(eleicao, 1,1).getNulos());
 			circuloNulosN.setFont(new Font("Arial", Font.PLAIN, 14));
 			ResultadosPRContentPane.add(circuloNulosN);
 			circuloNulosN.setBounds(380, 385, 75, 17);
@@ -271,14 +308,14 @@ public class ResultadosPR extends JFrame {
 					new Object[][] {
 					},
 					new String[] {
-						"Percentagem", "Lista", "N\u00famero de Votos", null
+						"Lista", "Percentagem", "Votos"
 					}
 				) {
 					Class<?>[] columnTypes = new Class<?>[] {
-						String.class, Object.class, Object.class, Object.class
+						Object.class, String.class, Object.class
 					};
 					boolean[] columnEditable = new boolean[] {
-						false, false, true, true
+						false, false, true
 					};
 					@Override
 					public Class<?> getColumnClass(int columnIndex) {
@@ -292,12 +329,10 @@ public class ResultadosPR extends JFrame {
 				{
 					TableColumnModel cm = tableResultadosCirculo.getColumnModel();
 					cm.getColumn(0).setResizable(false);
+					cm.getColumn(1).setResizable(false);
 				}
 				tableResultadosCirculo.setFont(new Font("Arial", Font.PLAIN, 12));
-				tableResultadosCirculo.getColumnModel().getColumn(3).setPreferredWidth(0);
-				tableResultadosCirculo.getColumnModel().getColumn(3).setMinWidth(0);
-				tableResultadosCirculo.getColumnModel().getColumn(3).setWidth(0);
-				tableResultadosCirculo.getColumnModel().getColumn(3).setMaxWidth(0);
+				povoarListaCriculo(1,1);
 				scrollCirculoExpanded.setViewportView(tableResultadosCirculo);
 			}
 			ResultadosPRContentPane.add(scrollCirculoExpanded);
@@ -341,6 +376,7 @@ public class ResultadosPR extends JFrame {
 				"Primeira Volta",
 				"Segunda Volta"
 			}));
+			voltaBox.addItemListener(e -> voltaBoxItemStateChanged(e));
 			ResultadosPRContentPane.add(voltaBox);
 			voltaBox.setBounds(165, 15, 135, 25);
 
@@ -394,7 +430,7 @@ public class ResultadosPR extends JFrame {
 	}
 
 	// JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables
-	// Generated using JFormDesigner Evaluation license - Octavio Maia
+	// Generated using JFormDesigner Evaluation license - Rui Freitas
 	private JFrame ResultadosPR;
 	private JLabel label1;
 	private JLabel label2;

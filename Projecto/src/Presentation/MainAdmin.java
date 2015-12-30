@@ -77,6 +77,20 @@ public class MainAdmin extends JFrame {
 		}
 	}
 
+	
+	
+	private void iniarSegundaVolta(Eleicao el1){
+		if(el1!=null){
+			if(el1.getClass().getSimpleName().equals("EleicaoPR")){
+				if(((EleicaoPR)el1).isVolta2() && !((EleicaoPR)el1).isPermitirVotar()){
+					buttonIniciarSegundaVolta.setEnabled(true);
+				}
+			}
+		}
+		
+	}
+	
+	
 	private void buttonTerminarEleicaoActionPerformed(ActionEvent e) {
 		try {
 			if(sge.eleicaoAtiva()!=null){
@@ -85,7 +99,9 @@ public class MainAdmin extends JFrame {
 				else 
 					labelEleicaoAtiva.setText(sge.eleicaoAtivaString());
 			}
-			sge.terminarEleicao(sge.eleicaoAtiva());
+			Eleicao ativaEL = sge.eleicaoAtiva();
+			sge.terminarEleicao(ativaEL);
+			iniarSegundaVolta(ativaEL);
 			if(sge.eleicaoAtiva()==null) labelEleicaoAtiva.setText("");
 		} catch (ExceptionEleicaoAtiva e1) {
 			JOptionPane.showMessageDialog(null, e1.getMessage());
@@ -172,10 +188,22 @@ public class MainAdmin extends JFrame {
 	private void buttonGerirPartidos2ActionPerformed(ActionEvent e) {
 		new ColigacaoInterface(sge);
 	}
+
+	private void buttonIniciarSegundaVoltaActionPerformed(ActionEvent e) {
+		try {
+			sge.iniciarEleicao(sge.eleicaoAtiva());
+			labelEleicaoAtiva.setText(sge.eleicaoAtivaString()+" 2º volta");
+			buttonIniciarSegundaVolta.setEnabled(false);
+		} catch (ExceptionEleicaoAtiva e1) {
+			JOptionPane.showMessageDialog(null, e1.getMessage());
+		} catch (ExceptionIniciarEleicao e1) {
+			JOptionPane.showMessageDialog(null, e1.getMessage());
+		}	
+	}
 	
 	private void initComponents() {
 		// JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
-		// Generated using JFormDesigner Evaluation license - Octavio Maia
+		// Generated using JFormDesigner Evaluation license - Rui Freitas
 		label1 = new JLabel();
 		labelEleicaoAtiva = new JLabel();
 		tabbedPane1 = new JTabbedPane();
@@ -196,6 +224,7 @@ public class MainAdmin extends JFrame {
 		button1 = new JButton();
 		buttonGerirPartidos = new JButton();
 		buttonGerirPartidos2 = new JButton();
+		buttonIniciarSegundaVolta = new JButton();
 
 		//======== this ========
 		setTitle("Main Admin");
@@ -216,7 +245,7 @@ public class MainAdmin extends JFrame {
 		labelEleicaoAtiva.setFont(new Font("Arial", Font.PLAIN, 14));
 		labelEleicaoAtiva.setText(sge.eleicaoAtivaString());
 		contentPane.add(labelEleicaoAtiva);
-		labelEleicaoAtiva.setBounds(105, 10, 480, 25);
+		labelEleicaoAtiva.setBounds(105, 10, 305, 25);
 
 		//======== tabbedPane1 ========
 		{
@@ -404,6 +433,15 @@ public class MainAdmin extends JFrame {
 		contentPane.add(buttonGerirPartidos2);
 		buttonGerirPartidos2.setBounds(590, 200, 155, 25);
 
+		//---- buttonIniciarSegundaVolta ----
+		buttonIniciarSegundaVolta.setText("Iniciar 2\u00ba Volta");
+		buttonIniciarSegundaVolta.setFont(new Font("Arial", Font.PLAIN, 14));
+		buttonIniciarSegundaVolta.setEnabled(false);
+		buttonIniciarSegundaVolta.addActionListener(e -> buttonIniciarSegundaVoltaActionPerformed(e));
+		iniarSegundaVolta(sge.eleicaoAtiva());
+		contentPane.add(buttonIniciarSegundaVolta);
+		buttonIniciarSegundaVolta.setBounds(425, 10, 155, 25);
+
 		{ // compute preferred size
 			Dimension preferredSize = new Dimension();
 			for(int i = 0; i < contentPane.getComponentCount(); i++) {
@@ -423,7 +461,7 @@ public class MainAdmin extends JFrame {
 	}
 
 	// JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables
-	// Generated using JFormDesigner Evaluation license - Octavio Maia
+	// Generated using JFormDesigner Evaluation license - Rui Freitas
 	private JLabel label1;
 	private JLabel labelEleicaoAtiva;
 	private JTabbedPane tabbedPane1;
@@ -444,5 +482,6 @@ public class MainAdmin extends JFrame {
 	private JButton button1;
 	private JButton buttonGerirPartidos;
 	private JButton buttonGerirPartidos2;
+	private JButton buttonIniciarSegundaVolta;
 	// JFormDesigner - End of variables declaration  //GEN-END:variables
 }

@@ -117,6 +117,7 @@ public class ResultadoCirculoAR {
 	public void addVoto(Lista lista) {
 		if(this.validos.get(lista)==null){
 			this.validos.put(lista, 1);
+			System.out.println("olaburro");
 		}else{
 			this.validos.put(lista, this.validos.get(lista) + 1);	
 		}

@@ -153,6 +153,7 @@ public class ResultadoCirculoPRDAO implements Map<Integer,ResultadoCirculoPR>{
 		ResultSet rs = psRLista.executeQuery();
 		while(rs.next()){
 			//presiso de um comparador de int com listaPR ou iquals
+			System.out.println("print get_aux_"+rs.getInt(Lista)+"-"+rs.getInt(Votos));
 			listasvotos.put(daoListas.get_aux(rs.getInt(Lista),c), rs.getInt(Votos));
 		}
 		rs.close();

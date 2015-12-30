@@ -151,7 +151,7 @@ public class GerirPR {
 	}
 
 	private void buttonEliminarCandidatoActionPerformed(ActionEvent e) {
-		sge.removeLista(eleicao, (Listavel) tableCandidatos.getValueAt(tableCandidatos.getSelectedRow(), 2));
+		sge.removeLista(eleicao, (Listavel) tableCandidatos.getValueAt(tableCandidatos.getSelectedRow(), 3));
 		povoarTabela();
 	}
 	
@@ -184,7 +184,7 @@ public class GerirPR {
 	
 	private void initComponents(SGE sge,EleicaoPR eleicao) {
 		// JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
-		// Generated using JFormDesigner Evaluation license - Octavio Maia
+		// Generated using JFormDesigner Evaluation license - Rui Freitas
 		DefaultComponentFactory compFactory = DefaultComponentFactory.getInstance();
 		GerirPR = new JFrame();
 		label1 = new JLabel();
@@ -385,14 +385,14 @@ public class GerirPR {
 					new Object[][] {
 					},
 					new String[] {
-						"Nome", "B.I. / C.C.", null
+						null, "Nome", "B.I. / C.C.", null
 					}
 				) {
 					Class<?>[] columnTypes = new Class<?>[] {
-						String.class, String.class, String.class
+						String.class, String.class, String.class, Object.class
 					};
 					boolean[] columnEditable = new boolean[] {
-						true, true, false
+						false, true, true, true
 					};
 					@Override
 					public Class<?> getColumnClass(int columnIndex) {
@@ -405,7 +405,7 @@ public class GerirPR {
 				});
 				{
 					TableColumnModel cm = tableCandidatos.getColumnModel();
-					cm.getColumn(2).setResizable(false);
+					cm.getColumn(0).setResizable(false);
 				}
 				tableCandidatos.addFocusListener(new FocusAdapter() {
 					@Override
@@ -413,10 +413,14 @@ public class GerirPR {
 						tableCandidatosFocusGained(e);
 					}
 				});
-				tableCandidatos.getColumnModel().getColumn(2).setPreferredWidth(0);
-				tableCandidatos.getColumnModel().getColumn(2).setMinWidth(0);
-				tableCandidatos.getColumnModel().getColumn(2).setWidth(0);
-				tableCandidatos.getColumnModel().getColumn(2).setMaxWidth(0);
+				tableCandidatos.getColumnModel().getColumn(0).setPreferredWidth(0);
+				tableCandidatos.getColumnModel().getColumn(0).setMinWidth(0);
+				tableCandidatos.getColumnModel().getColumn(0).setWidth(0);
+				tableCandidatos.getColumnModel().getColumn(0).setMaxWidth(0);
+				tableCandidatos.getColumnModel().getColumn(3).setPreferredWidth(0);
+				tableCandidatos.getColumnModel().getColumn(3).setMinWidth(0);
+				tableCandidatos.getColumnModel().getColumn(3).setWidth(0);
+				tableCandidatos.getColumnModel().getColumn(3).setMaxWidth(0);
 				povoarTabela();
 				scrollPane1.setViewportView(tableCandidatos);
 			}
@@ -517,7 +521,7 @@ public class GerirPR {
 	}
 
 	// JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables
-	// Generated using JFormDesigner Evaluation license - Octavio Maia
+	// Generated using JFormDesigner Evaluation license - Rui Freitas
 	private JFrame GerirPR;
 	private JLabel label1;
 	private JButton buttonApagarInfo;

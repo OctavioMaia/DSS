@@ -224,7 +224,7 @@ public class SGE {
 
 	public void iniciarEleicao(Eleicao e) throws ExceptionEleicaoAtiva, ExceptionIniciarEleicao {
 		Eleicao el;
-		if (this.ativa != -1) {
+		if (this.ativa != -1 && this.ativa!=e.getIdEleicao()) {
 			throw new ExceptionEleicaoAtiva("Já existe uma eleição ativa");
 		} else {
 			System.out.println("ativa id:"+ativa);
@@ -272,8 +272,8 @@ public class SGE {
 		eleicao.setIdEleicao(this.chaveEleicao());
 		this.eleicoesPR.put(eleicao.getIdEleicao(), eleicao);
 		EleicaoPR l = this.eleicoesPR.get(eleicao.getIdEleicao());
-		l.initResultadoCirculoPRDAO(eleicao.getIdEleicao(), 1, circulos.values());
-		l.initResultadoCirculoPRDAO(eleicao.getIdEleicao(), 2, circulos.values());
+		l.initResultadoCirculoPRDAO(l.getIdEleicao(), 1, circulos.values());
+		l.initResultadoCirculoPRDAO(l.getIdEleicao(), 2, circulos.values());
 		this.eleicoesPR.put(l.getIdEleicao(), l);
 		return l;
 	}
@@ -512,9 +512,9 @@ public class SGE {
 		return listasSeg;
 	}
 	
-	public Set<ListavelVotos> ordenarLista(HashMap<Lista, Integer> listas) {
+	public Set<ListavelVotos> ordenarListaPR(HashMap<ListaPR, Integer> listas) {
 		TreeSet<ListavelVotos> listasSeg = new TreeSet<>(new ComparatorListavelVotos());
-		for (Lista lista : listas.keySet()) {
+		for (ListaPR lista : listas.keySet()) {
 			ListavelVotos lv = new ListavelVotos(lista, listas.get(lista));
 			listasSeg.add(lv);
 		}
@@ -534,7 +534,6 @@ public class SGE {
 		return this.circulos.get(num);
 	}
 
-	
 	public Set<Votavel> getVotaveis(){
 		Set<Votavel> vot = new HashSet<>();
 		for(Partido  p : this.partidos.values()){
@@ -580,6 +579,10 @@ public class SGE {
 			}
 		}
 		return col;
+	}
+	
+	public boolean temSegundaVolta(EleicaoPR el){
+		return el.temSegundaVolta();
 	}
 	
 }
