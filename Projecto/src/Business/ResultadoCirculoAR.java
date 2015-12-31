@@ -63,7 +63,7 @@ public class ResultadoCirculoAR {
 			totVotos+=i.next();
 		}
 		
-		abstencao = totVotos-brancos-nulos;
+		abstencao = totEleitores-totVotos-brancos-nulos;
 		
 		return abstencao;
 	}
@@ -117,7 +117,6 @@ public class ResultadoCirculoAR {
 	public void addVoto(Lista lista) {
 		if(this.validos.get(lista)==null){
 			this.validos.put(lista, 1);
-			System.out.println("olaburro");
 		}else{
 			this.validos.put(lista, this.validos.get(lista) + 1);	
 		}

@@ -238,7 +238,6 @@ public class ListaARDAO implements Map<Integer,Lista>{
 		ps.setInt(1, this.circulo);
 		ps.setInt(2, this.Eleicao);
 		ps.setInt(3, key);
-		//System.out.println("ps:"+ps);
 		ResultSet rs = ps.executeQuery();
 		ArrayList<CandidatoAR> cands  =new ArrayList<>();
 		while(rs.next()){
@@ -257,7 +256,6 @@ public class ListaARDAO implements Map<Integer,Lista>{
 		//private static String TabListIDElei = "idEleicao";
 		psL.setInt(1, key);
 		psL.setInt(2, this.Eleicao);
-		//System.out.println("psL:"+psL);
 		ResultSet rsL = psL.executeQuery();
 		if(rsL.next()){
 			Votavel mandante = null;
@@ -445,9 +443,7 @@ public class ListaARDAO implements Map<Integer,Lista>{
 	protected Lista put_aux(Integer key,Lista value, Connection c) throws SQLException{
 		Lista l = this.get_aux(key, c);
 		ArrayList<CandidatoAR> cands = value.getCandidatos();
-		//System.out.println(key);
 		if(l==null){//nova inserir
-			System.out.println("entra_insert");
 			PreparedStatement ps = c.prepareStatement("INSERT INTO " + TabName +
 					"("+TabListID+","+TabListSimb+","+TabListSig+","+TabListNome+","+
 					TabListIDCirc+","+TabListIDElei+","+TabListOrd+","+TabListPart+","+TabListCol+")"+
@@ -473,7 +469,6 @@ public class ListaARDAO implements Map<Integer,Lista>{
 			ps.executeUpdate();
 			ps.close();
 		}else{
-			//System.out.println("entra_update");
 			PreparedStatement ps = c.prepareStatement("UPDATE " + TabName +
 					" SET "+TabListSimb+"=?,"+TabListSig+"=?,"+TabListNome+"=?,"+TabListOrd+"=?,"+
 					TabListPart+"=?,"+TabListCol+"=?"+
@@ -507,7 +502,6 @@ public class ListaARDAO implements Map<Integer,Lista>{
 	public Lista put(Integer key, Lista value) {
 		Lista ret = null;
 		Connection c = null;
-		//System.out.println("put");
 		try{
 			c=Connector.newConnection(false);
 			ret = this.put_aux(key, value, c);

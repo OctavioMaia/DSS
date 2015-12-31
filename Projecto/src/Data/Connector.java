@@ -5,8 +5,8 @@ import java.sql.DriverManager;
 
 public class Connector {
 	private static String url="jdbc:mysql://localhost:3306/sge";
-	private static String username="adminsge";
-	private static String password="1";
+	private static String username="";
+	private static String password="";
 
 	public static Connection newConnection(boolean autoCommit) throws Exception {
 		Class.forName("com.mysql.jdbc.Driver");
@@ -15,13 +15,5 @@ public class Connector {
         conn.setTransactionIsolation(Connection.TRANSACTION_REPEATABLE_READ);
         return conn;
 	}
-	/*
-	public static Connection newConnection() throws Exception {
-		Class.forName("com.mysql.jdbc.Driver");
-		Connection conn = DriverManager.getConnection(url,username,password);
-		conn.setAutoCommit(false);
-        conn.setTransactionIsolation(Connection.TRANSACTION_REPEATABLE_READ);
-        return conn;
-	}*/
 
 }

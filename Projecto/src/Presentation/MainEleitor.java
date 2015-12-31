@@ -39,9 +39,9 @@ public class MainEleitor {
 
 	private void button1ActionPerformed(ActionEvent e) {
 		if(tableEleicoes.getValueAt(tableEleicoes.getSelectedRow(), 2).getClass().getSimpleName().equals("EleicaoAR")){
-			ResultadosAR gui = new ResultadosAR(null, (EleicaoAR) tableEleicoes.getValueAt(tableEleicoes.getSelectedRow(), 2));
+			new ResultadosAR(sge, (EleicaoAR) tableEleicoes.getValueAt(tableEleicoes.getSelectedRow(), 2));
 		}else{
-			ResultadosPR gui = new ResultadosPR(null, (EleicaoPR) tableEleicoes.getValueAt(tableEleicoes.getSelectedRow(), 2));
+			new ResultadosPR(sge, (EleicaoPR) tableEleicoes.getValueAt(tableEleicoes.getSelectedRow(), 2));
 		}
 	}
 
@@ -84,7 +84,7 @@ public class MainEleitor {
 
 	private void initComponents(SGE sge) {
 		// JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
-		// Generated using JFormDesigner Evaluation license - Octavio Maia
+		// Generated using JFormDesigner Evaluation license - Rui Freitas
 		frameEleitor = new JFrame();
 		label1 = new JLabel();
 		label2 = new JLabel();
@@ -256,7 +256,7 @@ public class MainEleitor {
 	}
 
 	// JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables
-	// Generated using JFormDesigner Evaluation license - Octavio Maia
+	// Generated using JFormDesigner Evaluation license - Rui Freitas
 	private JFrame frameEleitor;
 	private JLabel label1;
 	private JLabel label2;

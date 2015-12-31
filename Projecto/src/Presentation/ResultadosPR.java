@@ -228,13 +228,13 @@ public class ResultadosPR extends JFrame {
 			globaisAbstencaoN.setBounds(380, 110, 75, 17);
 
 			//---- globaisAbstencaoP ----
-			globaisAbstencaoP.setText(Math.round(100.0 / eleicao.numeroEleitores() * sge.getResultadoGlobalPR(eleicao,1).getAbstencao())+"%");
+			globaisAbstencaoP.setText(Math.round(sge.getResultadoGlobalPR(eleicao,1).getAbstencao() / eleicao.numeroEleitores() * 100.0)+"%");
 			globaisAbstencaoP.setFont(new Font("Arial", Font.PLAIN, 14));
 			ResultadosPRContentPane.add(globaisAbstencaoP);
 			globaisAbstencaoP.setBounds(480, 110, 55, 17);
 
 			//---- globaisNulosP ----
-			globaisNulosP.setText(Math.round(100.0 / eleicao.numeroEleitores() * sge.getResultadoGlobalPR(eleicao,1).getNulos())+"%");
+			globaisNulosP.setText(Math.round(sge.getResultadoGlobalPR(eleicao,1).getNulos() / eleicao.numeroEleitores() * 100.0)+"%");
 			globaisNulosP.setFont(new Font("Arial", Font.PLAIN, 14));
 			ResultadosPRContentPane.add(globaisNulosP);
 			globaisNulosP.setBounds(480, 85, 55, 17);
@@ -332,6 +332,7 @@ public class ResultadosPR extends JFrame {
 					cm.getColumn(1).setResizable(false);
 				}
 				tableResultadosCirculo.setFont(new Font("Arial", Font.PLAIN, 12));
+				tableResultadosCirculo.setRowSelectionAllowed(false);
 				povoarListaCriculo(1,1);
 				scrollCirculoExpanded.setViewportView(tableResultadosCirculo);
 			}

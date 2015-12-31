@@ -133,9 +133,7 @@ public class SGE {
 				idEleicaoAtiva = ar.getIdEleicao();
 			}
 		}
-		
-		System.out.println("id ativa inicial "+idEleicaoAtiva);
-		
+				
 		return idEleicaoAtiva;
 	}
 	
@@ -166,7 +164,6 @@ public class SGE {
 			while ((line = br.readLine()) != null) {
 				if (line.contains(flin)) {
 					csvSplit = line.split("=")[1];
-					//System.out.println(csvSplit);
 				} else {
 					String[] eleitores = line.split(csvSplit);
 					int nCiruclo = Integer.parseInt(eleitores[1]);
@@ -227,23 +224,14 @@ public class SGE {
 		if (this.ativa != -1 && this.ativa!=e.getIdEleicao()) {
 			throw new ExceptionEleicaoAtiva("Já existe uma eleição ativa");
 		} else {
-			System.out.println("ativa id:"+ativa);
 			if (e.getClass().getSimpleName().equals("EleicaoPR")) {
-				System.out.println("debug1");
 				el = this.eleicoesPR.get(e.getIdEleicao());
-				System.out.println("debug2");
 				el.iniciar();
-				System.out.println("added");
 				this.eleicoesPR.put(el.getIdEleicao(), (EleicaoPR) el);
-				System.out.println("debug3");
 			} else {
-				System.out.println("debug4");
 				el = this.eleicoesAR.get(e.getIdEleicao());
-				System.out.println("debug5");
 				el.iniciar();
-				System.out.println("debug6");
 				this.eleicoesAR.put(el.getIdEleicao(), (EleicaoAR) el);
-				System.out.println("debug7");
 			}
 			this.ativa = e.getIdEleicao();
 		}
@@ -343,6 +331,9 @@ public class SGE {
 
 	public void addPartido(Partido part) throws ExceptionPartidoExiste {
 		part.setId(this.chavePartido());
+		if(this.partidos.containsValue(part)){
+			throw new ExceptionPartidoExiste("O partido que quer registar já se encontra registado");
+		}
 		this.partidos.put(part.getId(), part);
 	}
 
@@ -435,13 +426,10 @@ public class SGE {
 		int maxAR = 0;
 		if (this.eleicoesAR.size() > 0) {
 			maxAR = Collections.max(this.eleicoesAR.keySet());
-			//System.out.println("ar:"+maxAR);
 		}
 		if (this.eleicoesPR.size() > 0) {
 			maxPR = Collections.max(this.eleicoesPR.keySet());
-			//System.out.println("pr:"+maxAR);
 		}
-		//System.out.println("max"+(Math.max(maxPR, maxAR) + 1));
 		return (Math.max(maxPR, maxAR) + 1);
 	}
 

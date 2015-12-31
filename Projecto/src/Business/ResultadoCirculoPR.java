@@ -80,7 +80,7 @@ public class ResultadoCirculoPR {
 			totVotos+=i.next();
 		}
 		
-		abstencao = totVotos-brancos-nulos;
+		abstencao = totEleitores-totVotos-brancos-nulos;
 		
 		return abstencao;
 	}
@@ -98,19 +98,16 @@ public class ResultadoCirculoPR {
 	}
 
 	public void addVotoBranco() {
-		System.out.println("B:"+brancos);
 		this.brancos++;
 	}
 
 	public void addVotoNulo() {
-		System.out.println("N:"+nulos);
 		this.nulos++;
 	}
 
 	public void addListas(Collection<ListaPR> listas) {
 		for (ListaPR lista : listas) {
 			if (!this.validos.containsKey(lista)) {
-				System.out.println("Teste1conetem chave");
 				this.validos.put(lista, 0);
 			}
 		}
